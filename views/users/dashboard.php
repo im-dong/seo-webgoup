@@ -56,7 +56,7 @@
                                     <?php if(($order->status == 'paid' || $order->status == 'completed' || $order->status == 'confirmed' || $order->status == 'released') && !$order->has_reviewed): ?>
                                         <a href="<?php echo URLROOT; ?>/reviews/add/<?php echo $order->id; ?>" class="btn btn-sm btn-warning">Review</a>
                                     <?php endif; ?>
-                                    <a href="#" class="btn btn-sm btn-primary">View</a>
+                                    <a href="<?php echo URLROOT; ?>/conversations/start/<?php echo $order->id; ?>" class="btn btn-sm btn-primary">View</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -89,7 +89,7 @@
                                     <?php if(($order->status == 'paid' || $order->status == 'completed' || $order->status == 'confirmed' || $order->status == 'released') && !$order->has_reviewed): ?>
                                         <a href="<?php echo URLROOT; ?>/reviews/add/<?php echo $order->id; ?>" class="btn btn-sm btn-warning">Review</a>
                                     <?php endif; ?>
-                                    <a href="#" class="btn btn-sm btn-primary">View</a>
+                                    <a href="<?php echo URLROOT; ?>/conversations/start/<?php echo $order->id; ?>" class="btn btn-sm btn-primary">View</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
