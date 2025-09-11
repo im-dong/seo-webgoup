@@ -11,6 +11,40 @@ class Orders extends Controller {
         $this->serviceModel = $this->model('Service');
     }
 
+    // 为售前咨询开启一个对话
+    public function startInquiry($service_id){
+        $service = $this->serviceModel->getServiceById($service_id);
+
+        // 确保服务存在且用户不是服务所有者
+        if(!$service || $service->userId == $_SESSION['user_id']){
+            flash('service_message', 'Invalid service or you cannot message yourself.', 'alert alert-danger');
+            header('location: ' . URLROOT . '/services');
+            exit();
+        }
+
+        $buyer_id = $_SESSION['user_id'];
+        $seller_id = $service->userId;
+
+        // 检查是否已有咨询订单
+        $inquiry_order = $this->orderModel->findInquiryOrder($service_id, $buyer_id, $seller_id);
+
+        if($inquiry_order){
+            $order_id = $inquiry_order->id;
+        } else {
+            // 创建一个新的咨询订单
+            $order_id = $this->orderModel->createInquiryOrder($service_id, $buyer_id, $seller_id);
+        }
+
+        if($order_id){
+            header('location: ' . URLROOT . '/conversations/start/' . $order_id);
+            exit();
+        } else {
+            flash('service_message', 'Could not initiate conversation.', 'alert alert-danger');
+            header('location: ' . URLROOT . '/services/show/' . $service_id);
+            exit();
+        }
+    }
+
     // API端点：创建订单 (被PayPal JS SDK调用)
     public function create($service_id){
         // 设置响应头为JSON

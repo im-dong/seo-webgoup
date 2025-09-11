@@ -110,5 +110,27 @@ class Order {
         $this->db->bind(':user2_id', $user2_id);
         return $this->db->single();
     }
+
+    // 查找一个咨询订单
+    public function findInquiryOrder($service_id, $buyer_id, $seller_id){
+        $this->db->query('SELECT id FROM orders WHERE service_id = :service_id AND buyer_id = :buyer_id AND seller_id = :seller_id AND status = \'inquiry\'');
+        $this->db->bind(':service_id', $service_id);
+        $this->db->bind(':buyer_id', $buyer_id);
+        $this->db->bind(':seller_id', $seller_id);
+        return $this->db->single();
+    }
+
+    // 为售前咨询创建一个虚拟订单
+    public function createInquiryOrder($service_id, $buyer_id, $seller_id){
+        $this->db->query('INSERT INTO orders (service_id, buyer_id, seller_id, amount, status) VALUES (:service_id, :buyer_id, :seller_id, 0, \'inquiry\')');
+        $this->db->bind(':service_id', $service_id);
+        $this->db->bind(':buyer_id', $buyer_id);
+        $this->db->bind(':seller_id', $seller_id);
+        
+        if($this->db->execute()){
+            return $this->db->lastInsertId();
+        }
+        return false;
+    }
 }
 

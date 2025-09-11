@@ -6,5 +6,15 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <!-- Custom JS -->
 <script src="<?php echo URLROOT; ?>/js/main.js"></script>
+
+<!-- Toast Initializer -->
+<script>
+    var toastEl = document.getElementById('flash-toast');
+    if (toastEl) {
+        var toast = new bootstrap.Toast(toastEl, { delay: 5000 });
+        toast.show();
+    }
+</script>
+
 </body>
 </html>

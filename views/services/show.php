@@ -25,8 +25,8 @@
                     </ul>
                     <hr>
                     <div class="d-grid">
-                        <?php if(isset($_SESSION['user_id']) && $_SESSION['user_id'] != $data['service']->userId && $data['order_id_for_chat']): ?>
-                            <a href="<?php echo URLROOT; ?>/conversations/start/<?php echo $data['order_id_for_chat']; ?>" class="btn btn-primary btn-lg mb-2">Message Seller</a>
+                        <?php if(isset($_SESSION['user_id']) && $_SESSION['user_id'] != $data['service']->userId): ?>
+                            <a href="<?php echo URLROOT; ?>/orders/startInquiry/<?php echo $data['service']->serviceId; ?>" class="btn btn-primary btn-lg mb-2">Message Seller</a>
                         <?php endif; ?>
                         <div id="paypal-button-container"></div>
                     <p id="payment-message" class="text-center"></p>
