@@ -16,7 +16,7 @@
                         <p class="card-text"><?php echo substr(htmlspecialchars($service->description), 0, 100); ?>...</p>
                     </div>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Seller: <?php echo htmlspecialchars($service->username); ?></li>
+                        <li class="list-group-item">Seller: <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $service->userId; ?>"><?php echo htmlspecialchars($service->username); ?></a></li>
                         <li class="list-group-item">Delivery in: <?php echo htmlspecialchars($service->delivery_time); ?> days</li>
                         <li class="list-group-item">Link Type: <span class="badge bg-<?php echo ($service->link_type == 'follow') ? 'primary' : 'secondary'; ?>"><?php echo htmlspecialchars($service->link_type); ?></span></li>
                     </ul>

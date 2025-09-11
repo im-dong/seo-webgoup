@@ -93,5 +93,22 @@ class Order {
         $this->db->bind(':order_id', $order_id);
         return $this->db->single();
     }
+
+    // 获取特定服务和买卖双方的最新订单
+    public function getLatestOrderByServiceAndUsers($service_id, $buyer_id, $seller_id){
+        $this->db->query('SELECT id FROM orders WHERE service_id = :service_id AND buyer_id = :buyer_id AND seller_id = :seller_id ORDER BY created_at DESC LIMIT 1');
+        $this->db->bind(':service_id', $service_id);
+        $this->db->bind(':buyer_id', $buyer_id);
+        $this->db->bind(':seller_id', $seller_id);
+        return $this->db->single();
+    }
+
+    // 获取两个用户之间最新的订单
+    public function getLatestOrderBetweenUsers($user1_id, $user2_id){
+        $this->db->query('SELECT id FROM orders WHERE (buyer_id = :user1_id AND seller_id = :user2_id) OR (buyer_id = :user2_id AND seller_id = :user1_id) ORDER BY created_at DESC LIMIT 1');
+        $this->db->bind(':user1_id', $user1_id);
+        $this->db->bind(':user2_id', $user2_id);
+        return $this->db->single();
+    }
 }
 

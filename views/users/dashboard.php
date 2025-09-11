@@ -3,7 +3,7 @@
 <div class="container mt-5">
     <h2>My Dashboard</h2>
     <?php flash('order_message'); ?>
-    <p>Welcome, <?php echo $_SESSION['user_name']; ?>!</p>
+    <p>Welcome, <?php echo $_SESSION['user_name']; ?>! <a href="<?php echo URLROOT; ?>/users/editProfile" class="btn btn-sm btn-outline-secondary">Edit Profile</a></p>
 
     <div class="card mb-4">
         <div class="card-header">My Wallet</div>
@@ -53,13 +53,10 @@
                                 <td><?php echo date('Y-m-d', strtotime($order->created_at)); ?></td>
                                 <td><span class="badge bg-info"><?php echo htmlspecialchars($order->status); ?></span></td>
                                 <td>
-                                    <?php if($order->status == 'completed'): ?>
-                                        <a href="<?php echo htmlspecialchars($order->proof_url); ?>" class="btn btn-sm btn-info" target="_blank">View Proof</a>
-                                        <form action="<?php echo URLROOT; ?>/orders/confirm/<?php echo $order->id; ?>" method="post" class="d-inline">
-                                            <input type="submit" class="btn btn-sm btn-success" value="Confirm Completion">
-                                        </form>
+                                    <?php if(($order->status == 'paid' || $order->status == 'completed' || $order->status == 'confirmed' || $order->status == 'released') && !$order->has_reviewed): ?>
+                                        <a href="<?php echo URLROOT; ?>/reviews/add/<?php echo $order->id; ?>" class="btn btn-sm btn-warning">Review</a>
                                     <?php endif; ?>
-                                    <a href="<?php echo URLROOT; ?>/conversations/start/<?php echo $order->id; ?>" class="btn btn-sm btn-secondary">Message Seller</a>
+                                    <a href="#" class="btn btn-sm btn-primary">View</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -89,10 +86,10 @@
                                 <td><?php echo date('Y-m-d', strtotime($order->created_at)); ?></td>
                                 <td><span class="badge bg-info"><?php echo htmlspecialchars($order->status); ?></span></td>
                                 <td>
-                                    <?php if($order->status == 'paid'): ?>
-                                        <a href="<?php echo URLROOT; ?>/orders/complete/<?php echo $order->id; ?>" class="btn btn-sm btn-success">Mark as Complete</a>
+                                    <?php if(($order->status == 'paid' || $order->status == 'completed' || $order->status == 'confirmed' || $order->status == 'released') && !$order->has_reviewed): ?>
+                                        <a href="<?php echo URLROOT; ?>/reviews/add/<?php echo $order->id; ?>" class="btn btn-sm btn-warning">Review</a>
                                     <?php endif; ?>
-                                    <a href="<?php echo URLROOT; ?>/conversations/start/<?php echo $order->id; ?>" class="btn btn-sm btn-secondary">Message Buyer</a>
+                                    <a href="#" class="btn btn-sm btn-primary">View</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

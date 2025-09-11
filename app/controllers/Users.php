@@ -31,7 +31,11 @@ class Users extends Controller {
 
             if(empty($data['email_err']) && empty($data['username_err']) && empty($data['password_err']) && empty($data['confirm_password_err'])){
                 $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-                if($this->userModel->register($data)){
+                if($user_id = $this->userModel->register($data)){
+                    // 创建钱包
+                    $this->walletModel = $this->model('Wallet');
+                    $this->walletModel->createWallet($user_id);
+
                     flash('register_success', 'You are now registered and can log in');
                     header('location: ' . URLROOT . '/users/login');
                 } else { die('Something went wrong'); }
@@ -96,9 +100,18 @@ class Users extends Controller {
     public function dashboard(){
         $this->orderModel = $this->model('Order');
         $this->walletModel = $this->model('Wallet');
+        $this->reviewModel = $this->model('Review'); // 加载Review模型
 
         $buyer_orders = $this->orderModel->getOrdersByBuyerId($_SESSION['user_id']);
+        foreach($buyer_orders as $order){
+            $order->has_reviewed = $this->reviewModel->hasReviewed($order->id);
+        }
+
         $seller_orders = $this->orderModel->getOrdersBySellerId($_SESSION['user_id']);
+        foreach($seller_orders as $order){
+            $order->has_reviewed = $this->reviewModel->hasReviewed($order->id);
+        }
+        
         $wallet = $this->walletModel->getWalletByUserId($_SESSION['user_id']);
 
         $data = [
@@ -108,5 +121,62 @@ class Users extends Controller {
         ];
 
         $this->view('users/dashboard', $data);
+    }
+
+    public function editProfile(){
+        if(!isLoggedIn()){
+            header('location: ' . URLROOT . '/users/login');
+            exit();
+        }
+
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            $_POST = filter_input_array(INPUT_POST, FILTER_UNSAFE_RAW);
+            $data = [
+                'id' => $_SESSION['user_id'],
+                'bio' => trim($_POST['bio'])
+            ];
+
+            if($this->userModel->updateProfile($data)){
+                flash('profile_message', 'Profile updated successfully.');
+                header('location: ' . URLROOT . '/users/dashboard');
+            } else {
+                die('Something went wrong.');
+            }
+
+        } else {
+            $user = $this->userModel->getUserById($_SESSION['user_id']);
+            $data = [
+                'username' => $user->username,
+                'email' => $user->email,
+                'bio' => $user->bio
+            ];
+            $this->view('users/edit_profile', $data);
+        }
+    }
+
+    public function profile($user_id){
+        $this->reviewModel = $this->model('Review');
+        $user = $this->userModel->getUserById($user_id);
+        $reviews = $this->reviewModel->getReviewsBySellerId($user_id);
+        $average_rating = $this->reviewModel->getAverageRatingBySellerId($user_id);
+
+        // 获取一个订单ID用于聊天按钮，如果当前用户是买家或卖家
+        $order_id_for_chat = null;
+        if(isset($_SESSION['user_id']) && $_SESSION['user_id'] != $user_id){
+            $this->orderModel = $this->model('Order');
+            // 尝试找到当前用户和被查看用户之间的一个订单，用于聊天
+            $latest_order = $this->orderModel->getLatestOrderBetweenUsers($_SESSION['user_id'], $user_id);
+            if($latest_order) {
+                $order_id_for_chat = $latest_order->id;
+            }
+        }
+
+        $data = [
+            'user' => $user,
+            'reviews' => $reviews,
+            'average_rating' => $average_rating,
+            'order_id_for_chat' => $order_id_for_chat
+        ];
+        $this->view('users/profile', $data);
     }
 }

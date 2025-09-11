@@ -5,7 +5,7 @@
         <div class="col-md-8">
             <h2><?php echo htmlspecialchars($data['service']->title); ?></h2>
             <hr>
-            <p><strong>Sold by:</strong> <?php echo htmlspecialchars($data['service']->username); ?></p>
+            <p><strong>Sold by:</strong> <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $data['service']->userId; ?>"><?php echo htmlspecialchars($data['service']->username); ?></a></p>
             <p><strong>Website:</strong> <a href="<?php echo htmlspecialchars($data['service']->site_url); ?>" target="_blank"><?php echo htmlspecialchars($data['service']->site_url); ?></a></p>
             <hr>
             <h4>Service Description</h4>
@@ -24,7 +24,11 @@
                         <li class="mb-2"><strong>Adult Content:</strong> <?php echo ($data['service']->is_adult_allowed) ? 'Allowed' : 'Not Allowed'; ?></li>
                     </ul>
                     <hr>
-                    <div id="paypal-button-container"></div>
+                    <div class="d-grid">
+                        <?php if(isset($_SESSION['user_id']) && $_SESSION['user_id'] != $data['service']->userId && $data['order_id_for_chat']): ?>
+                            <a href="<?php echo URLROOT; ?>/conversations/start/<?php echo $data['order_id_for_chat']; ?>" class="btn btn-primary btn-lg mb-2">Message Seller</a>
+                        <?php endif; ?>
+                        <div id="paypal-button-container"></div>
                     <p id="payment-message" class="text-center"></p>
                 </div>
             </div>

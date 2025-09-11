@@ -31,12 +31,7 @@ class User {
 
         // 执行
         if($this->db->execute()){
-            $user_id = $this->db->lastInsertId();
-            // 为新用户创建钱包
-            $this->walletModel = new Wallet();
-            if($this->walletModel->createWallet($user_id)){
-                return true;
-            }
+            return $this->db->lastInsertId();
         }
         return false;
     }
@@ -54,5 +49,24 @@ class User {
         } else {
             return false;
         }
+    return false;
+    }
+
+    // 根据ID获取用户
+    public function getUserById($id){
+        $this->db->query('SELECT * FROM users WHERE id = :id');
+        $this->db->bind(':id', $id);
+        return $this->db->single();
+    }
+
+    // 更新用户资料
+    public function updateProfile($data){
+        $this->db->query('UPDATE users SET bio = :bio WHERE id = :id');
+        $this->db->bind(':bio', $data['bio']);
+        $this->db->bind(':id', $data['id']);
+        if($this->db->execute()){
+            return true;
+        }
+        return false;
     }
 }

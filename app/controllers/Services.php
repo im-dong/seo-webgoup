@@ -19,8 +19,19 @@ class Services extends Controller {
 
     public function show($id){
         $service = $this->serviceModel->getServiceById($id);
+        // 尝试获取与此服务相关的最新订单ID，以便用于聊天
+        $order_id_for_chat = null;
+        if(isset($_SESSION['user_id'])){
+            $this->orderModel = $this->model('Order');
+            $latest_order = $this->orderModel->getLatestOrderByServiceAndUsers($id, $_SESSION['user_id'], $service->userId);
+            if($latest_order) {
+                $order_id_for_chat = $latest_order->id;
+            }
+        }
+
         $data = [
-            'service' => $service
+            'service' => $service,
+            'order_id_for_chat' => $order_id_for_chat
         ];
         $this->view('services/show', $data);
     }
