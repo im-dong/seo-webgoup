@@ -20,6 +20,23 @@
                     <label for="bio">Bio:</label>
                     <textarea name="bio" class="form-control form-control-lg" rows="5"><?php echo $data['bio']; ?></textarea>
                 </div>
+
+                <div class="form-group mb-3">
+                    <label for="profile_image_url">Profile Image URL:</label>
+                    <input type="text" name="profile_image_url" class="form-control form-control-lg <?php echo (!empty($data['profile_image_url_err'])) ? 'is-invalid' : ''; ?>" value="<?php echo $data['profile_image_url']; ?>">
+                    <span class="invalid-feedback"><?php echo $data['profile_image_url_err']; ?></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="website_url">Website URL:</label>
+                    <input type="text" name="website_url" class="form-control form-control-lg <?php echo (!empty($data['website_url_err'])) ? 'is-invalid' : ''; ?>" value="<?php echo $data['website_url']; ?>">
+                    <span class="invalid-feedback"><?php echo $data['website_url_err']; ?></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="country">Country:</label>
+                    <input type="text" name="country" class="form-control form-control-lg" value="<?php echo $data['country']; ?>">
+                </div>
                 <div class="row">
                     <div class="col">
                         <input type="submit" value="Save Changes" class="btn btn-success btn-block">

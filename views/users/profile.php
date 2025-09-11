@@ -4,8 +4,21 @@
     <div class="row">
         <div class="col-md-8 mx-auto">
             <div class="card card-body bg-light">
-                <h2><?php echo htmlspecialchars($data['user']->username); ?>'s Profile</h2>
-                <p class="text-muted">Member since: <?php echo date('Y-m-d', strtotime($data['user']->created_at)); ?></p>
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        <img src="<?php echo htmlspecialchars($data['user']->profile_image_url); ?>" class="img-fluid rounded-circle mb-3" alt="Profile Picture">
+                    </div>
+                    <div class="col-md-9">
+                        <h2><?php echo htmlspecialchars($data['user']->username); ?>'s Profile</h2>
+                        <p class="text-muted">Member since: <?php echo date('Y-m-d', strtotime($data['user']->created_at)); ?></p>
+                        <?php if(!empty($data['user']->country)): ?>
+                            <p class="text-muted"><i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($data['user']->country); ?></p>
+                        <?php endif; ?>
+                        <?php if(!empty($data['user']->website_url)): ?>
+                            <a href="<?php echo htmlspecialchars($data['user']->website_url); ?>" class="btn btn-sm btn-outline-secondary" target="_blank">Visit Website</a>
+                        <?php endif; ?>
+                    </div>
+                </div>
                 <hr>
                 <h4>Bio:</h4>
                 <p><?php echo nl2br(htmlspecialchars($data['user']->bio)); ?></p>

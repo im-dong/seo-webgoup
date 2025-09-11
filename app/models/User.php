@@ -61,8 +61,11 @@ class User {
 
     // 更新用户资料
     public function updateProfile($data){
-        $this->db->query('UPDATE users SET bio = :bio WHERE id = :id');
+        $this->db->query('UPDATE users SET bio = :bio, profile_image_url = :profile_image_url, website_url = :website_url, country = :country WHERE id = :id');
         $this->db->bind(':bio', $data['bio']);
+        $this->db->bind(':profile_image_url', $data['profile_image_url']);
+        $this->db->bind(':website_url', $data['website_url']);
+        $this->db->bind(':country', $data['country']);
         $this->db->bind(':id', $data['id']);
         if($this->db->execute()){
             return true;

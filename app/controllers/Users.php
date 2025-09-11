@@ -133,14 +133,35 @@ class Users extends Controller {
             $_POST = filter_input_array(INPUT_POST, FILTER_UNSAFE_RAW);
             $data = [
                 'id' => $_SESSION['user_id'],
-                'bio' => trim($_POST['bio'])
+                'bio' => trim($_POST['bio']),
+                'profile_image_url' => trim($_POST['profile_image_url']),
+                'website_url' => trim($_POST['website_url']),
+                'country' => trim($_POST['country']),
+                'profile_image_url_err' => '',
+                'website_url_err' => ''
             ];
 
-            if($this->userModel->updateProfile($data)){
-                flash('profile_message', 'Profile updated successfully.');
-                header('location: ' . URLROOT . '/users/dashboard');
+            // Validate URLs
+            if(!empty($data['profile_image_url']) && !filter_var($data['profile_image_url'], FILTER_VALIDATE_URL)){
+                $data['profile_image_url_err'] = 'Please enter a valid image URL.';
+            }
+            if(!empty($data['website_url']) && !filter_var($data['website_url'], FILTER_VALIDATE_URL)){
+                $data['website_url_err'] = 'Please enter a valid website URL.';
+            }
+
+            if(empty($data['profile_image_url_err']) && empty($data['website_url_err'])){
+                if($this->userModel->updateProfile($data)){
+                    flash('profile_message', 'Profile updated successfully.');
+                    header('location: ' . URLROOT . '/users/dashboard');
+                } else {
+                    die('Something went wrong.');
+                }
             } else {
-                die('Something went wrong.');
+                // Load view with errors
+                $user = $this->userModel->getUserById($_SESSION['user_id']);
+                $data['username'] = $user->username;
+                $data['email'] = $user->email;
+                $this->view('users/edit_profile', $data);
             }
 
         } else {
@@ -148,7 +169,12 @@ class Users extends Controller {
             $data = [
                 'username' => $user->username,
                 'email' => $user->email,
-                'bio' => $user->bio
+                'bio' => $user->bio,
+                'profile_image_url' => $user->profile_image_url,
+                'website_url' => $user->website_url,
+                'country' => $user->country,
+                'profile_image_url_err' => '',
+                'website_url_err' => ''
             ];
             $this->view('users/edit_profile', $data);
         }
