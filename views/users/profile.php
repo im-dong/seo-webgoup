@@ -6,7 +6,7 @@
             <div class="card card-body bg-light">
                 <div class="row">
                     <div class="col-md-3 text-center">
-                        <img src="<?php echo htmlspecialchars($data['user']->profile_image_url); ?>" class="img-fluid rounded-circle mb-3" alt="Profile Picture">
+                        <img src="<?php echo !empty($data['user']->profile_image_url) ? htmlspecialchars($data['user']->profile_image_url) : URLROOT . '/uploads/images/avatars/default.png'; ?>" class="img-fluid rounded-circle mb-3" alt="Profile Picture">
                     </div>
                     <div class="col-md-9">
                         <h2><?php echo htmlspecialchars($data['user']->username); ?>'s Profile</h2>
@@ -32,7 +32,12 @@
                 </h4>
                 
                 <?php if(isset($_SESSION['user_id']) && $_SESSION['user_id'] != $data['user']->id): ?>
-                    <a href="<?php echo URLROOT; ?>/conversations/start/<?php echo $data['order_id_for_chat']; ?>" class="btn btn-primary mt-3">Message <?php echo htmlspecialchars($data['user']->username); ?></a>
+                    <?php if($data['order_id_for_chat']): ?>
+                        <a href="<?php echo URLROOT; ?>/conversations/start/<?php echo $data['order_id_for_chat']; ?>" class="btn btn-primary mt-3">Message <?php echo htmlspecialchars($data['user']->username); ?></a>
+                    <?php else: ?>
+                        <button class="btn btn-primary mt-3" disabled>Message <?php echo htmlspecialchars($data['user']->username); ?></button>
+                        <small class="text-muted d-block">You can only message users with whom you have an order.</small>
+                    <?php endif; ?>
                 <?php endif; ?>
 
                 <h4 class="mt-4">Reviews:</h4>

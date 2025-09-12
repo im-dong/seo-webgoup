@@ -39,14 +39,14 @@ class Order {
 
     // 根据买家ID获取订单
     public function getOrdersByBuyerId($buyer_id){
-        $this->db->query('SELECT o.*, s.title as service_title FROM orders o JOIN services s ON o.service_id = s.id WHERE o.buyer_id = :buyer_id ORDER BY o.created_at DESC');
+        $this->db->query('SELECT o.*, s.title as service_title, CASE WHEN r.id IS NOT NULL THEN 1 ELSE 0 END as has_reviewed FROM orders o JOIN services s ON o.service_id = s.id LEFT JOIN reviews r ON o.id = r.order_id WHERE o.buyer_id = :buyer_id ORDER BY o.created_at DESC');
         $this->db->bind(':buyer_id', $buyer_id);
         return $this->db->resultSet();
     }
 
     // 根据卖家ID获取订单
     public function getOrdersBySellerId($seller_id){
-        $this->db->query('SELECT o.*, s.title as service_title FROM orders o JOIN services s ON o.service_id = s.id WHERE o.seller_id = :seller_id ORDER BY o.created_at DESC');
+        $this->db->query('SELECT o.*, s.title as service_title, CASE WHEN r.id IS NOT NULL THEN 1 ELSE 0 END as has_reviewed FROM orders o JOIN services s ON o.service_id = s.id LEFT JOIN reviews r ON o.id = r.order_id WHERE o.seller_id = :seller_id ORDER BY o.created_at DESC');
         $this->db->bind(':seller_id', $seller_id);
         return $this->db->resultSet();
     }
