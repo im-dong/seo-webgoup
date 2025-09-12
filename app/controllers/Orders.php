@@ -66,6 +66,8 @@ class Orders extends Controller {
         $order_id = $this->orderModel->createOrder($data);
 
         if($order_id){
+            // 创建服务快照
+            $this->orderModel->createServiceSnapshot($order_id, $service);
             echo json_encode(['orderID' => $order_id]);
         } else {
             echo json_encode(['error' => 'Failed to create order']);
@@ -138,5 +140,27 @@ class Orders extends Controller {
         } else {
             header('location: ' . URLROOT . '/users/dashboard');
         }
+    }
+
+    public function details($order_id){
+        $order = $this->orderModel->getOrderById($order_id);
+        $snapshot = $this->orderModel->getSnapshotByOrderId($order_id);
+        $this->conversationModel = $this->model('Conversation');
+        $conversation = $this->conversationModel->getConversationByOrderId($order_id);
+
+        // Authorization check
+        if(!$order || ($order->buyer_id != $_SESSION['user_id'] && $order->seller_id != $_SESSION['user_id'])){
+            flash('order_message', 'You are not authorized to view this page.', 'alert alert-danger');
+            header('location: ' . URLROOT . '/users/dashboard');
+            exit();
+        }
+
+        $data = [
+            'order' => $order,
+            'snapshot' => $snapshot,
+            'conversation' => $conversation
+        ];
+
+        $this->view('orders/details', $data);
     }
 }

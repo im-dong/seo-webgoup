@@ -86,4 +86,11 @@ class Conversations extends Controller {
             exit();
         }
     }
+
+    // API: 获取新消息
+    public function getMessages($conversation_id, $last_message_id = 0){
+        header('Content-Type: application/json');
+        $messages = $this->conversationModel->getMessagesAfter($conversation_id, $last_message_id);
+        echo json_encode($messages);
+    }
 }

@@ -4,9 +4,17 @@
     <?php flash('conversation_message'); ?>
     <a href="<?php echo URLROOT; ?>/conversations" class="btn btn-light mb-3"><i class="fa fa-backward"></i> Back to Conversations</a>
 
-    <h2>Conversation for Order #<?php echo htmlspecialchars($data['conversation']->order_id); ?></h2>
-    <p>Service: <?php echo htmlspecialchars($data['conversation']->service_title); ?></p>
-    <p>Participants: <?php echo htmlspecialchars($data['conversation']->buyer_username); ?> (Buyer) & <?php echo htmlspecialchars($data['conversation']->seller_username); ?> (Seller)</p>
+    <div class="card mb-3">
+        <div class="card-header">Service Details</div>
+        <div class="card-body d-flex">
+            <img src="<?php echo URLROOT . htmlspecialchars($data['conversation']->service_thumbnail); ?>" alt="Service Thumbnail" class="img-thumbnail me-3" style="width: 100px; height: auto;">
+            <div>
+                <h5><a href="<?php echo URLROOT; ?>/services/show/<?php echo $data['conversation']->service_id; ?>"><?php echo htmlspecialchars($data['conversation']->service_title); ?></a></h5>
+                <p>Order #<?php echo htmlspecialchars($data['conversation']->order_id); ?></p>
+                <p>Participants: <?php echo htmlspecialchars($data['conversation']->buyer_username); ?> (Buyer) & <?php echo htmlspecialchars($data['conversation']->seller_username); ?> (Seller)</p>
+            </div>
+        </div>
+    </div>
 
     <div class="card mb-4">
         <div class="card-header">Messages</div>
@@ -38,5 +46,52 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const messageBox = document.querySelector('.message-box');
+        const conversationId = <?php echo $data['conversation']->id; ?>;
+        let lastMessageId = <?php echo end($data['conversation']->messages)->id ?? 0; ?>;
+
+        function fetchMessages() {
+            fetch(`<?php echo URLROOT; ?>/conversations/getMessages/${conversationId}/${lastMessageId}`)
+                .then(response => response.json())
+                .then(messages => {
+                    if (messages.length > 0) {
+                        messages.forEach(message => {
+                            appendMessage(message);
+                            lastMessageId = message.id;
+                        });
+                        messageBox.scrollTop = messageBox.scrollHeight;
+                    }
+                });
+        }
+
+        function appendMessage(message) {
+            const messageItem = document.createElement('div');
+            const isCurrentUser = message.sender_id == <?php echo $_SESSION['user_id']; ?>;
+            messageItem.className = `message-item mb-2 ${isCurrentUser ? 'text-end' : 'text-start'}`;
+
+            const small = document.createElement('small');
+            small.className = 'text-muted';
+            small.textContent = `${message.sender_username} at ${new Date(message.created_at).toLocaleString()}`;
+
+            const messageBody = document.createElement('div');
+            messageBody.className = `p-2 rounded ${isCurrentUser ? 'bg-primary text-white' : 'bg-light'} d-inline-block`;
+            messageBody.innerHTML = message.message_text.replace(/\n/g, '<br>');
+
+            messageItem.appendChild(small);
+            messageItem.appendChild(document.createElement('br'));
+            messageItem.appendChild(messageBody);
+            messageBox.appendChild(messageItem);
+        }
+
+        // Scroll to bottom initially
+        messageBox.scrollTop = messageBox.scrollHeight;
+
+        // Fetch new messages every 3 seconds
+        setInterval(fetchMessages, 3000);
+    });
+</script>
 
 <?php require APPROOT . '/views/layouts/footer.php'; ?>

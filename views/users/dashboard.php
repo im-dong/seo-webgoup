@@ -56,7 +56,11 @@
                                     <?php if(($order->status == 'paid' || $order->status == 'completed' || $order->status == 'confirmed' || $order->status == 'released') && !$order->has_reviewed): ?>
                                         <a href="<?php echo URLROOT; ?>/reviews/add/<?php echo $order->id; ?>" class="btn btn-sm btn-warning">Review</a>
                                     <?php endif; ?>
-                                    <a href="<?php echo URLROOT; ?>/conversations/start/<?php echo $order->id; ?>" class="btn btn-sm btn-primary">View</a>
+                                    <?php if($order->status == 'inquiry'): ?>
+                                        <a href="<?php echo URLROOT; ?>/conversations/start/<?php echo $order->id; ?>" class="btn btn-sm btn-primary">View</a>
+                                    <?php else: ?>
+                                        <a href="<?php echo URLROOT; ?>/orders/details/<?php echo $order->id; ?>" class="btn btn-sm btn-info">View Details</a>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -89,7 +93,11 @@
                                     <?php if(($order->status == 'paid' || $order->status == 'completed' || $order->status == 'confirmed' || $order->status == 'released') && !$order->has_reviewed): ?>
                                         <a href="<?php echo URLROOT; ?>/reviews/add/<?php echo $order->id; ?>" class="btn btn-sm btn-warning">Review</a>
                                     <?php endif; ?>
-                                    <a href="<?php echo URLROOT; ?>/conversations/start/<?php echo $order->id; ?>" class="btn btn-sm btn-primary">View</a>
+                                    <?php if($order->status == 'inquiry'): ?>
+                                        <a href="<?php echo URLROOT; ?>/conversations/start/<?php echo $order->id; ?>" class="btn btn-sm btn-primary">View</a>
+                                    <?php else: ?>
+                                        <a href="<?php echo URLROOT; ?>/orders/details/<?php echo $order->id; ?>" class="btn btn-sm btn-info">View Details</a>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

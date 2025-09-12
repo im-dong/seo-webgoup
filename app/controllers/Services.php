@@ -43,6 +43,7 @@ class Services extends Controller {
             $data = [
                 'title' => trim($_POST['title']),
                 'description' => trim($_POST['description']),
+                'thumbnail_url' => '', // 默认设为空
                 'site_url' => trim($_POST['site_url']),
                 'price' => trim($_POST['price']),
                 'delivery_time' => trim($_POST['delivery_time']),
@@ -54,12 +55,39 @@ class Services extends Controller {
                 'user_id' => $_SESSION['user_id'],
                 'title_err' => '',
                 'description_err' => '',
+                'thumbnail_err' => '',
                 'site_url_err' => '',
                 'price_err' => '',
                 'delivery_time_err' => '',
                 'duration_err' => '',
                 'terms_err' => ''
             ];
+
+            // 处理缩略图上传
+            if(isset($_FILES['thumbnail_image']) && $_FILES['thumbnail_image']['error'] == 0){
+                $upload_dir = 'uploads/images/thumbnails/';
+                $file_name = uniqid() . '-' . basename($_FILES['thumbnail_image']['name']);
+                $target_file = $upload_dir . $file_name;
+                $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+
+                // 验证
+                if(getimagesize($_FILES['thumbnail_image']['tmp_name']) === false) {
+                    $data['thumbnail_err'] = 'File is not an image.';
+                } elseif ($_FILES['thumbnail_image']['size'] > 500000) { // 500kb
+                    $data['thumbnail_err'] = 'Sorry, your file is too large.';
+                } elseif($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+                && $imageFileType != "gif" ) {
+                    $data['thumbnail_err'] = 'Sorry, only JPG, JPEG, PNG & GIF files are allowed.';
+                }
+
+                if (empty($data['thumbnail_err'])) {
+                    if (move_uploaded_file($_FILES['thumbnail_image']['tmp_name'], $target_file)) {
+                        $data['thumbnail_url'] = '/' . $target_file;
+                    } else {
+                        $data['thumbnail_err'] = 'Sorry, there was an error uploading your file.';
+                    }
+                }
+            }
 
             // -- 数据验证 --
             if(empty($data['title'])){ $data['title_err'] = 'Please enter a title'; }
@@ -71,7 +99,7 @@ class Services extends Controller {
             if(empty($data['terms'])){ $data['terms_err'] = 'You must agree to the terms'; }
 
             // 检查所有错误是否为空
-            if(empty($data['title_err']) && empty($data['description_err']) && empty($data['site_url_err']) && empty($data['price_err']) && empty($data['delivery_time_err']) && empty($data['duration_err']) && empty($data['terms_err'])){
+            if(empty($data['title_err']) && empty($data['description_err']) && empty($data['thumbnail_err']) && empty($data['site_url_err']) && empty($data['price_err']) && empty($data['delivery_time_err']) && empty($data['duration_err']) && empty($data['terms_err'])){
                 // 验证通过
                 if($this->serviceModel->addService($data)){
                     flash('service_message', 'Your service has been published successfully!');
@@ -86,8 +114,8 @@ class Services extends Controller {
 
         } else {
             $data = [
-                'title' => '', 'description' => '', 'site_url' => '', 'price' => '', 'delivery_time' => '', 'duration' => '', 'terms' => '',
-                'title_err' => '', 'description_err' => '', 'site_url_err' => '', 'price_err' => '', 'delivery_time_err' => '', 'duration_err' => '', 'terms_err' => ''
+                'title' => '', 'description' => '', 'thumbnail_url' => '', 'site_url' => '', 'price' => '', 'delivery_time' => '', 'duration' => '', 'terms' => '',
+                'title_err' => '', 'description_err' => '', 'thumbnail_err' => '', 'site_url_err' => '', 'price_err' => '', 'delivery_time_err' => '', 'duration_err' => '', 'terms_err' => ''
             ];
             $this->view('services/add', $data);
         }

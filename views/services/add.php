@@ -17,6 +17,11 @@
                     <span class="invalid-feedback"><?php echo $data['description_err']; ?></span>
                 </div>
                 <div class="form-group mb-3">
+                    <label for="thumbnail_image">Thumbnail Image:</label>
+                    <input type="file" name="thumbnail_image" class="form-control <?php echo (!empty($data['thumbnail_err'])) ? 'is-invalid' : ''; ?>">
+                    <span class="invalid-feedback"><?php echo $data['thumbnail_err']; ?></span>
+                </div>
+                <div class="form-group mb-3">
                     <label for="site_url">Your Website URL (where the link will be placed): <sup>*</sup></label>
                     <input type="text" name="site_url" class="form-control <?php echo (!empty($data['site_url_err'])) ? 'is-invalid' : ''; ?>" value="<?php echo $data['site_url']; ?>">
                     <span class="invalid-feedback"><?php echo $data['site_url_err']; ?></span>
@@ -73,6 +78,10 @@
                 <input type="submit" class="btn btn-success" value="Publish Service">
             </form>
         </div>
+    </div>
+</div>
+
+<?php require APPROOT . '/views/layouts/footer.php'; ?>   </div>
     </div>
 </div>
 

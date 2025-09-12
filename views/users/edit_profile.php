@@ -22,9 +22,10 @@
                 </div>
 
                 <div class="form-group mb-3">
-                    <label for="profile_image_url">Profile Image URL:</label>
-                    <input type="text" name="profile_image_url" class="form-control form-control-lg <?php echo (!empty($data['profile_image_url_err'])) ? 'is-invalid' : ''; ?>" value="<?php echo $data['profile_image_url']; ?>">
-                    <span class="invalid-feedback"><?php echo $data['profile_image_url_err']; ?></span>
+                    <label for="profile_image">Profile Image:</label>
+                    <input type="file" name="profile_image" class="form-control form-control-lg <?php echo (!empty($data['profile_image_err'])) ? 'is-invalid' : ''; ?>">
+                    <span class="invalid-feedback"><?php echo $data['profile_image_err']; ?></span>
+                    <input type="hidden" name="current_profile_image" value="<?php echo $data['profile_image_url']; ?>">
                 </div>
 
                 <div class="form-group mb-3">
@@ -43,6 +44,11 @@
                     </div>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<?php require APPROOT . '/views/layouts/footer.php'; ?>   </form>
         </div>
     </div>
 </div>

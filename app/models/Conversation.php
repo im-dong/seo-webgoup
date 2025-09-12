@@ -23,7 +23,7 @@ class Conversation {
 
     // 获取单个对话及其所有消息
     public function getConversationById($conversation_id){
-        $this->db->query('SELECT c.*, o.service_id, s.title as service_title, 
+        $this->db->query('SELECT c.*, o.service_id, s.title as service_title, s.thumbnail_url as service_thumbnail, 
                                     buyer.username as buyer_username, seller.username as seller_username
                              FROM conversations c
                              JOIN orders o ON c.order_id = o.id
@@ -78,5 +78,20 @@ class Conversation {
         // 这是一个简化版本，实际可能需要记录每条消息的已读状态
         // 目前只是一个占位符，表示用户已查看
         return true;
+    }
+
+    // 根据订单ID获取对话
+    public function getConversationByOrderId($order_id){
+        $this->db->query('SELECT * FROM conversations WHERE order_id = :order_id');
+        $this->db->bind(':order_id', $order_id);
+        return $this->db->single();
+    }
+
+    // 获取指定ID之后的新消息
+    public function getMessagesAfter($conversation_id, $last_message_id){
+        $this->db->query('SELECT m.*, u.username as sender_username FROM messages m JOIN users u ON m.sender_id = u.id WHERE m.conversation_id = :conversation_id AND m.id > :last_message_id ORDER BY m.created_at ASC');
+        $this->db->bind(':conversation_id', $conversation_id);
+        $this->db->bind(':last_message_id', $last_message_id);
+        return $this->db->resultSet();
     }
 }

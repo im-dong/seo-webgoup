@@ -8,12 +8,13 @@ class Service {
 
     // 添加新服务
     public function addService($data){
-        $this->db->query('INSERT INTO services (user_id, title, description, site_url, price, delivery_time, link_type, is_adult_allowed, is_new_window, duration) VALUES (:user_id, :title, :description, :site_url, :price, :delivery_time, :link_type, :is_adult_allowed, :is_new_window, :duration)');
+        $this->db->query('INSERT INTO services (user_id, title, description, thumbnail_url, site_url, price, delivery_time, link_type, is_adult_allowed, is_new_window, duration) VALUES (:user_id, :title, :description, :thumbnail_url, :site_url, :price, :delivery_time, :link_type, :is_adult_allowed, :is_new_window, :duration)');
         
         // 绑定数据
         $this->db->bind(':user_id', $data['user_id']);
         $this->db->bind(':title', $data['title']);
         $this->db->bind(':description', $data['description']);
+        $this->db->bind(':thumbnail_url', $data['thumbnail_url']);
         $this->db->bind(':site_url', $data['site_url']);
         $this->db->bind(':price', $data['price']);
         $this->db->bind(':delivery_time', $data['delivery_time']);

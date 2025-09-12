@@ -131,25 +131,48 @@ class Users extends Controller {
 
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $_POST = filter_input_array(INPUT_POST, FILTER_UNSAFE_RAW);
+
             $data = [
                 'id' => $_SESSION['user_id'],
                 'bio' => trim($_POST['bio']),
-                'profile_image_url' => trim($_POST['profile_image_url']),
                 'website_url' => trim($_POST['website_url']),
                 'country' => trim($_POST['country']),
-                'profile_image_url_err' => '',
+                'profile_image_url' => trim($_POST['current_profile_image']), // 保留当前图片
+                'profile_image_err' => '',
                 'website_url_err' => ''
             ];
 
-            // Validate URLs
-            if(!empty($data['profile_image_url']) && !filter_var($data['profile_image_url'], FILTER_VALIDATE_URL)){
-                $data['profile_image_url_err'] = 'Please enter a valid image URL.';
+            // 处理文件上传
+            if(isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] == 0){
+                $upload_dir = 'uploads/images/avatars/';
+                $file_name = uniqid() . '-' . basename($_FILES['profile_image']['name']);
+                $target_file = $upload_dir . $file_name;
+                $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+
+                // 验证
+                if(getimagesize($_FILES['profile_image']['tmp_name']) === false) {
+                    $data['profile_image_err'] = 'File is not an image.';
+                } elseif ($_FILES['profile_image']['size'] > 500000) { // 500kb
+                    $data['profile_image_err'] = 'Sorry, your file is too large.';
+                } elseif($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+                && $imageFileType != "gif" ) {
+                    $data['profile_image_err'] = 'Sorry, only JPG, JPEG, PNG & GIF files are allowed.';
+                }
+
+                if (empty($data['profile_image_err'])) {
+                    if (move_uploaded_file($_FILES['profile_image']['tmp_name'], $target_file)) {
+                        $data['profile_image_url'] = '/' . $target_file;
+                    } else {
+                        $data['profile_image_err'] = 'Sorry, there was an error uploading your file.';
+                    }
+                }
             }
+
             if(!empty($data['website_url']) && !filter_var($data['website_url'], FILTER_VALIDATE_URL)){
                 $data['website_url_err'] = 'Please enter a valid website URL.';
             }
 
-            if(empty($data['profile_image_url_err']) && empty($data['website_url_err'])){
+            if(empty($data['profile_image_err']) && empty($data['website_url_err'])){
                 if($this->userModel->updateProfile($data)){
                     flash('profile_message', 'Profile updated successfully.');
                     header('location: ' . URLROOT . '/users/dashboard');
@@ -157,7 +180,6 @@ class Users extends Controller {
                     die('Something went wrong.');
                 }
             } else {
-                // Load view with errors
                 $user = $this->userModel->getUserById($_SESSION['user_id']);
                 $data['username'] = $user->username;
                 $data['email'] = $user->email;
@@ -173,7 +195,7 @@ class Users extends Controller {
                 'profile_image_url' => $user->profile_image_url,
                 'website_url' => $user->website_url,
                 'country' => $user->country,
-                'profile_image_url_err' => '',
+                'profile_image_err' => '',
                 'website_url_err' => ''
             ];
             $this->view('users/edit_profile', $data);

@@ -10,6 +10,7 @@
             <?php foreach($data['services'] as $service): ?>
             <div class="col-md-4 mb-4">
                 <div class="card h-100">
+                    <img src="<?php echo !empty($service->thumbnail_url) ? htmlspecialchars($service->thumbnail_url) : 'https://via.placeholder.com/300x200'; ?>" class="card-img-top" alt="<?php echo htmlspecialchars($service->title); ?>">
                     <div class="card-body">
                         <h5 class="card-title"><?php echo htmlspecialchars($service->title); ?></h5>
                         <h6 class="card-subtitle mb-2 text-muted">$<?php echo htmlspecialchars($service->price); ?></h6>
