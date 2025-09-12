@@ -44,34 +44,116 @@
                 <?php if(empty($data['seller_reviews'])): ?>
                     <p class="text-muted">No reviews as a seller yet.</p>
                 <?php else: ?>
-                    <?php foreach($data['seller_reviews'] as $review): ?>
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Rating: <?php echo htmlspecialchars($review->rating); ?> / 5</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">By <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $review->reviewer_id; ?>"><?php echo htmlspecialchars($review->reviewer_username); ?></a> on <?php echo date('Y-m-d', strtotime($review->created_at)); ?></h6>
-                                <p class="card-text"><?php echo nl2br(htmlspecialchars($review->comment)); ?></p>
+                    <div class="review-list-seller">
+                        <?php foreach(array_slice($data['seller_reviews'], 0, 5) as $review): ?>
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">Rating: <?php echo htmlspecialchars($review->rating); ?> / 5</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">By <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $review->reviewer_id; ?>"><?php echo htmlspecialchars($review->reviewer_username); ?></a> on <?php echo date('Y-m-d', strtotime($review->created_at)); ?></h6>
+                                    <p class="card-text"><?php echo nl2br(htmlspecialchars($review->comment)); ?></p>
+                                </div>
                             </div>
-                        </div>
-                    <?php endforeach; ?>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php if(count($data['seller_reviews']) > 5): ?>
+                        <button class="btn btn-outline-primary btn-sm" id="show-more-seller">Show more</button>
+                    <?php endif; ?>
                 <?php endif; ?>
 
                 <h4 class="mt-4">Reviews as Buyer:</h4>
                 <?php if(empty($data['buyer_reviews'])): ?>
                     <p class="text-muted">No reviews as a buyer yet.</p>
                 <?php else: ?>
-                    <?php foreach($data['buyer_reviews'] as $review): ?>
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Rating: <?php echo htmlspecialchars($review->rating); ?> / 5</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">For <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $review->seller_id; ?>"><?php echo htmlspecialchars($review->seller_username); ?></a> on <?php echo date('Y-m-d', strtotime($review->created_at)); ?></h6>
-                                <p class="card-text"><?php echo nl2br(htmlspecialchars($review->comment)); ?></p>
+                    <div class="review-list-buyer">
+                        <?php foreach(array_slice($data['buyer_reviews'], 0, 5) as $review): ?>
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">Rating: <?php echo htmlspecialchars($review->rating); ?> / 5</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">For <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $review->seller_id; ?>"><?php echo htmlspecialchars($review->seller_username); ?></a> on <?php echo date('Y-m-d', strtotime($review->created_at)); ?></h6>
+                                    <p class="card-text"><?php echo nl2br(htmlspecialchars($review->comment)); ?></p>
+                                </div>
                             </div>
-                        </div>
-                    <?php endforeach; ?>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php if(count($data['buyer_reviews']) > 5): ?>
+                        <button class="btn btn-outline-primary btn-sm" id="show-more-buyer">Show more</button>
+                    <?php endif; ?>
                 <?php endif; ?>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sellerReviews = <?php echo json_encode($data['seller_reviews']); ?>;
+    const buyerReviews = <?php echo json_encode($data['buyer_reviews']); ?>;
+    const sellerReviewList = document.querySelector('.review-list-seller');
+    const buyerReviewList = document.querySelector('.review-list-buyer');
+    const showMoreSellerBtn = document.getElementById('show-more-seller');
+    const showMoreBuyerBtn = document.getElementById('show-more-buyer');
+    let sellerOffset = 5;
+    let buyerOffset = 5;
+
+    if (showMoreSellerBtn) {
+        showMoreSellerBtn.addEventListener('click', function() {
+            const reviewsToShow = sellerReviews.slice(sellerOffset, sellerOffset + 5);
+            reviewsToShow.forEach(review => {
+                const reviewCard = createReviewCard(review, 'seller');
+                sellerReviewList.appendChild(reviewCard);
+            });
+            sellerOffset += 5;
+            if (sellerOffset >= sellerReviews.length) {
+                showMoreSellerBtn.style.display = 'none';
+            }
+        });
+    }
+
+    if (showMoreBuyerBtn) {
+        showMoreBuyerBtn.addEventListener('click', function() {
+            const reviewsToShow = buyerReviews.slice(buyerOffset, buyerOffset + 5);
+            reviewsToShow.forEach(review => {
+                const reviewCard = createReviewCard(review, 'buyer');
+                buyerReviewList.appendChild(reviewCard);
+            });
+            buyerOffset += 5;
+            if (buyerOffset >= buyerReviews.length) {
+                showMoreBuyerBtn.style.display = 'none';
+            }
+        });
+    }
+
+    function createReviewCard(review, type) {
+        const card = document.createElement('div');
+        card.className = 'card mb-3';
+
+        const cardBody = document.createElement('div');
+        cardBody.className = 'card-body';
+
+        const rating = document.createElement('h5');
+        rating.className = 'card-title';
+        rating.textContent = `Rating: ${review.rating} / 5`;
+
+        const subtitle = document.createElement('h6');
+        subtitle.className = 'card-subtitle mb-2 text-muted';
+        if (type === 'seller') {
+            subtitle.innerHTML = `By <a href="<?php echo URLROOT; ?>/users/profile/${review.reviewer_id}">${review.reviewer_username}</a> on ${new Date(review.created_at).toLocaleDateString()}`;
+        } else {
+            subtitle.innerHTML = `For <a href="<?php echo URLROOT; ?>/users/profile/${review.seller_id}">${review.seller_username}</a> on ${new Date(review.created_at).toLocaleDateString()}`;
+        }
+
+        const comment = document.createElement('p');
+        comment.className = 'card-text';
+        comment.innerHTML = review.comment.replace(/\n/g, '<br>');
+
+        cardBody.appendChild(rating);
+        cardBody.appendChild(subtitle);
+        cardBody.appendChild(comment);
+        card.appendChild(cardBody);
+
+        return card;
+    }
+});
+</script>
 
 <?php require APPROOT . '/views/layouts/footer.php'; ?>

@@ -29,9 +29,10 @@ class Review {
     }
 
     // 获取卖家的所有评价
-    public function getReviewsBySellerId($seller_id){
-        $this->db->query('SELECT r.*, u.username as reviewer_username FROM reviews r JOIN users u ON r.reviewer_id = u.id WHERE r.seller_id = :seller_id ORDER BY r.created_at DESC');
+    public function getReviewsBySellerId($seller_id, $limit = 200){
+        $this->db->query('SELECT r.*, u.username as reviewer_username FROM reviews r JOIN users u ON r.reviewer_id = u.id WHERE r.seller_id = :seller_id ORDER BY r.created_at DESC LIMIT :limit');
         $this->db->bind(':seller_id', $seller_id);
+        $this->db->bind(':limit', $limit, PDO::PARAM_INT);
         return $this->db->resultSet();
     }
 
@@ -44,9 +45,10 @@ class Review {
     }
 
     // 获取买家的所有评价
-    public function getReviewsByReviewerId($reviewer_id){
-        $this->db->query('SELECT r.*, u.username as seller_username FROM reviews r JOIN users u ON r.seller_id = u.id WHERE r.reviewer_id = :reviewer_id ORDER BY r.created_at DESC');
+    public function getReviewsByReviewerId($reviewer_id, $limit = 200){
+        $this->db->query('SELECT r.*, u.username as seller_username FROM reviews r JOIN users u ON r.seller_id = u.id WHERE r.reviewer_id = :reviewer_id ORDER BY r.created_at DESC LIMIT :limit');
         $this->db->bind(':reviewer_id', $reviewer_id);
+        $this->db->bind(':limit', $limit, PDO::PARAM_INT);
         return $this->db->resultSet();
     }
 }
