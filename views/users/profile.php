@@ -40,15 +40,30 @@
                     <?php endif; ?>
                 <?php endif; ?>
 
-                <h4 class="mt-4">Reviews:</h4>
-                <?php if(empty($data['reviews'])): ?>
-                    <p class="text-muted">No reviews yet.</p>
+                <h4 class="mt-4">Reviews as Seller:</h4>
+                <?php if(empty($data['seller_reviews'])): ?>
+                    <p class="text-muted">No reviews as a seller yet.</p>
                 <?php else: ?>
-                    <?php foreach($data['reviews'] as $review): ?>
+                    <?php foreach($data['seller_reviews'] as $review): ?>
                         <div class="card mb-3">
                             <div class="card-body">
                                 <h5 class="card-title">Rating: <?php echo htmlspecialchars($review->rating); ?> / 5</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">By <?php echo htmlspecialchars($review->reviewer_username); ?> on <?php echo date('Y-m-d', strtotime($review->created_at)); ?></h6>
+                                <h6 class="card-subtitle mb-2 text-muted">By <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $review->reviewer_id; ?>"><?php echo htmlspecialchars($review->reviewer_username); ?></a> on <?php echo date('Y-m-d', strtotime($review->created_at)); ?></h6>
+                                <p class="card-text"><?php echo nl2br(htmlspecialchars($review->comment)); ?></p>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+
+                <h4 class="mt-4">Reviews as Buyer:</h4>
+                <?php if(empty($data['buyer_reviews'])): ?>
+                    <p class="text-muted">No reviews as a buyer yet.</p>
+                <?php else: ?>
+                    <?php foreach($data['buyer_reviews'] as $review): ?>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Rating: <?php echo htmlspecialchars($review->rating); ?> / 5</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">For <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $review->seller_id; ?>"><?php echo htmlspecialchars($review->seller_username); ?></a> on <?php echo date('Y-m-d', strtotime($review->created_at)); ?></h6>
                                 <p class="card-text"><?php echo nl2br(htmlspecialchars($review->comment)); ?></p>
                             </div>
                         </div>

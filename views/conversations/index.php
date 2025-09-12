@@ -11,7 +11,14 @@
         <div class="list-group">
             <?php foreach($data['conversations'] as $groupedConversation): ?>
                 <div class="list-group-item">
-                    <h5 class="mb-1">Conversation with <strong><?php echo htmlspecialchars($groupedConversation['other_user_username']); ?></strong></h5>
+                    <h5 class="mb-1">
+                        Conversation with 
+                        <strong>
+                            <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $groupedConversation['other_user_id']; ?>">
+                                <?php echo htmlspecialchars($groupedConversation['other_user_username']); ?>
+                            </a>
+                        </strong>
+                    </h5>
                     <?php foreach($groupedConversation['conversations'] as $conversation): ?>
                         <a href="<?php echo URLROOT; ?>/conversations/show/<?php echo $conversation->id; ?>" class="list-group-item list-group-item-action">
                             <div class="d-flex w-100 justify-content-between">

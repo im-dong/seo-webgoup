@@ -14,10 +14,12 @@
                 <p>
                     Chatting with:
                     <strong>
-                        <?php
-                        $other_user = ($data['conversation']->buyer_id == $_SESSION['user_id']) ? $data['conversation']->seller_username : $data['conversation']->buyer_username;
-                        echo htmlspecialchars($other_user);
-                        ?>
+                        <a href="<?php echo URLROOT; ?>/users/profile/<?php echo ($data['conversation']->buyer_id == $_SESSION['user_id']) ? $data['conversation']->seller_id : $data['conversation']->buyer_id; ?>">
+                            <?php
+                            $other_user = ($data['conversation']->buyer_id == $_SESSION['user_id']) ? $data['conversation']->seller_username : $data['conversation']->buyer_username;
+                            echo htmlspecialchars($other_user);
+                            ?>
+                        </a>
                     </strong>
                 </p>
             </div>

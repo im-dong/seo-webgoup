@@ -218,7 +218,10 @@ class Users extends Controller {
     public function profile($user_id){
         $this->reviewModel = $this->model('Review');
         $user = $this->userModel->getUserById($user_id);
-        $reviews = $this->reviewModel->getReviewsBySellerId($user_id);
+
+        $seller_reviews = $this->reviewModel->getReviewsBySellerId($user_id);
+        $buyer_reviews = $this->reviewModel->getReviewsByReviewerId($user_id);
+
         $average_rating = $this->reviewModel->getAverageRatingBySellerId($user_id);
 
         // 获取一个订单ID用于聊天按钮，如果当前用户是买家或卖家
@@ -234,7 +237,8 @@ class Users extends Controller {
 
         $data = [
             'user' => $user,
-            'reviews' => $reviews,
+            'seller_reviews' => $seller_reviews,
+            'buyer_reviews' => $buyer_reviews,
             'average_rating' => $average_rating,
             'order_id_for_chat' => $order_id_for_chat
         ];

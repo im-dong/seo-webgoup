@@ -7,6 +7,10 @@
 还有一些技术细节
 1.建表 加字段还有读数据什么的你自己直接调用命令行mysql或者你自己写的那个php 用php xxx.php select *....之类的方法去自己搞就行不要我来搞
 2.git 你需要用git 提交的话，备注用中文
+3.我的是nginx不是apache，我已经在nginx加了伪静态规则如下
+location / {
+        try_files $uri $uri/ /index.php?url=$uri&$args;
+    }
 
 
 
@@ -59,3 +63,7 @@
 5.在查看messages的时候并没有更新消息，例如卖家发了消息之后买家看不到，要刷新页面才可以，可以改进吗
 
 1.review功能好像有问题写不了review 当然profile那里也看不了review而且还报错
+
+1。所有能看到用户名字的都加一个点进去看他profile的链接
+2.目前点进去查看会报错Fatal error: Uncaught ArgumentCountError: Too few arguments to function Users::profile(), 0 passed in /Users/dong/project/seo-webgoup/app/core/Core.php on line 43 and exactly 1 expected in /Users/dong/project/seo-webgoup/app/controllers/Users.php:218 Stack trace: #0 /Users/dong/project/seo-webgoup/app/core/Core.php(43): Users->profile() #1 /Users/dong/project/seo-webgoup/app/bootstrap.php(23): Core->__construct() #2 /Users/dong/project/seo-webgoup/public/index.php(3): require_once('/Users/dong/pro...') #3 {main} thrown in /Users/dong/project/seo-webgoup/app/controllers/Users.php on line 218
+3.review分为作为买家的review和作为卖家的review，在profile页也分别显示出来

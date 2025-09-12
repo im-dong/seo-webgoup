@@ -42,4 +42,11 @@ class Review {
         $result = $this->db->single();
         return $result->average_rating ? round($result->average_rating, 2) : 0;
     }
+
+    // 获取买家的所有评价
+    public function getReviewsByReviewerId($reviewer_id){
+        $this->db->query('SELECT r.*, u.username as seller_username FROM reviews r JOIN users u ON r.seller_id = u.id WHERE r.reviewer_id = :reviewer_id ORDER BY r.created_at DESC');
+        $this->db->bind(':reviewer_id', $reviewer_id);
+        return $this->db->resultSet();
+    }
 }

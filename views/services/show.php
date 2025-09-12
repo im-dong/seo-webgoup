@@ -5,7 +5,7 @@
         <div class="col-md-8">
             <h2><?php echo htmlspecialchars($data['service']->title); ?></h2>
             <hr>
-            <p><strong>Sold by:</strong> <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $data['service']->userId; ?>"><?php echo htmlspecialchars($data['service']->username); ?></a></p>
+            <p><strong>Sold by:</strong> <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $data['service']->userId; ?>"><strong><?php echo htmlspecialchars($data['service']->username); ?></strong></a></p>
             <p><strong>Website:</strong> <a href="<?php echo htmlspecialchars($data['service']->site_url); ?>" target="_blank"><?php echo htmlspecialchars($data['service']->site_url); ?></a></p>
             <hr>
             <h4>Service Description</h4>
@@ -16,7 +16,7 @@
                 <div class="card-body">
                     <h2 class="card-title text-center fw-bold text-primary">$<?php echo htmlspecialchars($data['service']->price); ?></h2>
                     <hr>
-                    <p class="text-center"><strong>Sold by:</strong> <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $data['service']->userId; ?>"><?php echo htmlspecialchars($data['service']->username); ?></a></p>
+                    <p class="text-center"><strong>Sold by:</strong> <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $data['service']->userId; ?>"><strong><?php echo htmlspecialchars($data['service']->username); ?></strong></a></p>
                     <hr>
                     <ul class="list-unstyled">
                         <li class="mb-2"><strong>Delivery Time:</strong> <span class="badge bg-primary"><?php echo htmlspecialchars($data['service']->delivery_time); ?> days</span></li>
