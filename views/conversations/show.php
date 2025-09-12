@@ -11,7 +11,15 @@
             <div>
                 <h5><a href="<?php echo URLROOT; ?>/services/show/<?php echo $data['conversation']->service_id; ?>"><?php echo htmlspecialchars($data['conversation']->service_title); ?></a></h5>
                 <p>Order #<?php echo htmlspecialchars($data['conversation']->order_id); ?></p>
-                <p>Participants: <?php echo htmlspecialchars($data['conversation']->buyer_username); ?> (Buyer) & <?php echo htmlspecialchars($data['conversation']->seller_username); ?> (Seller)</p>
+                <p>
+                    Chatting with:
+                    <strong>
+                        <?php
+                        $other_user = ($data['conversation']->buyer_id == $_SESSION['user_id']) ? $data['conversation']->seller_username : $data['conversation']->buyer_username;
+                        echo htmlspecialchars($other_user);
+                        ?>
+                    </strong>
+                </p>
             </div>
         </div>
     </div>
