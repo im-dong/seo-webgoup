@@ -5,7 +5,7 @@
         <div class="card card-body bg-light mt-5">
             <h2>Edit Your Profile</h2>
             <p>Update your public profile information.</p>
-            <form action="<?php echo URLROOT; ?>/users/editProfile" method="post">
+            <form action="<?php echo URLROOT; ?>/users/editProfile" method="post" enctype="multipart/form-data">
                 <div class="form-group mb-3">
                     <label for="username">Username: <sup>*</sup></label>
                     <input type="text" name="username" class="form-control form-control-lg <?php echo (!empty($data['username_err'])) ? 'is-invalid' : ''; ?>" value="<?php echo $data['username']; ?>" disabled>
@@ -23,9 +23,9 @@
 
                 <div class="form-group mb-3">
                     <label for="profile_image">Profile Image:</label>
-                    <input type="file" name="profile_image" class="form-control form-control-lg <?php echo (!empty($data['profile_image_err'])) ? 'is-invalid' : ''; ?>">
+                    <input type="file" name="profile_image" id="profile_image_input" class="form-control form-control-lg <?php echo (!empty($data['profile_image_err'])) ? 'is-invalid' : ''; ?>">
+                    <img id="profile_image_preview" src="<?php echo $data['profile_image_url'] ?? 'https://via.placeholder.com/150'; ?>" alt="Image Preview" class="img-thumbnail mt-2" style="width: 150px; height: auto;">
                     <span class="invalid-feedback"><?php echo $data['profile_image_err']; ?></span>
-                    <input type="hidden" name="current_profile_image" value="<?php echo $data['profile_image_url']; ?>">
                 </div>
 
                 <div class="form-group mb-3">
@@ -48,9 +48,10 @@
     </div>
 </div>
 
-<?php require APPROOT . '/views/layouts/footer.php'; ?>   </form>
-        </div>
-    </div>
-</div>
-
 <?php require APPROOT . '/views/layouts/footer.php'; ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    setupImagePreview('profile_image_input', 'profile_image_preview');
+});
+</script>

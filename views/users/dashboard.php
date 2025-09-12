@@ -5,7 +5,7 @@
     <?php flash('order_message'); ?>
     <p>Welcome, <?php echo $_SESSION['user_name']; ?>! <a href="<?php echo URLROOT; ?>/users/editProfile" class="btn btn-sm btn-outline-secondary">Edit Profile</a></p>
 
-    <div class="card mb-4">
+    <div class="card mb-4 service-card">
         <div class="card-header">My Wallet</div>
         <div class="card-body">
             <div class="row">
@@ -29,13 +29,16 @@
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="sales-tab" data-bs-toggle="tab" data-bs-target="#sales" type="button" role="tab">My Sales</button>
         </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="my-services-tab" data-bs-toggle="tab" data-bs-target="#my-services" type="button" role="tab">My Services</button>
+        </li>
     </ul>
 
     <div class="tab-content" id="myTabContent">
         <!-- Purchases Tab -->
         <div class="tab-pane fade show active" id="purchases" role="tabpanel">
             <div class="table-responsive mt-3">
-                <table class="table table-striped">
+                <table class="table table-striped table-hover">
                     <thead>
                         <tr>
                             <th>Service</th>
@@ -72,7 +75,7 @@
         <!-- Sales Tab -->
         <div class="tab-pane fade" id="sales" role="tabpanel">
             <div class="table-responsive mt-3">
-                <table class="table table-striped">
+                <table class="table table-striped table-hover">
                     <thead>
                         <tr>
                             <th>Service</th>
@@ -98,6 +101,43 @@
                                     <?php else: ?>
                                         <a href="<?php echo URLROOT; ?>/orders/details/<?php echo $order->id; ?>" class="btn btn-sm btn-info">View Details</a>
                                     <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- My Services Tab -->
+        <div class="tab-pane fade" id="my-services" role="tabpanel">
+            <div class="table-responsive mt-3">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Price</th>
+                            <th>Category</th>
+                            <th>Industry</th>
+                            <th>Status</th>
+                            <th>Created At</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach($data['my_services'] as $service): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($service->title); ?></td>
+                                <td>$<?php echo htmlspecialchars($service->price); ?></td>
+                                <td><?php echo ucwords(str_replace('_', ' ', htmlspecialchars($service->service_category))); ?></td>
+                                <td><?php echo htmlspecialchars($service->industry_name); ?></td>
+                                <td><span class="badge bg-info"><?php echo htmlspecialchars($service->status); ?></span></td>
+                                <td><?php echo date('Y-m-d', strtotime($service->created_at)); ?></td>
+                                <td>
+                                    <a href="<?php echo URLROOT; ?>/services/edit/<?php echo $service->serviceId; ?>" class="btn btn-sm btn-warning">Edit</a>
+                                    <form class="d-inline" action="<?php echo URLROOT; ?>/services/delete/<?php echo $service->serviceId; ?>" method="post">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this service?');">Delete</button>
+                                    </form>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

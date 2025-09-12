@@ -3,9 +3,9 @@
 <div class="row">
     <div class="col-md-8 mx-auto">
         <div class="card card-body bg-light mt-5">
-            <h2>Add a New Link Service</h2>
-            <p>Fill out the form to publish your service</p>
-            <form action="<?php echo URLROOT; ?>/services/add" method="post" enctype="multipart/form-data">
+            <h2>Edit Service</h2>
+            <p>Update the form to edit your service</p>
+            <form action="<?php echo URLROOT; ?>/services/edit/<?php echo $data['id']; ?>" method="post" enctype="multipart/form-data">
                 <div class="form-group mb-3">
                     <label for="title">Service Title: <sup>*</sup></label>
                     <input type="text" name="title" class="form-control <?php echo (!empty($data['title_err'])) ? 'is-invalid' : ''; ?>" value="<?php echo $data['title']; ?>">
@@ -17,13 +17,15 @@
                     <span class="invalid-feedback"><?php echo $data['description_err']; ?></span>
                 </div>
                 <div class="form-group mb-3">
-                    <label for="thumbnail_image">Thumbnail Image:</label>
+                    <label for="thumbnail_image">New Thumbnail Image (optional):</label>
                     <input type="file" name="thumbnail_image" id="thumbnail_image_input" class="form-control <?php echo (!empty($data['thumbnail_err'])) ? 'is-invalid' : ''; ?>">
-                    <img id="thumbnail_image_preview" src="<?php echo $data['thumbnail_url'] ?? 'https://via.placeholder.com/300x200'; ?>" alt="Image Preview" class="img-thumbnail mt-2" style="width: 300px; height: 200px; object-fit: cover;">
+                    <p class="mt-2">Current Image:</p>
+                    <img id="thumbnail_image_preview" src="<?php echo URLROOT . $data['thumbnail_url']; ?>" alt="Image Preview" class="img-thumbnail mt-1" style="width: 300px; height: 200px; object-fit: cover;">
+                    <input type="hidden" name="current_thumbnail_url" value="<?php echo $data['thumbnail_url']; ?>">
                     <span class="invalid-feedback"><?php echo $data['thumbnail_err']; ?></span>
                 </div>
                 <div class="form-group mb-3">
-                    <label for="site_url">Your Website URL (where the link will be placed): <sup>*</sup></label>
+                    <label for="site_url">Your Website URL: <sup>*</sup></label>
                     <input type="text" name="site_url" class="form-control <?php echo (!empty($data['site_url_err'])) ? 'is-invalid' : ''; ?>" value="<?php echo $data['site_url']; ?>">
                     <span class="invalid-feedback"><?php echo $data['site_url_err']; ?></span>
                 </div>
@@ -48,8 +50,8 @@
                     <div class="col">
                         <label for="link_type">Link Type: <sup>*</sup></label>
                         <select name="link_type" class="form-select">
-                            <option value="follow">Follow</option>
-                            <option value="nofollow">Nofollow</option>
+                            <option value="follow" <?php echo ($data['link_type'] == 'follow') ? 'selected' : ''; ?>>Follow</option>
+                            <option value="nofollow" <?php echo ($data['link_type'] == 'nofollow') ? 'selected' : ''; ?>>Nofollow</option>
                         </select>
                     </div>
                 </div>
@@ -58,17 +60,17 @@
                     <div class="col-md-6">
                         <label for="service_category">Service Category: <sup>*</sup></label>
                         <select name="service_category" class="form-select <?php echo (!empty($data['service_category_err'])) ? 'is-invalid' : ''; ?>">
-                            <option value="backlink">Backlink</option>
-                            <option value="guest_post">Guest Post</option>
+                            <option value="backlink" <?php echo ($data['service_category'] == 'backlink') ? 'selected' : ''; ?>>Backlink</option>
+                            <option value="guest_post" <?php echo ($data['service_category'] == 'guest_post') ? 'selected' : ''; ?>>Guest Post</option>
                         </select>
                         <span class="invalid-feedback"><?php echo $data['service_category_err']; ?></span>
                     </div>
                     <div class="col-md-6">
                         <label for="industry_id">Industry: <sup>*</sup></label>
                         <select name="industry_id" class="form-select <?php echo (!empty($data['industry_id_err'])) ? 'is-invalid' : ''; ?>">
-                            <option value="" selected disabled>Select an industry</option>
+                            <option value="" disabled>Select an industry</option>
                             <?php foreach($data['industries'] as $industry): ?>
-                                <option value="<?php echo $industry->id; ?>" <?php echo (isset($data['industry_id']) && $data['industry_id'] == $industry->id) ? 'selected' : ''; ?>>
+                                <option value="<?php echo $industry->id; ?>" <?php echo ($data['industry_id'] == $industry->id) ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars($industry->name); ?>
                                 </option>
                             <?php endforeach; ?>
@@ -80,26 +82,19 @@
                     <div class="col">
                         <label for="is_new_window">Open in new window?: <sup>*</sup></label>
                         <select name="is_new_window" class="form-select">
-                            <option value="1">Yes</option>
-                            <option value="0">No</option>
+                            <option value="1" <?php echo ($data['is_new_window'] == 1) ? 'selected' : ''; ?>>Yes</option>
+                            <option value="0" <?php echo ($data['is_new_window'] == 0) ? 'selected' : ''; ?>>No</option>
                         </select>
                     </div>
                     <div class="col">
                         <label for="is_adult_allowed">Allow Adult/Gambling Content?: <sup>*</sup></label>
                         <select name="is_adult_allowed" class="form-select">
-                            <option value="0">No</option>
-                            <option value="1">Yes</option>
+                            <option value="0" <?php echo ($data['is_adult_allowed'] == 0) ? 'selected' : ''; ?>>No</option>
+                            <option value="1" <?php echo ($data['is_adult_allowed'] == 1) ? 'selected' : ''; ?>>Yes</option>
                         </select>
                     </div>
                 </div>
-                <div class="form-check mb-3">
-                    <input class="form-check-input <?php echo (!empty($data['terms_err'])) ? 'is-invalid' : ''; ?>" type="checkbox" name="terms" id="terms">
-                    <label class="form-check-label" for="terms">
-                        I agree to the <a href="#">Terms of Service</a>.
-                    </label>
-                    <div class="invalid-feedback"><?php echo $data['terms_err']; ?></div>
-                </div>
-                <input type="submit" class="btn btn-success" value="Publish Service">
+                <input type="submit" class="btn btn-success" value="Update Service">
             </form>
         </div>
     </div>

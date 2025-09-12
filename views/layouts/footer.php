@@ -5,7 +5,7 @@
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <!-- Custom JS -->
-<script src="<?php echo URLROOT; ?>/js/main.js"></script>
+<script src="<?php echo URLROOT; ?>/js/main.js?v=1.1"></script>
 
 <!-- Toast Initializer -->
 <script>

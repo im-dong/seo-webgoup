@@ -9,7 +9,7 @@
             <p><strong>Website:</strong> <a href="<?php echo htmlspecialchars($data['service']->site_url); ?>" target="_blank"><?php echo htmlspecialchars($data['service']->site_url); ?></a></p>
             <hr>
             <h4>Service Description</h4>
-            <p><?php echo nl2br(htmlspecialchars($data['service']->description)); ?></p>
+            <p class="service-description"><?php echo nl2br(htmlspecialchars($data['service']->description)); ?></p>
         </div>
         <div class="col-md-4">
             <div class="card">
@@ -20,6 +20,10 @@
                         <li class="mb-2"><strong>Delivery Time:</strong> <?php echo htmlspecialchars($data['service']->delivery_time); ?> days</li>
                         <li class="mb-2"><strong>Link Duration:</strong> <?php echo htmlspecialchars($data['service']->duration); ?> days</li>
                         <li class="mb-2"><strong>Link Type:</strong> <span class="badge bg-<?php echo ($data['service']->link_type == 'follow') ? 'primary' : 'secondary'; ?>"><?php echo htmlspecialchars($data['service']->link_type); ?></span></li>
+                        <li class="mb-2"><strong>Category:</strong> <span class="badge bg-info"><?php echo ucwords(str_replace('_', ' ', htmlspecialchars($data['service']->service_category))); ?></span></li>
+                        <?php if(!empty($data['service']->industry_name)): ?>
+                            <li class="mb-2"><strong>Industry:</strong> <span class="badge bg-secondary"><?php echo htmlspecialchars($data['service']->industry_name); ?></span></li>
+                        <?php endif; ?>
                         <li class="mb-2"><strong>New Window:</strong> <?php echo ($data['service']->is_new_window) ? 'Yes' : 'No'; ?></li>
                         <li class="mb-2"><strong>Adult Content:</strong> <?php echo ($data['service']->is_adult_allowed) ? 'Allowed' : 'Not Allowed'; ?></li>
                     </ul>

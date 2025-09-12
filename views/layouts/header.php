@@ -19,30 +19,31 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <?php $current_uri = $_SERVER['REQUEST_URI']; ?>
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" href="<?php echo URLROOT; ?>">Home</a>
+          <a class="nav-link <?php echo ($current_uri === '/' || $current_uri === '/index.php') ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="<?php echo URLROOT; ?>/official">Our Services</a>
+          <a class="nav-link <?php echo (strpos($current_uri, '/official') !== false) ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>/official">Our Services</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="<?php echo URLROOT; ?>/services">Marketplace</a>
+          <a class="nav-link <?php echo (strpos($current_uri, '/services') !== false && strpos($current_uri, '/services/add') === false) ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>/services">Marketplace</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="<?php echo URLROOT; ?>/pages/about">About</a>
+          <a class="nav-link <?php echo (strpos($current_uri, '/pages/about') !== false) ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>/pages/about">About</a>
         </li>
       </ul>
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <?php if(isset($_SESSION['user_id'])) : ?>
           <li class="nav-item">
-            <a class="nav-link" href="<?php echo URLROOT; ?>/conversations">Messages</a>
+            <a class="nav-link <?php echo (strpos($current_uri, '/conversations') !== false) ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>/conversations">Messages</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="<?php echo URLROOT; ?>/users/dashboard">Dashboard</a>
+            <a class="nav-link <?php echo (strpos($current_uri, '/users/dashboard') !== false) ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>/users/dashboard">Dashboard</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="<?php echo URLROOT; ?>/services/add">Add Service</a>
+            <a class="nav-link <?php echo (strpos($current_uri, '/services/add') !== false) ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>/services/add">Add Service</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Welcome <?php echo $_SESSION['user_name']; ?></a>
@@ -52,10 +53,10 @@
           </li>
         <?php else : ?>
           <li class="nav-item">
-            <a class="nav-link" href="<?php echo URLROOT; ?>/users/register">Register</a>
+            <a class="nav-link <?php echo (strpos($current_uri, '/users/register') !== false) ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>/users/register">Register</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="<?php echo URLROOT; ?>/users/login">Login</a>
+            <a class="nav-link <?php echo (strpos($current_uri, '/users/login') !== false) ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>/users/login">Login</a>
           </li>
         <?php endif; ?>
       </ul>

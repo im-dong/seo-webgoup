@@ -101,6 +101,7 @@ class Users extends Controller {
         $this->orderModel = $this->model('Order');
         $this->walletModel = $this->model('Wallet');
         $this->reviewModel = $this->model('Review'); // 加载Review模型
+        $this->serviceModel = $this->model('Service'); // 加载Service模型
 
         $buyer_orders = $this->orderModel->getOrdersByBuyerId($_SESSION['user_id']);
         foreach($buyer_orders as $order){
@@ -113,11 +114,13 @@ class Users extends Controller {
         }
         
         $wallet = $this->walletModel->getWalletByUserId($_SESSION['user_id']);
+        $my_services = $this->serviceModel->getServicesByUserId($_SESSION['user_id']);
 
         $data = [
             'buyer_orders' => $buyer_orders,
             'seller_orders' => $seller_orders,
-            'wallet' => $wallet
+            'wallet' => $wallet,
+            'my_services' => $my_services
         ];
 
         $this->view('users/dashboard', $data);
@@ -134,22 +137,29 @@ class Users extends Controller {
 
             $data = [
                 'id' => $_SESSION['user_id'],
-                'bio' => trim($_POST['bio']),
-                'website_url' => trim($_POST['website_url']),
-                'country' => trim($_POST['country']),
-                'profile_image_url' => trim($_POST['current_profile_image']), // 保留当前图片
                 'profile_image_err' => '',
                 'website_url_err' => ''
             ];
 
-            // 处理文件上传
+            // Only add fields to data if they are submitted
+            if(isset($_POST['bio'])){
+                $data['bio'] = trim($_POST['bio']);
+            }
+            if(isset($_POST['website_url'])){
+                $data['website_url'] = trim($_POST['website_url']);
+            }
+            if(isset($_POST['country'])){
+                $data['country'] = trim($_POST['country']);
+            }
+
+            // Handle file upload
             if(isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] == 0){
                 $upload_dir = 'uploads/images/avatars/';
                 $file_name = uniqid() . '-' . basename($_FILES['profile_image']['name']);
                 $target_file = $upload_dir . $file_name;
                 $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 
-                // 验证
+                // Validation
                 if(getimagesize($_FILES['profile_image']['tmp_name']) === false) {
                     $data['profile_image_err'] = 'File is not an image.';
                 } elseif ($_FILES['profile_image']['size'] > 500000) { // 500kb
@@ -173,6 +183,9 @@ class Users extends Controller {
             }
 
             if(empty($data['profile_image_err']) && empty($data['website_url_err'])){
+                unset($data['profile_image_err']);
+                unset($data['website_url_err']);
+
                 if($this->userModel->updateProfile($data)){
                     flash('profile_message', 'Profile updated successfully.');
                     header('location: ' . URLROOT . '/users/dashboard');
