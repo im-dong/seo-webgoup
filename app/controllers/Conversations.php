@@ -16,7 +16,7 @@ class Conversations extends Controller {
 
     // 显示用户的所有对话列表
     public function index(){
-        $conversations = $this->conversationModel->getConversationsByUserId($_SESSION['user_id']);
+        $conversations = $this->conversationModel->getGroupedConversationsByUserId($_SESSION['user_id']);
         $data = [
             'conversations' => $conversations
         ];

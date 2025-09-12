@@ -94,4 +94,24 @@ class Conversation {
         $this->db->bind(':last_message_id', $last_message_id);
         return $this->db->resultSet();
     }
+
+    // 获取用户的所有对话并按对方用户分组
+    public function getGroupedConversationsByUserId($user_id){
+        $conversations = $this->getConversationsByUserId($user_id);
+        $groupedConversations = [];
+        foreach ($conversations as $conversation) {
+            $other_user_id = ($conversation->buyer_id == $user_id) ? $conversation->seller_id : $conversation->buyer_id;
+            $other_user_username = ($conversation->buyer_id == $user_id) ? $conversation->seller_username : $conversation->buyer_username;
+
+            if (!isset($groupedConversations[$other_user_id])) {
+                $groupedConversations[$other_user_id] = [
+                    'other_user_id' => $other_user_id,
+                    'other_user_username' => $other_user_username,
+                    'conversations' => []
+                ];
+            }
+            $groupedConversations[$other_user_id]['conversations'][] = $conversation;
+        }
+        return $groupedConversations;
+    }
 }

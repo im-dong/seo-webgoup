@@ -41,7 +41,7 @@
     </div>
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
         © 2025 webGoup:
-        <a class="text-white" href="<?php echo URLROOT; ?>">webGoup.com</a>
+        <a class="text-white" href="https://www.webgoup.com">webGoup.com</a>
     </div>
 </footer>
 
