@@ -8,7 +8,7 @@ class Service {
 
     // 添加新服务
     public function addService($data){
-        $this->db->query('INSERT INTO services (user_id, title, description, thumbnail_url, site_url, price, delivery_time, link_type, service_category, industry_id, is_adult_allowed, is_new_window, duration) VALUES (:user_id, :title, :description, :thumbnail_url, :site_url, :price, :delivery_time, :link_type, :service_category, :industry_id, :is_adult_allowed, :is_new_window, :duration)');
+        $this->db->query('INSERT INTO services (user_id, title, description, thumbnail_url, site_url, price, delivery_time, link_type, service_category, industry_id, is_adult_allowed, is_new_window, duration, is_official) VALUES (:user_id, :title, :description, :thumbnail_url, :site_url, :price, :delivery_time, :link_type, :service_category, :industry_id, :is_adult_allowed, :is_new_window, :duration, :is_official)');
         
         // 绑定数据
         $this->db->bind(':user_id', $data['user_id']);
@@ -24,6 +24,7 @@ class Service {
         $this->db->bind(':is_adult_allowed', $data['is_adult_allowed']);
         $this->db->bind(':is_new_window', $data['is_new_window']);
         $this->db->bind(':duration', $data['duration']);
+        $this->db->bind(':is_official', $data['is_official']);
 
         // 执行
         if($this->db->execute()){
@@ -110,7 +111,7 @@ class Service {
     }
 
     public function updateService($data){
-        $this->db->query('UPDATE services SET title = :title, description = :description, thumbnail_url = :thumbnail_url, site_url = :site_url, price = :price, delivery_time = :delivery_time, link_type = :link_type, service_category = :service_category, industry_id = :industry_id, is_adult_allowed = :is_adult_allowed, is_new_window = :is_new_window, duration = :duration WHERE id = :id');
+        $this->db->query('UPDATE services SET title = :title, description = :description, thumbnail_url = :thumbnail_url, site_url = :site_url, price = :price, delivery_time = :delivery_time, link_type = :link_type, service_category = :service_category, industry_id = :industry_id, is_adult_allowed = :is_adult_allowed, is_new_window = :is_new_window, duration = :duration, is_official = :is_official WHERE id = :id');
         
         $this->db->bind(':id', $data['id']);
         $this->db->bind(':title', $data['title']);
@@ -125,6 +126,7 @@ class Service {
         $this->db->bind(':is_adult_allowed', $data['is_adult_allowed']);
         $this->db->bind(':is_new_window', $data['is_new_window']);
         $this->db->bind(':duration', $data['duration']);
+        $this->db->bind(':is_official', $data['is_official']);
 
         if($this->db->execute()){
             return true;

@@ -19,3 +19,6 @@ define('URLROOT', 'http://webgoup'); // 请根据您的实际URL修改
 // 网站名称
 // Site Name
 define('SITENAME', 'WebGoup');
+
+// Platform Fee
+define('PLATFORM_FEE_PERCENTAGE', 30);

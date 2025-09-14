@@ -85,7 +85,7 @@ class Orders extends Controller {
         if($this->orderModel->captureOrder($order_id, $paypal_order_id)){
             // 将资金添加到卖家的总余额中
             $this->walletModel = $this->model('Wallet');
-            $this->walletModel->addFundsToTotalBalance($service->user_id, $service->price);
+            $this->walletModel->addFundsToTotalBalance($service->user_id, $service->price, $order_id);
 
             echo json_encode(['status' => 'success']);
         } else {

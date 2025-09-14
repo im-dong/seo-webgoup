@@ -69,7 +69,7 @@ class Services extends Controller {
                 'seo_description' => 'Offer your own SEO services to the community. Create a listing and start earning.',
                 'seo_keywords' => 'add service, sell SEO services, offer services',
                 'title' => trim($_POST['title']),
-                'description' => trim($_POST['description']),
+                'description' => $this->_sanitize_html($_POST['description']),
                 'thumbnail_url' => '', // 默认设为空
                 'site_url' => trim($_POST['site_url']),
                 'price' => trim($_POST['price']),
@@ -81,6 +81,7 @@ class Services extends Controller {
                 'is_new_window' => $_POST['is_new_window'],
                 'duration' => trim($_POST['duration']),
                 'terms' => isset($_POST['terms']) ? 'on' : '',
+                'is_official' => isset($_POST['is_official']) && $_SESSION['user_role'] == 'admin' ? 1 : 0,
                 'user_id' => $_SESSION['user_id'],
                 'industries' => $this->industryModel->getIndustries(),
                 'title_err' => '',
@@ -145,7 +146,7 @@ class Services extends Controller {
                 'seo_keywords' => 'edit service, update service, manage service',
                 'id' => $id,
                 'title' => trim($_POST['title']),
-                'description' => trim($_POST['description']),
+                'description' => $this->_sanitize_html($_POST['description']),
                 'thumbnail_url' => trim($_POST['current_thumbnail_url']),
                 'site_url' => trim($_POST['site_url']),
                 'price' => trim($_POST['price']),
@@ -156,6 +157,7 @@ class Services extends Controller {
                 'is_adult_allowed' => $_POST['is_adult_allowed'],
                 'is_new_window' => $_POST['is_new_window'],
                 'duration' => trim($_POST['duration']),
+                'is_official' => isset($_POST['is_official']) && $_SESSION['user_role'] == 'admin' ? 1 : 0,
                 'industries' => $this->industryModel->getIndustries(),
                 'title_err' => '',
                 'description_err' => '',
@@ -185,9 +187,10 @@ class Services extends Controller {
                 // 验证通过
                 if($this->serviceModel->updateService($data)){
                     flash('service_message', 'Service updated successfully!');
-                    header('location: ' . URLROOT . '/users/dashboard');
+                    header('location: ' . URLROOT . '/services/edit/' . $id);
                 } else {
-                    die('Something went wrong');
+                    flash('service_message', 'Something went wrong. Please try again.', 'alert alert-danger');
+                    header('location: ' . URLROOT . '/services/edit/' . $id);
                 }
             } else {
                 // 加载带有错误的视图
@@ -222,6 +225,7 @@ class Services extends Controller {
                 'is_adult_allowed' => $service->is_adult_allowed,
                 'is_new_window' => $service->is_new_window,
                 'duration' => $service->duration,
+                'is_official' => $service->is_official,
                 'industries' => $this->industryModel->getIndustries(),
                 'title_err' => '',
                 'description_err' => '',
@@ -238,4 +242,9 @@ class Services extends Controller {
     }
 
     // ... (delete and _process_and_crop_image methods are the same)
+
+    private function _sanitize_html($html) {
+        $allowed_tags = '<p><a><h1><h2><h3><h4><h5><h6><strong><em><u><ul><ol><li><br><img>';
+        return strip_tags($html, $allowed_tags);
+    }
 }

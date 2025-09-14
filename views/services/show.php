@@ -9,7 +9,13 @@
             <p><strong>Website:</strong> <a href="<?php echo htmlspecialchars($data['service']->site_url); ?>" target="_blank"><?php echo htmlspecialchars($data['service']->site_url); ?></a></p>
             <hr>
             <h4>Service Description</h4>
-            <p class="service-description"><?php echo nl2br(htmlspecialchars($data['service']->description)); ?></p>
+            <div class="service-description">
+                <?php if(isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin') : ?>
+                    <?php echo $data['service']->description; // Admin sees rich text ?>
+                <?php else : ?>
+                    <?php echo nl2br(htmlspecialchars(strip_tags($data['service']->description))); // Non-admin sees plain text ?>
+                <?php endif; ?>
+            </div>
         </div>
         <div class="col-md-4">
             <div class="card">

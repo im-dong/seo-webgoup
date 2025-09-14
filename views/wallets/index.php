@@ -7,7 +7,8 @@
             <div class="card">
                 <div class="card-header"><h4>Request Withdrawal</h4></div>
                 <div class="card-body">
-                    <p>Your current withdrawable balance is: <strong class="text-success">$<?php echo number_format($data['wallet']->withdrawable_balance, 2); ?></strong></p>
+                    <p>Total Balance (including funds in escrow): <strong>$<?php echo number_format($data['wallet']->total_balance, 2); ?></strong></p>
+                    <p>Withdrawable Balance: <strong class="text-success">$<?php echo number_format($data['wallet']->withdrawable_balance, 2); ?></strong></p>
                     <hr>
                     <form action="<?php echo URLROOT; ?>/wallets" method="post">
                         <div class="form-group mb-3">
@@ -28,8 +29,9 @@
             </div>
         </div>
         <div class="col-md-6">
-            <h4>Withdrawal History</h4>
-            <p>Coming soon...</p>
+            <h4>Balance History</h4>
+            <p>View your full transaction history to track your earnings and withdrawals.</p>
+            <a href="<?php echo URLROOT; ?>/wallets/transactions" class="btn btn-primary">View Transactions</a>
         </div>
     </div>
 </div>

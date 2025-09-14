@@ -58,4 +58,15 @@ class Wallets extends Controller {
             $this->view('wallets/index', $data);
         }
     }
+
+    public function transactions(){
+        $transactions = $this->walletModel->getTransactionsByUserId($_SESSION['user_id']);
+        $data = [
+            'title' => 'Wallet Transactions',
+            'description' => 'View your wallet transaction history.',
+            'keywords' => 'wallet, transactions, history, earnings',
+            'transactions' => $transactions
+        ];
+        $this->view('wallets/transactions', $data);
+    }
 }

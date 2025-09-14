@@ -61,5 +61,32 @@
     }
 </script>
 
+<script>
+$(document).ready(function() {
+    function fetchUnreadCount() {
+        $.ajax({
+            url: '<?php echo URLROOT; ?>/conversations/unreadCount',
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                const unreadCount = response.unread_count;
+                const messagesLink = $('#messages-link'); // Add an ID to the messages link
+                if (unreadCount > 0) {
+                    messagesLink.html(`Messages <span class="badge bg-danger">${unreadCount}</span>`);
+                } else {
+                    messagesLink.html('Messages');
+                }
+            }
+        });
+    }
+
+    // Fetch count on page load
+    fetchUnreadCount();
+
+    // Fetch count every 30 seconds
+    setInterval(fetchUnreadCount, 30000);
+});
+</script>
+
 </body>
 </html>

@@ -20,9 +20,14 @@
                         </strong>
                     </h5>
                     <?php foreach($groupedConversation['conversations'] as $conversation): ?>
-                        <a href="<?php echo URLROOT; ?>/conversations/show/<?php echo $conversation->id; ?>" class="list-group-item list-group-item-action">
+                        <a href="<?php echo URLROOT; ?>/conversations/show/<?php echo $conversation->id; ?>" class="list-group-item list-group-item-action <?php echo ($conversation->unread_count > 0) ? 'list-group-item-primary' : ''; ?>">
                             <div class="d-flex w-100 justify-content-between">
-                                <p class="mb-1">Order #<?php echo htmlspecialchars($conversation->order_id); ?>: <?php echo htmlspecialchars($conversation->service_title); ?></p>
+                                <p class="mb-1">
+                                    Order #<?php echo htmlspecialchars($conversation->order_id); ?>: <?php echo htmlspecialchars($conversation->service_title); ?>
+                                    <?php if($conversation->unread_count > 0): ?>
+                                        <span class="badge bg-primary rounded-pill"><?php echo $conversation->unread_count; ?></span>
+                                    <?php endif; ?>
+                                </p>
                                 <small><?php echo date('Y-m-d H:i', strtotime($conversation->updated_at)); ?></small>
                             </div>
                         </a>

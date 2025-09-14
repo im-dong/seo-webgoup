@@ -1,6 +1,11 @@
 <?php require APPROOT . '/views/layouts/header.php'; ?>
 
+<?php if(isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin') : ?>
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+<?php endif; ?>
+
 <div class="row">
+    <?php flash('service_message'); ?>
     <div class="col-md-8 mx-auto">
         <div class="card card-body bg-light mt-5">
             <h2>Add a New Link Service</h2>
@@ -13,7 +18,7 @@
                 </div>
                 <div class="form-group mb-3">
                     <label for="description">Service Description: <sup>*</sup></label>
-                    <textarea name="description" class="form-control <?php echo (!empty($data['description_err'])) ? 'is-invalid' : ''; ?>"><?php echo $data['description']; ?></textarea>
+                    <textarea id="description" name="description" class="form-control <?php echo (!empty($data['description_err'])) ? 'is-invalid' : ''; ?>"><?php echo $data['description']; ?></textarea>
                     <span class="invalid-feedback"><?php echo $data['description_err']; ?></span>
                 </div>
                 <div class="form-group mb-3">
@@ -92,6 +97,15 @@
                         </select>
                     </div>
                 </div>
+                <?php if(isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin') : ?>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" name="is_official" id="is_official">
+                    <label class="form-check-label" for="is_official">
+                        Official Service (will appear in Our Services)
+                    </label>
+                </div>
+                <?php endif; ?>
+
                 <div class="form-check mb-3">
                     <input class="form-check-input <?php echo (!empty($data['terms_err'])) ? 'is-invalid' : ''; ?>" type="checkbox" name="terms" id="terms">
                     <label class="form-check-label" for="terms">
@@ -107,8 +121,43 @@
 
 <?php require APPROOT . '/views/layouts/footer.php'; ?>
 
+<?php if(isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin') : ?>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+<script>
+$(document).ready(function() {
+  $('#description').summernote({
+    height: 300
+  });
+});
+</script>
+<?php else: ?>
+<script>
+// Add more rows to the textarea for non-admins
+document.getElementById('description').rows = 10;
+</script>
+<?php endif; ?>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     setupImagePreview('thumbnail_image_input', 'thumbnail_image_preview');
+
+    const form = document.querySelector('form');
+    const inputs = form.querySelectorAll('input, textarea, select');
+
+    inputs.forEach(input => {
+        input.addEventListener('input', function() {
+            // Check if the input has an error
+            if (this.classList.contains('is-invalid')) {
+                // Basic validation: check if the value is not empty
+                if (this.value.trim() !== '') {
+                    this.classList.remove('is-invalid');
+                    const errorSpan = this.nextElementSibling;
+                    if (errorSpan && errorSpan.classList.contains('invalid-feedback')) {
+                        errorSpan.textContent = '';
+                    }
+                }
+            }
+        });
+    });
 });
 </script>

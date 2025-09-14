@@ -9,12 +9,12 @@
             <p class="text-center">No official services are currently available.</p>
         <?php else: ?>
             <?php foreach($data['officialServices'] as $service): ?>
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 official-service-card">
                     <div class="card-body">
                         <h5 class="card-title"><?php echo htmlspecialchars($service->title); ?></h5>
                         <h6 class="card-subtitle mb-2 text-muted">$<?php echo htmlspecialchars($service->price); ?></h6>
-                        <p class="card-text"><?php echo substr(htmlspecialchars($service->description), 0, 100); ?>...</p>
+                        <div class="card-text"><?php echo $service->description; ?></div>
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">Delivery in: <?php echo htmlspecialchars($service->delivery_time); ?> days</li>

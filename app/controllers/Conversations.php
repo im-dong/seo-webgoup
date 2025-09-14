@@ -99,4 +99,11 @@ class Conversations extends Controller {
         $messages = $this->conversationModel->getMessagesAfter($conversation_id, $last_message_id);
         echo json_encode($messages);
     }
+
+    // API: Get unread message count
+    public function unreadCount(){
+        header('Content-Type: application/json');
+        $count = $this->conversationModel->getUnreadMessageCount($_SESSION['user_id']);
+        echo json_encode(['unread_count' => $count]);
+    }
 }

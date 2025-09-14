@@ -75,9 +75,10 @@ class Conversation {
     // 标记对话中的消息为已读 (简化处理：当用户打开对话时，所有消息被视为已读)
     // 实际应用中可能需要更复杂的已读状态，例如每条消息的已读状态
     public function markMessagesAsRead($conversation_id, $user_id){
-        // 这是一个简化版本，实际可能需要记录每条消息的已读状态
-        // 目前只是一个占位符，表示用户已查看
-        return true;
+        $this->db->query('UPDATE messages SET is_read = 1 WHERE conversation_id = :conversation_id AND sender_id != :user_id AND is_read = 0');
+        $this->db->bind(':conversation_id', $conversation_id);
+        $this->db->bind(':user_id', $user_id);
+        return $this->db->execute();
     }
 
     // 根据订单ID获取对话
@@ -110,8 +111,23 @@ class Conversation {
                     'conversations' => []
                 ];
             }
+
+            // Get unread message count for this conversation
+            $this->db->query('SELECT COUNT(*) as unread_count FROM messages WHERE conversation_id = :conversation_id AND sender_id != :user_id AND is_read = 0');
+            $this->db->bind(':conversation_id', $conversation->id);
+            $this->db->bind(':user_id', $user_id);
+            $row = $this->db->single();
+            $conversation->unread_count = $row ? (int)$row->unread_count : 0;
+
             $groupedConversations[$other_user_id]['conversations'][] = $conversation;
         }
         return $groupedConversations;
+    }
+
+    public function getUnreadMessageCount($user_id){
+        $this->db->query('SELECT COUNT(*) as unread_count FROM messages m JOIN conversations c ON m.conversation_id = c.id WHERE (c.buyer_id = :user_id OR c.seller_id = :user_id) AND m.sender_id != :user_id AND m.is_read = 0');
+        $this->db->bind(':user_id', $user_id);
+        $row = $this->db->single();
+        return $row ? (int)$row->unread_count : 0;
     }
 }

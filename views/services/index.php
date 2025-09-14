@@ -40,7 +40,7 @@
                     <div class="card-body">
                         <h5 class="card-title card-title-clamp"><?php echo htmlspecialchars($service->title); ?></h5>
                         <h6 class="card-subtitle mb-2 text-muted">$<?php echo htmlspecialchars($service->price); ?></h6>
-                        <p class="card-text card-text-clamp"><?php echo htmlspecialchars($service->description); ?></p>
+                        <p class="card-text card-text-clamp"><?php echo substr(strip_tags($service->description), 0, 100); ?>...</p>
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">Seller: <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $service->userId; ?>"><?php echo htmlspecialchars($service->username); ?></a></li>
