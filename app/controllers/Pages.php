@@ -6,8 +6,9 @@ class Pages extends Controller {
     
     public function index(){
         $data = [
-            'title' => SITENAME,
-            'description' => 'A platform for SEO services and link exchange. Register and start trading or purchase our official services.'
+            'title' => 'Home',
+            'description' => 'A decentralized platform for SEO services. Join our webGroup to elevate your online presence.',
+            'keywords' => 'SEO, backlinks, link building, search engine optimization, webGoup'
         ];
         $this->view('pages/index', $data);
     }
@@ -15,7 +16,8 @@ class Pages extends Controller {
     public function about(){
         $data = [
             'title' => 'About Us',
-            'description' => 'This is a platform built to facilitate SEO link trading.'
+            'description' => 'Learn about webGoup and our mission to provide a decentralized platform for SEO services.',
+            'keywords' => 'about webGoup, SEO platform, decentralized SEO'
         ];
         $this->view('pages/about', $data);
     }

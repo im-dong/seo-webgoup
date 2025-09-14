@@ -11,6 +11,7 @@
 location / {
         try_files $uri $uri/ /index.php?url=$uri&$args;
     }
+4.跟我的对话用中文,代码里面的注释也是中文
 
 
 
@@ -67,3 +68,13 @@ location / {
 1。所有能看到用户名字的都加一个点进去看他profile的链接
 2.目前点进去查看会报错Fatal error: Uncaught ArgumentCountError: Too few arguments to function Users::profile(), 0 passed in /Users/dong/project/seo-webgoup/app/core/Core.php on line 43 and exactly 1 expected in /Users/dong/project/seo-webgoup/app/controllers/Users.php:218 Stack trace: #0 /Users/dong/project/seo-webgoup/app/core/Core.php(43): Users->profile() #1 /Users/dong/project/seo-webgoup/app/bootstrap.php(23): Core->__construct() #2 /Users/dong/project/seo-webgoup/public/index.php(3): require_once('/Users/dong/pro...') #3 {main} thrown in /Users/dong/project/seo-webgoup/app/controllers/Users.php on line 218
 3.review分为作为买家的review和作为卖家的review，在profile页也分别显示出来
+
+
+
+4.现在显示的还是这样
+Reviews as Seller:
+No reviews as a seller yet.
+
+Reviews as Buyer:
+No reviews as a buyer yet.
+我要的是卡片切换的，就是要么看买家评价要么看作为卖家的评价

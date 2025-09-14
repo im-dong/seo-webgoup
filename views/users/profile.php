@@ -40,45 +40,61 @@
                     <?php endif; ?>
                 <?php endif; ?>
 
-                <h4 class="mt-4">Reviews as Seller:</h4>
-                <?php if(empty($data['seller_reviews'])): ?>
-                    <p class="text-muted">No reviews as a seller yet.</p>
-                <?php else: ?>
-                    <div class="review-list-seller">
-                        <?php foreach(array_slice($data['seller_reviews'], 0, 5) as $review): ?>
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <h5 class="card-title">Rating: <?php echo htmlspecialchars($review->rating); ?> / 5</h5>
-                                    <h6 class="card-subtitle mb-2 text-muted">By <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $review->reviewer_id; ?>"><?php echo htmlspecialchars($review->reviewer_username); ?></a> on <?php echo date('Y-m-d', strtotime($review->created_at)); ?></h6>
-                                    <p class="card-text"><?php echo nl2br(htmlspecialchars($review->comment)); ?></p>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                    <?php if(count($data['seller_reviews']) > 5): ?>
-                        <button class="btn btn-outline-primary btn-sm" id="show-more-seller">Show more</button>
-                    <?php endif; ?>
-                <?php endif; ?>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" id="reviewTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="seller-reviews-tab" data-bs-toggle="tab" data-bs-target="#seller-reviews" type="button" role="tab" aria-controls="seller-reviews" aria-selected="true">Reviews as Seller</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="buyer-reviews-tab" data-bs-toggle="tab" data-bs-target="#buyer-reviews" type="button" role="tab" aria-controls="buyer-reviews" aria-selected="false">Reviews as Buyer</button>
+                    </li>
+                </ul>
 
-                <h4 class="mt-4">Reviews as Buyer:</h4>
-                <?php if(empty($data['buyer_reviews'])): ?>
-                    <p class="text-muted">No reviews as a buyer yet.</p>
-                <?php else: ?>
-                    <div class="review-list-buyer">
-                        <?php foreach(array_slice($data['buyer_reviews'], 0, 5) as $review): ?>
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <h5 class="card-title">Rating: <?php echo htmlspecialchars($review->rating); ?> / 5</h5>
-                                    <h6 class="card-subtitle mb-2 text-muted">For <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $review->seller_id; ?>"><?php echo htmlspecialchars($review->seller_username); ?></a> on <?php echo date('Y-m-d', strtotime($review->created_at)); ?></h6>
-                                    <p class="card-text"><?php echo nl2br(htmlspecialchars($review->comment)); ?></p>
-                                </div>
+                <!-- Tab panes -->
+                <div class="tab-content" id="reviewTabsContent">
+                    <div class="tab-pane fade show active" id="seller-reviews" role="tabpanel" aria-labelledby="seller-reviews-tab">
+                        <h4 class="mt-4">Reviews as Seller:</h4>
+                        <?php if(empty($data['seller_reviews'])): ?>
+                            <p class="text-muted">No reviews as a seller yet.</p>
+                        <?php else: ?>
+                            <div class="review-list-seller">
+                                <?php foreach(array_slice($data['seller_reviews'], 0, 5) as $review): ?>
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Rating: <?php echo htmlspecialchars($review->rating); ?> / 5</h5>
+                                            <h6 class="card-subtitle mb-2 text-muted">By <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $review->reviewer_id; ?>"><?php echo htmlspecialchars($review->reviewer_username); ?></a> on <?php echo date('Y-m-d', strtotime($review->created_at)); ?></h6>
+                                            <p class="card-text"><?php echo nl2br(htmlspecialchars($review->comment)); ?></p>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
                             </div>
-                        <?php endforeach; ?>
+                            <?php if(count($data['seller_reviews']) > 5): ?>
+                                <button class="btn btn-outline-primary btn-sm" id="show-more-seller">Show more</button>
+                            <?php endif; ?>
+                        <?php endif; ?>
                     </div>
-                    <?php if(count($data['buyer_reviews']) > 5): ?>
-                        <button class="btn btn-outline-primary btn-sm" id="show-more-buyer">Show more</button>
-                    <?php endif; ?>
-                <?php endif; ?>
+                    <div class="tab-pane fade" id="buyer-reviews" role="tabpanel" aria-labelledby="buyer-reviews-tab">
+                        <h4 class="mt-4">Reviews as Buyer:</h4>
+                        <?php if(empty($data['buyer_reviews'])): ?>
+                            <p class="text-muted">No reviews as a buyer yet.</p>
+                        <?php else: ?>
+                            <div class="review-list-buyer">
+                                <?php foreach(array_slice($data['buyer_reviews'], 0, 5) as $review): ?>
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Rating: <?php echo htmlspecialchars($review->rating); ?> / 5</h5>
+                                            <h6 class="card-subtitle mb-2 text-muted">For <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $review->seller_id; ?>"><?php echo htmlspecialchars($review->seller_username); ?></a> on <?php echo date('Y-m-d', strtotime($review->created_at)); ?></h6>
+                                            <p class="card-text"><?php echo nl2br(htmlspecialchars($review->comment)); ?></p>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <?php if(count($data['buyer_reviews']) > 5): ?>
+                                <button class="btn btn-outline-primary btn-sm" id="show-more-buyer">Show more</button>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

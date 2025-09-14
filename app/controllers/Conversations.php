@@ -18,6 +18,9 @@ class Conversations extends Controller {
     public function index(){
         $conversations = $this->conversationModel->getGroupedConversationsByUserId($_SESSION['user_id']);
         $data = [
+            'title' => 'Messages',
+            'description' => 'View your conversations with other users.',
+            'keywords' => 'messages, conversations, inbox',
             'conversations' => $conversations
         ];
         $this->view('conversations/index', $data);
@@ -60,6 +63,9 @@ class Conversations extends Controller {
         $this->conversationModel->markMessagesAsRead($conversation_id, $_SESSION['user_id']);
 
         $data = [
+            'title' => 'Conversation',
+            'description' => 'View your conversation with another user.',
+            'keywords' => 'conversation, messages, chat',
             'conversation' => $conversation
         ];
         $this->view('conversations/show', $data);

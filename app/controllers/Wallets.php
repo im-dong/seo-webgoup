@@ -15,6 +15,9 @@ class Wallets extends Controller {
             $wallet = $this->walletModel->getWalletByUserId($_SESSION['user_id']);
 
             $data = [
+                'title' => 'Wallet',
+                'description' => 'Manage your wallet, view your balance, and request withdrawals.',
+                'keywords' => 'wallet, balance, withdrawal, funds',
                 'amount' => trim($_POST['amount']),
                 'paypal_email' => trim($_POST['paypal_email']),
                 'wallet' => $wallet,
@@ -43,6 +46,9 @@ class Wallets extends Controller {
         } else {
             $wallet = $this->walletModel->getWalletByUserId($_SESSION['user_id']);
             $data = [
+                'title' => 'Wallet',
+                'description' => 'Manage your wallet, view your balance, and request withdrawals.',
+                'keywords' => 'wallet, balance, withdrawal, funds',
                 'wallet' => $wallet,
                 'amount' => '',
                 'paypal_email' => '',

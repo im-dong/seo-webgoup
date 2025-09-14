@@ -97,12 +97,15 @@ class Orders extends Controller {
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
             $data = [
+                'title' => 'Complete Order',
+                'description' => 'Complete your order by providing the proof of work.',
+                'keywords' => 'complete order, proof of work, finish order',
                 'order_id' => $order_id,
                 'proof_url' => trim($_POST['proof_url']),
                 'proof_url_err' => ''
             ];
 
-            if(empty($data['proof_url'])){
+            if(empty($data['proof_url'])){ 
                 $data['proof_url_err'] = 'Please provide the proof URL.';
             } elseif(!filter_var($data['proof_url'], FILTER_VALIDATE_URL)){
                 $data['proof_url_err'] = 'Please provide a valid URL.';
@@ -121,6 +124,9 @@ class Orders extends Controller {
 
         } else {
             $data = [
+                'title' => 'Complete Order',
+                'description' => 'Complete your order by providing the proof of work.',
+                'keywords' => 'complete order, proof of work, finish order',
                 'order_id' => $order_id,
                 'proof_url' => '',
                 'proof_url_err' => ''
@@ -156,6 +162,9 @@ class Orders extends Controller {
         }
 
         $data = [
+            'title' => 'Order Details',
+            'description' => 'View the details of your order.',
+            'keywords' => 'order details, order information, transaction',
             'order' => $order,
             'snapshot' => $snapshot,
             'conversation' => $conversation

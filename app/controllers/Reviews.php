@@ -27,6 +27,9 @@ class Reviews extends Controller {
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $_POST = filter_input_array(INPUT_POST, FILTER_UNSAFE_RAW);
             $data = [
+                'title' => 'Add Review',
+                'description' => 'Submit a review for your completed order.',
+                'keywords' => 'add review, submit review, rate order',
                 'order_id' => $order_id,
                 'reviewer_id' => $_SESSION['user_id'],
                 'seller_id' => $order->seller_id,
@@ -57,6 +60,9 @@ class Reviews extends Controller {
 
         } else {
             $data = [
+                'title' => 'Add Review',
+                'description' => 'Submit a review for your completed order.',
+                'keywords' => 'add review, submit review, rate order',
                 'order_id' => $order_id,
                 'order' => $order,
                 'rating' => '',

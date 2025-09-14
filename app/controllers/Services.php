@@ -27,6 +27,9 @@ class Services extends Controller {
         $services = $this->serviceModel->getServices($filters);
         
         $data = [
+            'title' => 'Marketplace',
+            'description' => 'Browse and buy SEO services from our community marketplace. Find the perfect service to boost your website\'s ranking.',
+            'keywords' => 'SEO marketplace, buy SEO services, link building services',
             'services' => $services,
             'industries' => $this->industryModel->getIndustries(),
             'current_category' => $category,
@@ -48,6 +51,9 @@ class Services extends Controller {
         }
 
         $data = [
+            'title' => $service->title,
+            'description' => substr(strip_tags($service->description), 0, 160),
+            'keywords' => $service->title . ', ' . $service->service_category . ', SEO service',
             'service' => $service,
             'order_id_for_chat' => $order_id_for_chat
         ];
@@ -59,6 +65,9 @@ class Services extends Controller {
             $_POST = filter_input_array(INPUT_POST, FILTER_UNSAFE_RAW);
 
             $data = [
+                'seo_title' => 'Add Service',
+                'seo_description' => 'Offer your own SEO services to the community. Create a listing and start earning.',
+                'seo_keywords' => 'add service, sell SEO services, offer services',
                 'title' => trim($_POST['title']),
                 'description' => trim($_POST['description']),
                 'thumbnail_url' => '', // 默认设为空
@@ -115,6 +124,9 @@ class Services extends Controller {
 
         } else {
             $data = [
+                'seo_title' => 'Add Service',
+                'seo_description' => 'Offer your own SEO services to the community. Create a listing and start earning.',
+                'seo_keywords' => 'add service, sell SEO services, offer services',
                 'title' => '', 'description' => '', 'thumbnail_url' => '', 'site_url' => '', 'price' => '', 'delivery_time' => '', 'duration' => '', 'service_category' => '', 'industry_id' => '', 'terms' => '',
                 'industries' => $this->industryModel->getIndustries(),
                 'title_err' => '', 'description_err' => '', 'thumbnail_err' => '', 'site_url_err' => '', 'price_err' => '', 'delivery_time_err' => '', 'duration_err' => '', 'service_category_err' => '', 'industry_id_err' => '', 'terms_err' => ''
@@ -128,6 +140,9 @@ class Services extends Controller {
             $_POST = filter_input_array(INPUT_POST, FILTER_UNSAFE_RAW);
 
             $data = [
+                'seo_title' => 'Edit Service',
+                'seo_description' => 'Edit your existing SEO service listing.',
+                'seo_keywords' => 'edit service, update service, manage service',
                 'id' => $id,
                 'title' => trim($_POST['title']),
                 'description' => trim($_POST['description']),
@@ -191,6 +206,9 @@ class Services extends Controller {
             }
 
             $data = [
+                'seo_title' => 'Edit Service: ' . $service->title,
+                'seo_description' => 'Edit your existing SEO service listing.',
+                'seo_keywords' => 'edit service, update service, manage service',
                 'id' => $id,
                 'title' => $service->title,
                 'description' => $service->description,

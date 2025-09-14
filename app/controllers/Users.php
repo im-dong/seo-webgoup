@@ -11,6 +11,9 @@ class Users extends Controller {
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $_POST = filter_input_array(INPUT_POST, FILTER_UNSAFE_RAW);
             $data =[
+                'title' => 'Register',
+                'description' => 'Create an account to join our community of SEO professionals and start improving your website\'s ranking.',
+                'keywords' => 'register, signup, create account, SEO community',
                 'username' => trim($_POST['username']),
                 'email' => trim($_POST['email']),
                 'password' => trim($_POST['password']),
@@ -41,7 +44,12 @@ class Users extends Controller {
                 } else { die('Something went wrong'); }
             } else { $this->view('users/register', $data); }
         } else {
-            $data =['username' => '','email' => '','password' => '','confirm_password' => '','username_err' => '','email_err' => '','password_err' => '','confirm_password_err' => ''];
+            $data =[
+                'title' => 'Register',
+                'description' => 'Create an account to join our community of SEO professionals and start improving your website\'s ranking.',
+                'keywords' => 'register, signup, create account, SEO community',
+                'username' => '','email' => '','password' => '','confirm_password' => '','username_err' => '','email_err' => '','password_err' => '','confirm_password_err' => ''
+            ];
             $this->view('users/register', $data);
         }
     }
@@ -50,6 +58,9 @@ class Users extends Controller {
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $_POST = filter_input_array(INPUT_POST, FILTER_UNSAFE_RAW);
             $data =[
+                'title' => 'Login',
+                'description' => 'Login to your webGoup account to access the marketplace and your dashboard.',
+                'keywords' => 'login, signin, access account, SEO marketplace',
                 'email' => trim($_POST['email']),
                 'password' => trim($_POST['password']),
                 'email_err' => '',
@@ -77,7 +88,12 @@ class Users extends Controller {
                 $this->view('users/login', $data);
             }
         } else {
-            $data =['email' => '','password' => '','email_err' => '','password_err' => ''];
+            $data =[
+                'title' => 'Login',
+                'description' => 'Login to your webGoup account to access the marketplace and your dashboard.',
+                'keywords' => 'login, signin, access account, SEO marketplace',
+                'email' => '','password' => '','email_err' => '','password_err' => ''
+            ];
             $this->view('users/login', $data);
         }
     }
@@ -117,6 +133,9 @@ class Users extends Controller {
         $my_services = $this->serviceModel->getServicesByUserId($_SESSION['user_id']);
 
         $data = [
+            'title' => 'Dashboard',
+            'description' => 'Manage your orders, services, and wallet from your personal dashboard.',
+            'keywords' => 'dashboard, my account, orders, services, wallet',
             'buyer_orders' => $buyer_orders,
             'seller_orders' => $seller_orders,
             'wallet' => $wallet,
@@ -136,6 +155,9 @@ class Users extends Controller {
             $_POST = filter_input_array(INPUT_POST, FILTER_UNSAFE_RAW);
 
             $data = [
+                'title' => 'Edit Profile',
+                'description' => 'Update your profile information, including your bio, website URL, and profile picture.',
+                'keywords' => 'edit profile, update profile, user settings',
                 'id' => $_SESSION['user_id'],
                 'profile_image_err' => '',
                 'website_url_err' => ''
@@ -202,6 +224,9 @@ class Users extends Controller {
         } else {
             $user = $this->userModel->getUserById($_SESSION['user_id']);
             $data = [
+                'title' => 'Edit Profile',
+                'description' => 'Update your profile information, including your bio, website URL, and profile picture.',
+                'keywords' => 'edit profile, update profile, user settings',
                 'username' => $user->username,
                 'email' => $user->email,
                 'bio' => $user->bio,
@@ -236,6 +261,9 @@ class Users extends Controller {
         }
 
         $data = [
+            'title' => $user->username . "'s Profile",
+            'description' => 'View the profile, reviews, and services of ' . $user->username . ' on webGoup.',
+            'keywords' => $user->username . ', user profile, reviews, services, SEO expert',
             'user' => $user,
             'seller_reviews' => $seller_reviews,
             'buyer_reviews' => $buyer_reviews,

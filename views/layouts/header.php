@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo SITENAME; ?></title>
+    <title><?php echo !empty($data['seo_title']) ? $data['seo_title'] . ' - ' . SITENAME : (!empty($data['title']) ? $data['title'] . ' - ' . SITENAME : SITENAME); ?></title>
+    <meta name="description" content="<?php echo !empty($data['seo_description']) ? $data['seo_description'] : (!empty($data['description']) ? $data['description'] : 'Welcome to ' . SITENAME); ?>">
+    <meta name="keywords" content="<?php echo !empty($data['seo_keywords']) ? $data['seo_keywords'] : (!empty($data['keywords']) ? $data['keywords'] : 'seo, webgoup, services'); ?>">
+    <link rel="canonical" href="<?php echo 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" />
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->

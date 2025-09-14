@@ -9,6 +9,9 @@ class Official extends Controller {
     public function index(){
         $officialServices = $this->serviceModel->getOfficialServices();
         $data = [
+            'title' => 'Our Services',
+            'description' => 'Explore the official SEO services offered by webGoup.',
+            'keywords' => 'official services, webgoup services, professional SEO',
             'officialServices' => $officialServices
         ];
         $this->view('official/index', $data);
