@@ -9,8 +9,19 @@
             <div class="card mb-4">
                 <div class="card-header">Service Snapshot</div>
                 <div class="card-body">
+                    <!-- Service Thumbnail -->
+                    <?php if(!empty($data['snapshot']->thumbnail_url)): ?>
+                        <div class="mb-3">
+                            <img src="<?php echo htmlspecialchars($data['snapshot']->thumbnail_url); ?>"
+                                 class="img-fluid rounded shadow-sm"
+                                 alt="<?php echo htmlspecialchars($data['snapshot']->title); ?>"
+                                 style="max-height: 250px; object-fit: cover;"
+                                 onerror="this.src='https://via.placeholder.com/800x400?text=No+Image+Available'">
+                        </div>
+                    <?php endif; ?>
+
                     <h4 class="card-title"><?php echo htmlspecialchars($data['snapshot']->title); ?></h4>
-                    <p class="card-text"><?php echo nl2br(htmlspecialchars($data['snapshot']->description)); ?></p>
+                    <div class="card-text"><?php echo $data['snapshot']->description; ?></div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item"><b>Price:</b> $<?php echo number_format($data['snapshot']->price, 2); ?></li>
                         <li class="list-group-item"><b>Delivery Time:</b> <?php echo htmlspecialchars($data['snapshot']->delivery_time); ?> days</li>

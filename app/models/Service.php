@@ -71,10 +71,10 @@ class Service {
 
     // 通过ID获取单个服务
     public function getServiceById($id){
-        $sql = 'SELECT s.*, s.id as serviceId, u.id as userId, u.username, i.name as industry_name 
-                FROM services s 
-                JOIN users u ON s.user_id = u.id 
-                LEFT JOIN industries i ON s.industry_id = i.id 
+        $sql = 'SELECT s.*, s.id as serviceId, u.id as userId, u.username, u.role, i.name as industry_name
+                FROM services s
+                JOIN users u ON s.user_id = u.id
+                LEFT JOIN industries i ON s.industry_id = i.id
                 WHERE s.id = :id';
         $this->db->query($sql);
         $this->db->bind(':id', $id);

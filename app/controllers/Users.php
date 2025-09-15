@@ -3,8 +3,10 @@ class Users extends Controller {
     protected $userModel;
     protected $orderModel;
     protected $walletModel;
+    protected $emailHelper;
     public function __construct(){
         $this->userModel = $this->model('User');
+        $this->emailHelper = new EmailHelper();
     }
 
     public function register(){
@@ -18,37 +20,114 @@ class Users extends Controller {
                 'email' => trim($_POST['email']),
                 'password' => trim($_POST['password']),
                 'confirm_password' => trim($_POST['confirm_password']),
+                'verification_code' => isset($_POST['verification_code']) ? trim($_POST['verification_code']) : '',
                 'username_err' => '',
                 'email_err' => '',
                 'password_err' => '',
-                'confirm_password_err' => ''
+                'confirm_password_err' => '',
+                'verification_code_err' => '',
+                'step' => isset($_POST['step']) ? $_POST['step'] : '1'
             ];
 
-            if(empty($data['email'])){ $data['email_err'] = 'Please enter email'; }
-            else { if($this->userModel->findUserByEmail($data['email'])){ $data['email_err'] = 'Email is already taken'; }}
-            if(empty($data['username'])){ $data['username_err'] = 'Please enter username'; }
-            if(empty($data['password'])){ $data['password_err'] = 'Please enter password'; }
-            elseif(strlen($data['password']) < 6){ $data['password_err'] = 'Password must be at least 6 characters'; }
-            if(empty($data['confirm_password'])){ $data['confirm_password_err'] = 'Please confirm password'; }
-            else { if($data['password'] != $data['confirm_password']){ $data['confirm_password_err'] = 'Passwords do not match'; }}
+            // 第一步：验证基本信息
+            if($data['step'] == '1'){
+                if(empty($data['email'])){ $data['email_err'] = 'Please enter email'; }
+                else { if($this->userModel->findUserByEmail($data['email'])){ $data['email_err'] = 'Email is already taken'; }}
+                if(empty($data['username'])){ $data['username_err'] = 'Please enter username'; }
+                else { if($this->userModel->findUserByUsername($data['username'])){ $data['username_err'] = 'Username is already taken'; }}
+                if(empty($data['password'])){ $data['password_err'] = 'Please enter password'; }
+                elseif(strlen($data['password']) < 6){ $data['password_err'] = 'Password must be at least 6 characters'; }
+                if(empty($data['confirm_password'])){ $data['confirm_password_err'] = 'Please confirm password'; }
+                else { if($data['password'] != $data['confirm_password']){ $data['confirm_password_err'] = 'Passwords do not match'; }}
 
-            if(empty($data['email_err']) && empty($data['username_err']) && empty($data['password_err']) && empty($data['confirm_password_err'])){
-                $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-                if($user_id = $this->userModel->register($data)){
-                    // 创建钱包
-                    $this->walletModel = $this->model('Wallet');
-                    $this->walletModel->createWallet($user_id);
+                if(empty($data['email_err']) && empty($data['username_err']) && empty($data['password_err']) && empty($data['confirm_password_err'])){
+                    // 生成验证码
+                    $verificationCode = sprintf('%06d', mt_rand(100000, 999999));
+                    $expiresAt = date('Y-m-d H:i:s', strtotime('+10 minutes'));
 
-                    flash('register_success', 'You are now registered and can log in');
-                    header('location: ' . URLROOT . '/users/login');
-                } else { die('Something went wrong'); }
-            } else { $this->view('users/register', $data); }
+                    // 保存验证码到数据库
+                    if($this->userModel->saveVerificationCode($data['email'], $verificationCode, $expiresAt)){
+                        // 发送验证邮件
+                        if($this->emailHelper->sendVerificationEmail($data['email'], $verificationCode)){
+                            // 临时存储用户信息在session中
+                            $_SESSION['temp_registration'] = [
+                                'username' => $data['username'],
+                                'email' => $data['email'],
+                                'password' => password_hash($data['password'], PASSWORD_DEFAULT)
+                            ];
+
+                            $data['step'] = '2';
+                            $this->view('users/register', $data);
+                        } else {
+                            $data['email_err'] = 'Failed to send verification email. Please try again.';
+                            $this->view('users/register', $data);
+                        }
+                    } else {
+                        die('Something went wrong with verification code generation');
+                    }
+                } else { $this->view('users/register', $data); }
+            }
+            // 第二步：验证邮箱验证码
+            elseif($data['step'] == '2'){
+                // 从POST数据中获取用户名和邮箱（如果表单重新提交）
+                if(isset($_POST['username']) && isset($_POST['email'])){
+                    $data['username'] = trim($_POST['username']);
+                    $data['email'] = trim($_POST['email']);
+                }
+
+                if(empty($data['verification_code'])){
+                    $data['verification_code_err'] = 'Please enter verification code';
+                } else {
+                    // 验证验证码
+                    $tempRegistration = $_SESSION['temp_registration'] ?? null;
+                    if($tempRegistration && $this->userModel->verifyCode($tempRegistration['email'], $data['verification_code'])){
+                        // 再次检查用户名和邮箱是否仍然可用（防止在验证过程中被其他人注册）
+                        if($this->userModel->findUserByUsername($tempRegistration['username'])){
+                            $data['username_err'] = 'Username is already taken. Please choose a different username.';
+                            $data['step'] = '2';
+                            $this->view('users/register', $data);
+                            return;
+                        }
+                        if($this->userModel->findUserByEmail($tempRegistration['email'])){
+                            $data['email_err'] = 'Email is already taken. Please use a different email.';
+                            $data['step'] = '2';
+                            $this->view('users/register', $data);
+                            return;
+                        }
+
+                        // 注册用户
+                        $userData = [
+                            'username' => $tempRegistration['username'],
+                            'email' => $tempRegistration['email'],
+                            'password' => $tempRegistration['password']
+                        ];
+
+                        if($user_id = $this->userModel->register($userData)){
+                            // 创建钱包
+                            $this->walletModel = $this->model('Wallet');
+                            $this->walletModel->createWallet($user_id);
+
+                            // 清除临时数据
+                            unset($_SESSION['temp_registration']);
+
+                            flash('register_success', 'Registration successful! You can now log in.');
+                            header('location: ' . URLROOT . '/users/login');
+                        } else { die('Something went wrong during registration'); }
+                    } else {
+                        $data['verification_code_err'] = 'Invalid or expired verification code';
+                        $data['step'] = '2';
+                        $this->view('users/register', $data);
+                    }
+                }
+            }
         } else {
             $data =[
                 'title' => 'Register',
                 'description' => 'Create an account to join our community of SEO professionals and start improving your website\'s ranking.',
                 'keywords' => 'register, signup, create account, SEO community',
-                'username' => '','email' => '','password' => '','confirm_password' => '','username_err' => '','email_err' => '','password_err' => '','confirm_password_err' => ''
+                'username' => '','email' => '','password' => '','confirm_password' => '','verification_code' => '',
+                'username_err' => '','email_err' => '','password_err' => '','confirm_password_err' => '','verification_code_err' => '',
+                'step' => '1'
             ];
             $this->view('users/register', $data);
         }
@@ -64,20 +143,20 @@ class Users extends Controller {
                 'email' => trim($_POST['email']),
                 'password' => trim($_POST['password']),
                 'email_err' => '',
-                'password_err' => '',      
+                'password_err' => '',
             ];
 
-            if(empty($data['email'])){ $data['email_err'] = 'Please enter email'; }
+            if(empty($data['email'])){ $data['email_err'] = 'Please enter email or username'; }
             if(empty($data['password'])){ $data['password_err'] = 'Please enter password'; }
 
-            if($this->userModel->findUserByEmail($data['email'])){
-                // 用户找到
-            } else {
-                $data['email_err'] = 'No user found';
+            // 检查用户是否存在（支持用户名或邮箱）
+            $user = $this->userModel->findUserByUsernameOrEmail($data['email']);
+            if(!$user){
+                $data['email_err'] = 'No user found with this email or username';
             }
 
             if(empty($data['email_err']) && empty($data['password_err'])){
-                $loggedInUser = $this->userModel->login($data['email'], $data['password']);
+                $loggedInUser = $this->userModel->loginByUsernameOrEmail($data['email'], $data['password']);
                 if($loggedInUser){
                     $this->createUserSession($loggedInUser);
                 } else {

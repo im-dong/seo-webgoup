@@ -206,6 +206,11 @@ class Orders extends Controller {
         $this->userModel = $this->model('User');
         $seller = $this->userModel->getUserById($order->seller_id);
         $buyer = $this->userModel->getUserById($order->buyer_id);
+        $currentUser = $this->userModel->getUserById($_SESSION['user_id']);
+
+        // Get service creator info
+        $service = $this->serviceModel->getServiceById($order->service_id);
+        $serviceCreator = $service ? $this->userModel->getUserById($service->userId) : null;
 
         $data = [
             'title' => 'Order Details',
@@ -215,7 +220,9 @@ class Orders extends Controller {
             'snapshot' => $snapshot,
             'conversation' => $conversation,
             'seller' => $seller,
-            'buyer' => $buyer
+            'buyer' => $buyer,
+            'currentUser' => $currentUser,
+            'serviceCreator' => $serviceCreator
         ];
 
         $this->view('orders/details', $data);

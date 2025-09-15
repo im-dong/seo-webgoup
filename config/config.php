@@ -28,3 +28,11 @@ define('PAYPAL_RECEIVER_EMAIL', 'sb-skb47i38000699@personal.example.com'); // TO
 define('PAYPAL_SANDBOX', true); // 设置为 false 以进行真实交易
 define('PAYPAL_URL', PAYPAL_SANDBOX ? 'https://www.sandbox.paypal.com/cgi-bin/webscr' : 'https://www.paypal.com/cgi-bin/webscr');
 
+// Email Settings
+define('EMAIL_HOST', 'smtp.gmail.com');
+define('EMAIL_PORT', 587);
+define('EMAIL_USERNAME', 'webgoup.service@gmail.com');
+define('EMAIL_PASSWORD', 'ozdy xehk vbqq jjfg');
+define('EMAIL_FROM_NAME', 'WebGoup Team');
+define('EMAIL_FROM_EMAIL', 'webgoup.service@gmail.com');
+

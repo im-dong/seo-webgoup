@@ -142,10 +142,11 @@ class Order {
 
     // 创建服务快照
     public function createServiceSnapshot($order_id, $service_data){
-        $this->db->query('INSERT INTO order_service_snapshots (order_id, title, description, price, delivery_time, link_type, duration) VALUES (:order_id, :title, :description, :price, :delivery_time, :link_type, :duration)');
+        $this->db->query('INSERT INTO order_service_snapshots (order_id, title, description, thumbnail_url, price, delivery_time, link_type, duration) VALUES (:order_id, :title, :description, :thumbnail_url, :price, :delivery_time, :link_type, :duration)');
         $this->db->bind(':order_id', $order_id);
         $this->db->bind(':title', $service_data->title);
         $this->db->bind(':description', $service_data->description);
+        $this->db->bind(':thumbnail_url', $service_data->thumbnail_url ?? null);
         $this->db->bind(':price', $service_data->price);
         $this->db->bind(':delivery_time', $service_data->delivery_time);
         $this->db->bind(':link_type', $service_data->link_type);

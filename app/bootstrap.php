@@ -6,6 +6,7 @@ define('APPROOT', dirname(__DIR__));
 require_once APPROOT . '/config/config.php';
 // 加载助手
 require_once APPROOT . '/app/helpers/session_helper.php';
+require_once APPROOT . '/app/helpers/email_helper.php';
 
 // 自动加载核心库
 spl_autoload_register(function($className){

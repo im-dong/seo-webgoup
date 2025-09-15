@@ -3,6 +3,17 @@
 <div class="container mt-5">
     <div class="row">
         <div class="col-md-8">
+            <!-- Service Thumbnail -->
+            <?php if(!empty($data['service']->thumbnail_url)): ?>
+                <div class="mb-4">
+                    <img src="<?php echo htmlspecialchars($data['service']->thumbnail_url); ?>"
+                         class="img-fluid rounded shadow-sm"
+                         alt="<?php echo htmlspecialchars($data['service']->title); ?>"
+                         style="max-height: 300px; object-fit: cover;"
+                         onerror="this.src='https://via.placeholder.com/800x400?text=No+Image+Available'">
+                </div>
+            <?php endif; ?>
+
             <h2><?php echo htmlspecialchars($data['service']->title); ?></h2>
             <hr>
             <p><strong>Sold by:</strong> <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $data['service']->userId; ?>"><strong><?php echo htmlspecialchars($data['service']->username); ?></strong></a></p>
@@ -10,10 +21,10 @@
             <hr>
             <h4>Service Description</h4>
             <div class="service-description">
-                <?php if(isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin') : ?>
-                    <?php echo $data['service']->description; // Admin sees rich text ?>
+                <?php if(isset($data['service']->role) && $data['service']->role == 'admin') : ?>
+                    <?php echo $data['service']->description; // Admin发布的商品显示完整HTML ?>
                 <?php else : ?>
-                    <?php echo nl2br(htmlspecialchars(strip_tags($data['service']->description))); // Non-admin sees plain text ?>
+                    <?php echo nl2br(htmlspecialchars(strip_tags($data['service']->description))); // 普通用户发布的商品显示纯文本 ?>
                 <?php endif; ?>
             </div>
         </div>
