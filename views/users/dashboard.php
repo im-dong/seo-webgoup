@@ -51,7 +51,11 @@
                     <tbody>
                         <?php foreach($data['buyer_orders'] as $order): ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($order->service_title); ?></td>
+                                <td>
+                                    <a href="<?php echo URLROOT; ?>/services/show/<?php echo $order->service_id; ?>"><?php echo htmlspecialchars($order->service_title); ?></a>
+                                    <br>
+                                    <small>Sold by: <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $order->seller_id; ?>"><?php echo htmlspecialchars($order->seller_name); ?></a></small>
+                                </td>
                                 <td>$<?php echo htmlspecialchars($order->amount); ?></td>
                                 <td><?php echo date('Y-m-d', strtotime($order->created_at)); ?></td>
                                 <td>

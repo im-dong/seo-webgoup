@@ -39,54 +39,8 @@
                     <div class="d-grid">
                         <?php if(isset($_SESSION['user_id']) && $_SESSION['user_id'] != $data['service']->userId): ?>
                             <a href="<?php echo URLROOT; ?>/orders/startInquiry/<?php echo $data['service']->serviceId; ?>" class="btn btn-primary btn-lg mb-2">Message Seller</a>
+                            <a href="<?php echo URLROOT; ?>/orders/create_and_pay/<?php echo $data['service']->serviceId; ?>" class="btn btn-success btn-lg">Buy Now ($<?php echo htmlspecialchars($data['service']->price); ?>)</a>
+                        <?php elseif(!isset($_SESSION['user_id'])): ?>
+                             <a href="<?php echo URLROOT; ?>/users/login" class="btn btn-primary btn-lg">Login to Purchase</a>
                         <?php endif; ?>
-                        <div id="paypal-button-container"></div>
-                    <p id="payment-message" class="text-center"></p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- PayPal JS SDK -->
-<script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD"></script> <!-- 请将 client-id=sb 替换为您的真实ID -->
-
-<script>
-    paypal.Buttons({
-        // 创建订单
-        createOrder: function(data, actions) {
-            return fetch('<?php echo URLROOT; ?>/orders/create/<?php echo $data['service']->serviceId; ?>', {
-                method: 'post'
-            }).then(function(res) {
-                return res.json();
-            }).then(function(orderData) {
-                return orderData.orderID; // 返回我们自己数据库的订单ID
-            });
-        },
-
-        // 捕获支付
-        onApprove: function(data, actions) {
-            return fetch('<?php echo URLROOT; ?>/orders/capture/' + data.orderID, {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ orderID: data.orderID })
-            }).then(function(res) {
-                return res.json();
-            }).then(function(orderData) {
-                var messageContainer = document.getElementById('payment-message');
-                if (orderData.status === 'success') {
-                    messageContainer.className = 'alert alert-success';
-                    messageContainer.innerText = 'Payment successful! Redirecting...';
-                    setTimeout(() => { window.location.href = '<?php echo URLROOT; ?>/users/dashboard'; }, 3000); // 稍后创建dashboard
-                } else {
-                    messageContainer.className = 'alert alert-danger';
-                    messageContainer.innerText = 'Payment failed. Please try again.';
-                }
-            });
-        }
-    }).render('#paypal-button-container');
-</script>
-
-<?php require APPROOT . '/views/layouts/footer.php'; ?>
+                    </div>

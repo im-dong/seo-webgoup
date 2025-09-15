@@ -1,0 +1,8 @@
+[2025-09-14 22:28:23] IPN Received. Sending validation request to PayPal.
+[2025-09-14 22:28:23] IPN Validation Response: INVALID
+[2025-09-14 22:28:23] IPN INVALID.
+[2025-09-14 22:31:13] IPN Received. Sending validation request to PayPal.
+[2025-09-14 22:31:14] IPN Validation Response: VERIFIED
+[2025-09-14 22:31:14] IPN VERIFIED. Processing payment...
+[2025-09-14 22:31:14] Order 8 successfully updated.
+[2025-09-14 22:31:14] Funds for order 8 added to seller 5.

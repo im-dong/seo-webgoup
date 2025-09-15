@@ -21,6 +21,55 @@
             </div>
         </div>
         <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">Participants</div>
+                <div class="card-body">
+                    <p>
+                        <strong>Seller:</strong>
+                        <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $data['seller']->id; ?>">
+                            <?php echo htmlspecialchars($data['seller']->username); ?>
+                        </a>
+                    </p>
+                    <p>
+                        <strong>Buyer:</strong>
+                        <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $data['buyer']->id; ?>">
+                            <?php echo htmlspecialchars($data['buyer']->username); ?>
+                        </a>
+                    </p>
+                    <?php if ($data['conversation']): ?>
+                        <hr>
+                        <div class="d-grid">
+                             <a href="<?php echo URLROOT; ?>/conversations/show/<?php echo $data['conversation']->id; ?>" class="btn btn-primary">
+                                 <i class="fa fa-comments"></i> View Conversation
+                             </a>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <?php if (!$data['order']->paid_at && $data['order']->buyer_id == $_SESSION['user_id']): ?>
+                <div class="card mb-4">
+                    <div class="card-header">Pay for Order</div>
+                    <div class="card-body">
+                        <p>Click the button below to pay with PayPal.</p>
+                        <form action="<?php echo PAYPAL_URL; ?>" method="post" target="_blank">
+                            <!-- PayPal Variables -->
+                            <input type="hidden" name="cmd" value="_xclick">
+                            <input type="hidden" name="business" value="<?php echo PAYPAL_RECEIVER_EMAIL; ?>">
+                            <input type="hidden" name="item_name" value="<?php echo htmlspecialchars($data['snapshot']->title) . ' - Order #' . $data['order']->id; ?>">
+                            <input type="hidden" name="amount" value="<?php echo $data['snapshot']->price; ?>">
+                            <input type="hidden" name="currency_code" value="USD">
+                            <input type="hidden" name="notify_url" value="<?php echo URLROOT; ?>/orders/ipn">
+                            <input type="hidden" name="return" value="<?php echo URLROOT; ?>/orders/details/<?php echo $data['order']->id; ?>">
+                            <input type="hidden" name="custom" value="<?php echo $data['order']->id; ?>">
+                            <input type="hidden" name="charset" value="utf-8">
+
+                            <!-- Button -->
+                            <button type="submit" class="btn btn-primary btn-block">Pay with PayPal</button>
+                        </form>
+                    </div>
+                </div>
+            <?php endif; ?>
             <div class="card">
                 <div class="card-header">Order Timeline</div>
                 <div class="card-body">

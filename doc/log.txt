@@ -78,3 +78,28 @@ No reviews as a seller yet.
 Reviews as Buyer:
 No reviews as a buyer yet.
 我要的是卡片切换的，就是要么看买家评价要么看作为卖家的评价
+
+
+
+
+
+
+
+
+
+
+
+
+我目前只有个人账户，能不能以这种形式来支付，目前仅需要解决支付问题，其他高级paypal功能可以先不搞
+    $paypalUrl = "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&notify_url={$notify}&business={$receiver}&item_name={$item}{$orderId}&amount={$amount}&currency_code=USD&return=$returnUrl&custom=$orderId";
+
+
+
+
+1.先在配置文件写好我的谷歌邮箱，用来给客户发邮件的，webgoup.service@ │
+│    gmail.com                                                            │
+│    应用专用密码                                                         │
+│    ozdy xehk vbqq jjfg                                                  │
+│    2.现在注册邮箱是没有验证码的你加一个验证流程，就是要证明那个邮箱是他 │
+│    的邮件模版漂亮一些，把我们理念带上                                   │
+│    3.现在只能用邮箱登录，改成用户名和邮箱都能登陆  

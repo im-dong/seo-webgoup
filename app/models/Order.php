@@ -39,7 +39,7 @@ class Order {
 
     // 根据买家ID获取订单
     public function getOrdersByBuyerId($buyer_id){
-        $this->db->query('SELECT o.*, s.title as service_title, CASE WHEN r.id IS NOT NULL THEN 1 ELSE 0 END as has_reviewed FROM orders o JOIN services s ON o.service_id = s.id LEFT JOIN reviews r ON o.id = r.order_id WHERE o.buyer_id = :buyer_id ORDER BY o.created_at DESC');
+        $this->db->query('SELECT o.*, s.title as service_title, u.username as seller_name, CASE WHEN r.id IS NOT NULL THEN 1 ELSE 0 END as has_reviewed FROM orders o JOIN services s ON o.service_id = s.id JOIN users u ON o.seller_id = u.id LEFT JOIN reviews r ON o.id = r.order_id WHERE o.buyer_id = :buyer_id ORDER BY o.created_at DESC');
         $this->db->bind(':buyer_id', $buyer_id);
         return $this->db->resultSet();
     }
@@ -91,6 +91,13 @@ class Order {
     public function getOrderById($order_id){
         $this->db->query('SELECT * FROM orders WHERE id = :order_id');
         $this->db->bind(':order_id', $order_id);
+        return $this->db->single();
+    }
+
+    // 根据支付ID获取订单
+    public function getOrderByPaymentId($payment_id){
+        $this->db->query('SELECT * FROM orders WHERE payment_id = :payment_id');
+        $this->db->bind(':payment_id', $payment_id);
         return $this->db->single();
     }
 
