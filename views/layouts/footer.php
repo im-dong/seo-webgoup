@@ -16,6 +16,9 @@
                         <a href="<?php echo URLROOT; ?>/pages/about" class="text-white">About Us</a>
                     </li>
                     <li>
+                        <a href="<?php echo URLROOT; ?>/pages/terms" class="text-white">Terms of Service</a>
+                    </li>
+                    <li>
                         <a href="<?php echo URLROOT; ?>/services" class="text-white">Marketplace</a>
                     </li>
                     <li>

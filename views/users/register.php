@@ -71,6 +71,16 @@
                         <small class="form-text text-muted">Enter the 6-digit code sent to your email</small>
                     </div>
 
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" name="terms" id="terms" value="1" <?php echo (!empty($data['terms'])) ? 'checked' : ''; ?>>
+                        <label class="form-check-label" for="terms">
+                            I agree to the <a href="<?php echo URLROOT; ?>/pages/terms" target="_blank">Terms of Service</a> and understand the 30% platform commission
+                        </label>
+                        <?php if(!empty($data['terms_err'])): ?>
+                            <div class="invalid-feedback d-block"><?php echo $data['terms_err']; ?></div>
+                        <?php endif; ?>
+                    </div>
+
                     <div class="row">
                         <div class="col">
                             <button type="submit" class="btn btn-success btn-block">

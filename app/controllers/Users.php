@@ -21,11 +21,13 @@ class Users extends Controller {
                 'password' => trim($_POST['password']),
                 'confirm_password' => trim($_POST['confirm_password']),
                 'verification_code' => isset($_POST['verification_code']) ? trim($_POST['verification_code']) : '',
+                'terms' => isset($_POST['terms']) ? trim($_POST['terms']) : '',
                 'username_err' => '',
                 'email_err' => '',
                 'password_err' => '',
                 'confirm_password_err' => '',
                 'verification_code_err' => '',
+                'terms_err' => '',
                 'step' => isset($_POST['step']) ? $_POST['step'] : '1'
             ];
 
@@ -77,6 +79,8 @@ class Users extends Controller {
 
                 if(empty($data['verification_code'])){
                     $data['verification_code_err'] = 'Please enter verification code';
+                } elseif(empty($data['terms'])){
+                    $data['terms_err'] = 'You must agree to the Terms of Service to register';
                 } else {
                     // 验证验证码
                     $tempRegistration = $_SESSION['temp_registration'] ?? null;
@@ -125,8 +129,8 @@ class Users extends Controller {
                 'title' => 'Register',
                 'description' => 'Create an account to join our community of SEO professionals and start improving your website\'s ranking.',
                 'keywords' => 'register, signup, create account, SEO community',
-                'username' => '','email' => '','password' => '','confirm_password' => '','verification_code' => '',
-                'username_err' => '','email_err' => '','password_err' => '','confirm_password_err' => '','verification_code_err' => '',
+                'username' => '','email' => '','password' => '','confirm_password' => '','verification_code' => '', 'terms' => '',
+                'username_err' => '','email_err' => '','password_err' => '','confirm_password_err' => '','verification_code_err' => '', 'terms_err' => '',
                 'step' => '1'
             ];
             $this->view('users/register', $data);

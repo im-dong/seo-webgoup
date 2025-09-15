@@ -21,4 +21,13 @@ class Pages extends Controller {
         ];
         $this->view('pages/about', $data);
     }
+
+    public function terms(){
+        $data = [
+            'title' => 'Terms of Service',
+            'description' => 'Read webGoup\'s terms of service, fee structure, and user guidelines.',
+            'keywords' => 'terms of service, webGoup terms, SEO platform rules'
+        ];
+        $this->view('pages/terms', $data);
+    }
 }

@@ -11,7 +11,72 @@
             <div class="mb-5">
                 <h2 class="fw-bold">Our Mission</h2>
                 <p>At webGoup, our mission is to democratize the SEO industry. We believe that every website, regardless of its size or budget, deserves to be visible. We are the "webGroup" – a collective of passionate SEO experts, developers, and entrepreneurs – and we are here to help your "web go up".</p>
-                <p>We've created a decentralized marketplace where talent and opportunity connect, fostering a community that thrives on mutual success. Our platform is built on transparency, trust, and the shared goal of achieving exceptional results.</p>
+                <p>We've created a decentralized <strong>two-sided marketplace</strong> where website owners can both buy and sell SEO services. Our platform is built on transparency, trust, and the shared goal of achieving exceptional results for everyone.</p>
+            </div>
+
+            <div class="mb-5">
+                <h2 class="fw-bold">Our Two-Sided Marketplace</h2>
+                <p>webGoup empowers both buyers and sellers in the SEO ecosystem:</p>
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                    <i class="fas fa-shopping-cart fa-2x"></i>
+                                </div>
+                                <h5 class="card-title">For Buyers</h5>
+                                <p class="card-text">Access a curated marketplace of quality backlinks from reputable websites. Boost your SEO rankings with safe, effective link building strategies.</p>
+                                <ul class="list-unstyled text-start mt-3">
+                                    <li><i class="fas fa-check text-success me-2"></i>Vetted service providers</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Secure payment escrow</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Quality guarantee</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Transparent pricing</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                    <i class="fas fa-dollar-sign fa-2x"></i>
+                                </div>
+                                <h5 class="card-title">For Sellers</h5>
+                                <p class="card-text">Monetize your website by selling backlink placements. Connect with buyers worldwide and earn recurring revenue from your digital assets.</p>
+                                <ul class="list-unstyled text-start mt-3">
+                                    <li><i class="fas fa-check text-primary me-2"></i>Set your own prices</li>
+                                    <li><i class="fas fa-check text-primary me-2"></i>Earn 70% revenue</li>
+                                    <li><i class="fas fa-check text-primary me-2"></i>Secure payment system</li>
+                                    <li><i class="fas fa-check text-primary me-2"></i>Build your reputation</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-5">
+                <h2 class="fw-bold">Transparent Fee Structure</h2>
+                <p>We believe in complete transparency. Here's how our platform fees work:</p>
+                <div class="card bg-light border-0">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <h5 class="text-primary">Service Providers Earn</h5>
+                                <p class="display-4 fw-bold text-success">70%</p>
+                                <p>Of the total service price</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h5 class="text-primary">Platform Fee</h5>
+                                <p class="display-4 fw-bold text-info">30%</p>
+                                <p>Covers payment processing, support, and platform maintenance</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert alert-info mt-3">
+                    <strong>Example:</strong> For a $100 service, the provider earns $70 and webGoup retains $30.
+                </div>
             </div>
 
             <div class="mb-5">
