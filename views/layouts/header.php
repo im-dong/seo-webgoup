@@ -7,6 +7,9 @@
     <meta name="description" content="<?php echo !empty($data['seo_description']) ? $data['seo_description'] : (!empty($data['description']) ? $data['description'] : 'Welcome to ' . SITENAME); ?>">
     <meta name="keywords" content="<?php echo !empty($data['seo_keywords']) ? $data['seo_keywords'] : (!empty($data['keywords']) ? $data['keywords'] : 'seo, webgoup, services'); ?>">
     <link rel="canonical" href="<?php echo 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" />
+    <!-- Local Fonts -->
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/fonts/inter.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/fonts/figtree.css">
     <!-- Bootstrap CSS -->
     <link href="<?php echo URLROOT; ?>/assets/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -49,6 +52,9 @@
           <li class="nav-item">
             <a id="messages-link" class="nav-link <?php echo (strpos($current_uri, '/conversations') !== false) ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>/conversations">Messages</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link <?php echo (strpos($current_uri, '/users/dashboard') !== false) ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>/users/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+          </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <?php echo $_SESSION['user_name']; ?>
@@ -57,7 +63,6 @@
               <?php if($_SESSION['user_role'] == 'admin') : ?>
                 <li><a class="dropdown-item" href="<?php echo URLROOT; ?>/admin"><i class="fas fa-user-shield"></i> Admin</a></li>
               <?php endif; ?>
-              <li><a class="dropdown-item" href="<?php echo URLROOT; ?>/users/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
               <li><a class="dropdown-item" href="<?php echo URLROOT; ?>/users/profile/<?php echo $_SESSION['user_id']; ?>"><i class="fas fa-user-circle"></i> Profile</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="<?php echo URLROOT; ?>/users/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>

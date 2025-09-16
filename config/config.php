@@ -15,7 +15,7 @@ define('DB_NAME', 'webgoup');
 // URL根目录
 // URL Root
 //define('URLROOT', 'http://webgoup'); // 请根据您的实际URL修改
-define('URLROOT', 'http://webgoup'); // 调试paypal时的地址
+define('URLROOT', 'https://8ddee074ab9a.ngrok-free.app'); // 调试paypal时的地址
 
 // Site Name
 define('SITENAME', 'WebGoup');
@@ -24,7 +24,7 @@ define('SITENAME', 'WebGoup');
 define('PLATFORM_FEE_PERCENTAGE', 30);
 
 // PayPal Settings
-define('PAYPAL_RECEIVER_EMAIL', 'sb-skb47i38000699@personal.example.com'); // TODO: 请将此替换为您的PayPal沙箱收款邮箱
+define('PAYPAL_RECEIVER_EMAIL', 'sb-trcnm46278750@personal.example.com'); // TODO: 请将此替换为您的PayPal沙箱收款邮箱
 define('PAYPAL_SANDBOX', true); // 设置为 false 以进行真实交易
 define('PAYPAL_URL', PAYPAL_SANDBOX ? 'https://www.sandbox.paypal.com/cgi-bin/webscr' : 'https://www.paypal.com/cgi-bin/webscr');
 

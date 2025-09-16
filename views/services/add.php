@@ -1,7 +1,7 @@
 <?php require APPROOT . '/views/layouts/header.php'; ?>
 
 <?php if(isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin') : ?>
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+<link href="<?php echo URLROOT; ?>/assets/summernote/summernote-lite.min.css" rel="stylesheet">
 <?php endif; ?>
 
 <div class="row">
@@ -122,7 +122,7 @@
 <?php require APPROOT . '/views/layouts/footer.php'; ?>
 
 <?php if(isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin') : ?>
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+<script src="<?php echo URLROOT; ?>/assets/summernote/summernote-lite.min.js"></script>
 <script>
 $(document).ready(function() {
   $('#description').summernote({
