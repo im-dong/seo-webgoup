@@ -51,7 +51,7 @@ class Core {
             // Fallback for POST requests or different server configs
             $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         }
-        
+
         $path = trim($path, '/');
         $path = filter_var($path, FILTER_SANITIZE_URL);
         return explode('/', $path);

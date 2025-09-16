@@ -71,8 +71,18 @@ function paginate($current_page, $total_pages, $url, $get_params = []) {
  * @return string 完整URL
  */
 function buildPageUrl($base_url, $page, $get_params = []) {
-    $params = $get_params;
-    $params['page'] = $page;
+    // 如果是第一页，不添加page参数
+    if ($page == 1) {
+        $params = $get_params;
+        unset($params['page']);
+    } else {
+        $params = $get_params;
+        $params['page'] = $page;
+    }
+
+    if (empty($params)) {
+        return $base_url;
+    }
 
     $query_string = http_build_query($params);
 
@@ -85,7 +95,12 @@ function buildPageUrl($base_url, $page, $get_params = []) {
  * @return int 当前页码
  */
 function getCurrentPage($default = 1) {
-    return isset($_GET['page']) ? max(1, intval($_GET['page'])) : $default;
+    // 如果没有指定页码，或者页码为空，返回第一页
+    if (!isset($_GET['page']) || $_GET['page'] === '' || $_GET['page'] === '1') {
+        return 1;
+    }
+    $page = intval($_GET['page']);
+    return max(1, $page);
 }
 
 /**

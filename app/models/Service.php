@@ -53,9 +53,13 @@ class Service {
 
         $sql .= ' ORDER BY s.created_at DESC';
 
-        // 添加分页
-        if (!empty($pagination['per_page']) && !empty($pagination['offset'])) {
-            $sql .= ' LIMIT ' . intval($pagination['per_page']) . ' OFFSET ' . intval($pagination['offset']);
+        // 添加分页 - 确保即使值为0也应用LIMIT
+        if (isset($pagination['per_page']) && isset($pagination['offset'])) {
+            $per_page = intval($pagination['per_page']);
+            $offset = intval($pagination['offset']);
+            if ($per_page > 0) {
+                $sql .= ' LIMIT ' . $per_page . ' OFFSET ' . $offset;
+            }
         }
 
         $this->db->query($sql);
@@ -144,9 +148,13 @@ class Service {
                 LEFT JOIN industries i ON s.industry_id = i.id
                 WHERE s.user_id = :user_id';
 
-        // 添加分页
-        if (!empty($pagination['per_page']) && !empty($pagination['offset'])) {
-            $sql .= ' LIMIT ' . intval($pagination['per_page']) . ' OFFSET ' . intval($pagination['offset']);
+        // 添加分页 - 确保即使值为0也应用LIMIT
+        if (isset($pagination['per_page']) && isset($pagination['offset'])) {
+            $per_page = intval($pagination['per_page']);
+            $offset = intval($pagination['offset']);
+            if ($per_page > 0) {
+                $sql .= ' LIMIT ' . $per_page . ' OFFSET ' . $offset;
+            }
         }
 
         $this->db->query($sql);

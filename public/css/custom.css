@@ -261,10 +261,8 @@ a:not([class]):hover {
 .btn-primary.show,
 .dropdown-item.active,
 .dropdown-item:active,
-.nav-link.active,
 .nav-link:focus,
 .nav-link:hover,
-.form-control:focus,
 .form-select:focus,
 .btn-check:checked + .btn {
     color: #fff !important;
@@ -306,4 +304,31 @@ a:not(.btn):not(.nav-link):not(.dropdown-item) {
 
 a:not(.btn):not(.nav-link):not(.dropdown-item):hover {
     color: #065f73 !important;
+}
+
+/* 导航栏激活状态 - 只改变文字颜色，不显示背景框 */
+.nav-link.active {
+    color: #087990 !important;
+    background-color: transparent !important;
+    border: none !important;
+}
+
+/* 分页样式 - 使用主题色 */
+.pagination .page-item.active .page-link {
+    background-color: #087990 !important;
+    border-color: #087990 !important;
+    color: #fff !important;
+}
+
+.pagination .page-item.active .page-link:hover {
+    background-color: #065f73 !important;
+    border-color: #065f73 !important;
+}
+
+.pagination .page-link {
+    color: #087990;
+}
+
+.pagination .page-link:hover {
+    color: #065f73;
 }
