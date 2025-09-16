@@ -204,18 +204,47 @@ class Users extends Controller {
         $this->reviewModel = $this->model('Review'); // 加载Review模型
         $this->serviceModel = $this->model('Service'); // 加载Service模型
 
-        $buyer_orders = $this->orderModel->getOrdersByBuyerId($_SESSION['user_id']);
+        // 分页设置
+        $current_page = getCurrentPage();
+        $per_page = 10; // 每页显示10个订单
+
+        // 获取买家订单分页信息
+        $total_buyer_orders = $this->orderModel->getOrdersByBuyerIdCount($_SESSION['user_id']);
+        $buyer_pagination = calculatePagination($total_buyer_orders, $current_page, $per_page);
+
+        // 获取分页后的买家订单
+        $buyer_orders = $this->orderModel->getOrdersByBuyerId($_SESSION['user_id'], [
+            'per_page' => $buyer_pagination['per_page'],
+            'offset' => $buyer_pagination['offset']
+        ]);
         foreach($buyer_orders as $order){
             $order->has_reviewed = $this->reviewModel->hasReviewed($order->id);
         }
 
-        $seller_orders = $this->orderModel->getOrdersBySellerId($_SESSION['user_id']);
+        // 获取卖家订单分页信息
+        $total_seller_orders = $this->orderModel->getOrdersBySellerIdCount($_SESSION['user_id']);
+        $seller_pagination = calculatePagination($total_seller_orders, $current_page, $per_page);
+
+        // 获取分页后的卖家订单
+        $seller_orders = $this->orderModel->getOrdersBySellerId($_SESSION['user_id'], [
+            'per_page' => $seller_pagination['per_page'],
+            'offset' => $seller_pagination['offset']
+        ]);
         foreach($seller_orders as $order){
             $order->has_reviewed = $this->reviewModel->hasReviewed($order->id);
         }
-        
+
         $wallet = $this->walletModel->getWalletByUserId($_SESSION['user_id']);
-        $my_services = $this->serviceModel->getServicesByUserId($_SESSION['user_id']);
+
+        // 获取用户服务分页信息
+        $total_services = $this->serviceModel->getServicesByUserIdCount($_SESSION['user_id']);
+        $services_pagination = calculatePagination($total_services, $current_page, $per_page);
+
+        // 获取分页后的用户服务
+        $my_services = $this->serviceModel->getServicesByUserId($_SESSION['user_id'], [
+            'per_page' => $services_pagination['per_page'],
+            'offset' => $services_pagination['offset']
+        ]);
 
         $data = [
             'title' => 'Dashboard',
@@ -224,7 +253,11 @@ class Users extends Controller {
             'buyer_orders' => $buyer_orders,
             'seller_orders' => $seller_orders,
             'wallet' => $wallet,
-            'my_services' => $my_services
+            'my_services' => $my_services,
+            'buyer_pagination' => $buyer_pagination,
+            'seller_pagination' => $seller_pagination,
+            'services_pagination' => $services_pagination,
+            'base_url' => URLROOT . '/users/dashboard'
         ];
 
         $this->view('users/dashboard', $data);

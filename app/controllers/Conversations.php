@@ -16,12 +16,49 @@ class Conversations extends Controller {
 
     // 显示用户的所有对话列表
     public function index(){
-        $conversations = $this->conversationModel->getGroupedConversationsByUserId($_SESSION['user_id']);
+        // 分页设置
+        $current_page = getCurrentPage();
+        $per_page = 20; // 每页显示20个对话
+
+        // 获取对话总数
+        $total_conversations = $this->conversationModel->getConversationsByUserIdCount($_SESSION['user_id']);
+
+        // 计算分页信息
+        $pagination = calculatePagination($total_conversations, $current_page, $per_page);
+
+        // 获取分页后的对话
+        $conversations = $this->conversationModel->getConversationsByUserId($_SESSION['user_id'], [
+            'per_page' => $pagination['per_page'],
+            'offset' => $pagination['offset']
+        ]);
+
+        // 分组对话
+        $groupedConversations = [];
+        foreach ($conversations as $conversation) {
+            $other_user_id = ($conversation->buyer_id == $_SESSION['user_id']) ? $conversation->seller_id : $conversation->buyer_id;
+            $other_user_username = ($conversation->buyer_id == $_SESSION['user_id']) ? $conversation->seller_username : $conversation->buyer_username;
+
+            if (!isset($groupedConversations[$other_user_id])) {
+                $groupedConversations[$other_user_id] = [
+                    'other_user_id' => $other_user_id,
+                    'other_user_username' => $other_user_username,
+                    'conversations' => []
+                ];
+            }
+
+            // Get unread message count for this conversation
+            $conversation->unread_count = $this->conversationModel->getUnreadCountByConversation($conversation->id, $_SESSION['user_id']);
+
+            $groupedConversations[$other_user_id]['conversations'][] = $conversation;
+        }
+
         $data = [
             'title' => 'Messages',
             'description' => 'View your conversations with other users.',
             'keywords' => 'messages, conversations, inbox',
-            'conversations' => $conversations
+            'conversations' => $groupedConversations,
+            'pagination' => $pagination,
+            'base_url' => URLROOT . '/conversations'
         ];
         $this->view('conversations/index', $data);
     }

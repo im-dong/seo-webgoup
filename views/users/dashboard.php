@@ -90,6 +90,10 @@ if (!function_exists('get_status_badge')) {
             <div class="tab-content" id="myTabContent">
                 <!-- Purchases Tab -->
                 <div class="tab-pane fade show active p-3" id="purchases-pane" role="tabpanel" aria-labelledby="purchases-tab">
+                    <?php if(!empty($data['buyer_pagination'])): ?>
+                        <?php echo showPaginationStats($data['buyer_pagination']); ?>
+                    <?php endif; ?>
+
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-light">
@@ -102,31 +106,52 @@ if (!function_exists('get_status_badge')) {
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach($data['buyer_orders'] as $order): ?>
+                                <?php if(empty($data['buyer_orders'])): ?>
                                     <tr>
-                                        <td>
-                                            <a href="<?php echo URLROOT; ?>/services/show/<?php echo $order->service_id; ?>" class="fw-bold"><?php echo htmlspecialchars($order->service_title); ?></a>
-                                            <br>
-                                            <small class="text-muted">Sold by: <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $order->seller_id; ?>"><?php echo htmlspecialchars($order->seller_name); ?></a></small>
-                                        </td>
-                                        <td>$<?php echo htmlspecialchars($order->amount); ?></td>
-                                        <td><?php echo date('Y-m-d', strtotime($order->created_at)); ?></td>
-                                        <td><span class="badge rounded-pill bg-<?php echo get_status_badge($order->status); ?>"><?php echo htmlspecialchars($order->status); ?></span></td>
-                                        <td class="text-end">
-                                            <?php if(in_array($order->status, ['completed', 'confirmed', 'released']) && !$order->has_reviewed): ?>
-                                                <a href="<?php echo URLROOT; ?>/reviews/add/<?php echo $order->id; ?>" class="btn btn-sm btn-warning">Review</a>
-                                            <?php endif; ?>
-                                            <a href="<?php echo URLROOT; ?>/orders/details/<?php echo $order->id; ?>" class="btn btn-sm btn-outline-primary">Details</a>
+                                        <td colspan="5" class="text-center text-muted">
+                                            <div class="py-4">
+                                                <i class="fas fa-shopping-cart fa-3x mb-3 d-block text-muted"></i>
+                                                <p class="mb-0">No purchase orders found.</p>
+                                            </div>
                                         </td>
                                     </tr>
-                                <?php endforeach; ?>
+                                <?php else: ?>
+                                    <?php foreach($data['buyer_orders'] as $order): ?>
+                                        <tr>
+                                            <td>
+                                                <a href="<?php echo URLROOT; ?>/services/show/<?php echo $order->service_id; ?>" class="fw-bold"><?php echo htmlspecialchars($order->service_title); ?></a>
+                                                <br>
+                                                <small class="text-muted">Sold by: <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $order->seller_id; ?>"><?php echo htmlspecialchars($order->seller_name); ?></a></small>
+                                            </td>
+                                            <td>$<?php echo htmlspecialchars($order->amount); ?></td>
+                                            <td><?php echo date('Y-m-d', strtotime($order->created_at)); ?></td>
+                                            <td><span class="badge rounded-pill bg-<?php echo get_status_badge($order->status); ?>"><?php echo htmlspecialchars($order->status); ?></span></td>
+                                            <td class="text-end">
+                                                <?php if(in_array($order->status, ['completed', 'confirmed', 'released']) && !$order->has_reviewed): ?>
+                                                    <a href="<?php echo URLROOT; ?>/reviews/add/<?php echo $order->id; ?>" class="btn btn-sm btn-warning">Review</a>
+                                                <?php endif; ?>
+                                                <a href="<?php echo URLROOT; ?>/orders/details/<?php echo $order->id; ?>" class="btn btn-sm btn-outline-primary">Details</a>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
+
+                    <?php if(!empty($data['buyer_pagination']) && $data['buyer_pagination']['total_pages'] > 1): ?>
+                        <div class="d-flex justify-content-center mt-3">
+                            <?php echo paginate($data['buyer_pagination']['current_page'], $data['buyer_pagination']['total_pages'], $data['base_url'], []); ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
                 <!-- Sales Tab -->
                 <div class="tab-pane fade p-3" id="sales-pane" role="tabpanel" aria-labelledby="sales-tab">
+                    <?php if(!empty($data['seller_pagination'])): ?>
+                        <?php echo showPaginationStats($data['seller_pagination']); ?>
+                    <?php endif; ?>
+
                      <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-light">
@@ -139,28 +164,49 @@ if (!function_exists('get_status_badge')) {
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach($data['seller_orders'] as $order): ?>
+                                <?php if(empty($data['seller_orders'])): ?>
                                     <tr>
-                                        <td>
-                                            <span class="fw-bold"><?php echo htmlspecialchars($order->service_title); ?></span>
-                                            <br>
-                                            <small class="text-muted">Bought by: <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $order->buyer_id; ?>"><?php echo htmlspecialchars($order->buyer_name); ?></a></small>
-                                        </td>
-                                        <td>$<?php echo htmlspecialchars($order->amount); ?></td>
-                                        <td><?php echo date('Y-m-d', strtotime($order->created_at)); ?></td>
-                                        <td><span class="badge rounded-pill bg-<?php echo get_status_badge($order->status); ?>"><?php echo htmlspecialchars($order->status); ?></span></td>
-                                        <td class="text-end">
-                                            <a href="<?php echo URLROOT; ?>/orders/details/<?php echo $order->id; ?>" class="btn btn-sm btn-outline-primary">Details</a>
+                                        <td colspan="5" class="text-center text-muted">
+                                            <div class="py-4">
+                                                <i class="fas fa-shopping-bag fa-3x mb-3 d-block text-muted"></i>
+                                                <p class="mb-0">No sales orders found.</p>
+                                            </div>
                                         </td>
                                     </tr>
-                                <?php endforeach; ?>
+                                <?php else: ?>
+                                    <?php foreach($data['seller_orders'] as $order): ?>
+                                        <tr>
+                                            <td>
+                                                <span class="fw-bold"><?php echo htmlspecialchars($order->service_title); ?></span>
+                                                <br>
+                                                <small class="text-muted">Bought by: <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $order->buyer_id; ?>"><?php echo htmlspecialchars($order->buyer_name); ?></a></small>
+                                            </td>
+                                            <td>$<?php echo htmlspecialchars($order->amount); ?></td>
+                                            <td><?php echo date('Y-m-d', strtotime($order->created_at)); ?></td>
+                                            <td><span class="badge rounded-pill bg-<?php echo get_status_badge($order->status); ?>"><?php echo htmlspecialchars($order->status); ?></span></td>
+                                            <td class="text-end">
+                                                <a href="<?php echo URLROOT; ?>/orders/details/<?php echo $order->id; ?>" class="btn btn-sm btn-outline-primary">Details</a>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
+
+                    <?php if(!empty($data['seller_pagination']) && $data['seller_pagination']['total_pages'] > 1): ?>
+                        <div class="d-flex justify-content-center mt-3">
+                            <?php echo paginate($data['seller_pagination']['current_page'], $data['seller_pagination']['total_pages'], $data['base_url'], []); ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
                 <!-- My Services Tab -->
                 <div class="tab-pane fade p-3" id="my-services-pane" role="tabpanel" aria-labelledby="my-services-tab">
+                    <?php if(!empty($data['services_pagination'])): ?>
+                        <?php echo showPaginationStats($data['services_pagination']); ?>
+                    <?php endif; ?>
+
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-light">
@@ -173,23 +219,40 @@ if (!function_exists('get_status_badge')) {
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach($data['my_services'] as $service): ?>
+                                <?php if(empty($data['my_services'])): ?>
                                     <tr>
-                                        <td class="fw-bold"><?php echo htmlspecialchars($service->title); ?></td>
-                                        <td>$<?php echo htmlspecialchars($service->price); ?></td>
-                                        <td><span class="badge rounded-pill bg-<?php echo get_status_badge($service->status); ?>"><?php echo htmlspecialchars($service->status); ?></span></td>
-                                        <td><?php echo date('Y-m-d', strtotime($service->created_at)); ?></td>
-                                        <td class="text-end">
-                                            <a href="<?php echo URLROOT; ?>/services/edit/<?php echo $service->serviceId; ?>" class="btn btn-sm btn-outline-secondary">Edit</a>
-                                            <form class="d-inline" action="<?php echo URLROOT; ?>/services/delete/<?php echo $service->serviceId; ?>" method="post" onsubmit="return confirm('Are you sure you want to delete this service?');">
-                                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
-                                            </form>
+                                        <td colspan="5" class="text-center text-muted">
+                                            <div class="py-4">
+                                                <i class="fas fa-briefcase fa-3x mb-3 d-block text-muted"></i>
+                                                <p class="mb-0">No services found.</p>
+                                            </div>
                                         </td>
                                     </tr>
-                                <?php endforeach; ?>
+                                <?php else: ?>
+                                    <?php foreach($data['my_services'] as $service): ?>
+                                        <tr>
+                                            <td class="fw-bold"><?php echo htmlspecialchars($service->title); ?></td>
+                                            <td>$<?php echo htmlspecialchars($service->price); ?></td>
+                                            <td><span class="badge rounded-pill bg-<?php echo get_status_badge($service->status); ?>"><?php echo htmlspecialchars($service->status); ?></span></td>
+                                            <td><?php echo date('Y-m-d', strtotime($service->created_at)); ?></td>
+                                            <td class="text-end">
+                                                <a href="<?php echo URLROOT; ?>/services/edit/<?php echo $service->serviceId; ?>" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                                <form class="d-inline" action="<?php echo URLROOT; ?>/services/delete/<?php echo $service->serviceId; ?>" method="post" onsubmit="return confirm('Are you sure you want to delete this service?');">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
+
+                    <?php if(!empty($data['services_pagination']) && $data['services_pagination']['total_pages'] > 1): ?>
+                        <div class="d-flex justify-content-center mt-3">
+                            <?php echo paginate($data['services_pagination']['current_page'], $data['services_pagination']['total_pages'], $data['base_url'], []); ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

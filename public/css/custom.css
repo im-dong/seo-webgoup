@@ -264,24 +264,17 @@ a:not([class]):hover {
 .nav-link.active,
 .nav-link:focus,
 .nav-link:hover,
-.page-link,
-.page-link:hover,
 .form-control:focus,
 .form-select:focus,
-.btn-check:checked + .btn,
-.btn-outline-primary,
-.btn-outline-primary:hover,
-.btn-outline-primary:focus,
-.btn-outline-primary:active {
+.btn-check:checked + .btn {
     color: #fff !important;
     background-color: #087990 !important;
     border-color: #087990 !important;
 }
 
-.btn-primary:hover,
-.btn-outline-primary:hover {
+.btn-primary:hover {
     background-color: #065f73 !important;
-    border-color: #065f73 !important;
+    border-color: #054c5a !important;
 }
 
 /* Override specific Bootstrap components that might use default blue */

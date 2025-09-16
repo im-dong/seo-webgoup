@@ -34,13 +34,13 @@ class Service {
     }
 
     // 获取所有服务
-    public function getServices($filters = []){
-        $sql = 'SELECT s.*, s.id as serviceId, u.id as userId, u.username, i.name as industry_name 
-                FROM services s 
-                JOIN users u ON s.user_id = u.id 
-                LEFT JOIN industries i ON s.industry_id = i.id 
+    public function getServices($filters = [], $pagination = []){
+        $sql = 'SELECT s.*, s.id as serviceId, u.id as userId, u.username, i.name as industry_name
+                FROM services s
+                JOIN users u ON s.user_id = u.id
+                LEFT JOIN industries i ON s.industry_id = i.id
                 WHERE s.status = 1';
-        
+
         if(!empty($filters['category'])){
             if($filters['category'] == 'guest_post' || $filters['category'] == 'backlink'){
                 $sql .= ' AND s.service_category = :category';
@@ -50,8 +50,13 @@ class Service {
         if(!empty($filters['industry_id'])){
             $sql .= ' AND s.industry_id = :industry_id';
         }
-        
+
         $sql .= ' ORDER BY s.created_at DESC';
+
+        // 添加分页
+        if (!empty($pagination['per_page']) && !empty($pagination['offset'])) {
+            $sql .= ' LIMIT ' . intval($pagination['per_page']) . ' OFFSET ' . intval($pagination['offset']);
+        }
 
         $this->db->query($sql);
 
@@ -67,6 +72,40 @@ class Service {
 
         $results = $this->db->resultSet();
         return $results;
+    }
+
+    // 获取服务总数（用于分页）
+    public function getServicesCount($filters = []){
+        $sql = 'SELECT COUNT(*) as total
+                FROM services s
+                JOIN users u ON s.user_id = u.id
+                LEFT JOIN industries i ON s.industry_id = i.id
+                WHERE s.status = 1';
+
+        if(!empty($filters['category'])){
+            if($filters['category'] == 'guest_post' || $filters['category'] == 'backlink'){
+                $sql .= ' AND s.service_category = :category';
+            }
+        }
+
+        if(!empty($filters['industry_id'])){
+            $sql .= ' AND s.industry_id = :industry_id';
+        }
+
+        $this->db->query($sql);
+
+        if(!empty($filters['category'])){
+            if($filters['category'] == 'guest_post' || $filters['category'] == 'backlink'){
+                $this->db->bind(':category', $filters['category']);
+            }
+        }
+
+        if(!empty($filters['industry_id'])){
+            $this->db->bind(':industry_id', $filters['industry_id'], PDO::PARAM_INT);
+        }
+
+        $result = $this->db->single();
+        return $result->total;
     }
 
     // 通过ID获取单个服务
@@ -98,16 +137,33 @@ class Service {
     }
 
     // 根据用户ID获取服务
-    public function getServicesByUserId($user_id){
-        $sql = 'SELECT s.*, s.id as serviceId, u.username, i.name as industry_name 
-                FROM services s 
-                JOIN users u ON s.user_id = u.id 
-                LEFT JOIN industries i ON s.industry_id = i.id 
+    public function getServicesByUserId($user_id, $pagination = []){
+        $sql = 'SELECT s.*, s.id as serviceId, u.username, i.name as industry_name
+                FROM services s
+                JOIN users u ON s.user_id = u.id
+                LEFT JOIN industries i ON s.industry_id = i.id
                 WHERE s.user_id = :user_id';
+
+        // 添加分页
+        if (!empty($pagination['per_page']) && !empty($pagination['offset'])) {
+            $sql .= ' LIMIT ' . intval($pagination['per_page']) . ' OFFSET ' . intval($pagination['offset']);
+        }
+
         $this->db->query($sql);
         $this->db->bind(':user_id', $user_id);
         $results = $this->db->resultSet();
         return $results;
+    }
+
+    // 获取用户服务总数（用于分页）
+    public function getServicesByUserIdCount($user_id){
+        $sql = 'SELECT COUNT(*) as total
+                FROM services s
+                WHERE s.user_id = :user_id';
+        $this->db->query($sql);
+        $this->db->bind(':user_id', $user_id);
+        $result = $this->db->single();
+        return $result->total;
     }
 
     public function updateService($data){

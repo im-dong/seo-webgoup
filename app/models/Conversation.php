@@ -7,8 +7,8 @@ class Conversation {
     }
 
     // 获取用户的所有对话
-    public function getConversationsByUserId($user_id){
-        $this->db->query('SELECT c.*, o.service_id, s.title as service_title, 
+    public function getConversationsByUserId($user_id, $pagination = []){
+        $sql = 'SELECT c.*, o.service_id, s.title as service_title,
                                     buyer.username as buyer_username, seller.username as seller_username
                              FROM conversations c
                              JOIN orders o ON c.order_id = o.id
@@ -16,9 +16,26 @@ class Conversation {
                              JOIN users buyer ON c.buyer_id = buyer.id
                              JOIN users seller ON c.seller_id = seller.id
                              WHERE c.buyer_id = :user_id OR c.seller_id = :user_id
-                             ORDER BY c.updated_at DESC');
+                             ORDER BY c.updated_at DESC';
+
+        // 添加分页
+        if (!empty($pagination['per_page']) && !empty($pagination['offset'])) {
+            $sql .= ' LIMIT ' . intval($pagination['per_page']) . ' OFFSET ' . intval($pagination['offset']);
+        }
+
+        $this->db->query($sql);
         $this->db->bind(':user_id', $user_id);
         return $this->db->resultSet();
+    }
+
+    // 获取用户对话总数（用于分页）
+    public function getConversationsByUserIdCount($user_id){
+        $this->db->query('SELECT COUNT(DISTINCT c.id) as total
+                         FROM conversations c
+                         WHERE c.buyer_id = :user_id OR c.seller_id = :user_id');
+        $this->db->bind(':user_id', $user_id);
+        $result = $this->db->single();
+        return $result->total;
     }
 
     // 获取单个对话及其所有消息
@@ -126,6 +143,15 @@ class Conversation {
 
     public function getUnreadMessageCount($user_id){
         $this->db->query('SELECT COUNT(*) as unread_count FROM messages m JOIN conversations c ON m.conversation_id = c.id WHERE (c.buyer_id = :user_id OR c.seller_id = :user_id) AND m.sender_id != :user_id AND m.is_read = 0');
+        $this->db->bind(':user_id', $user_id);
+        $row = $this->db->single();
+        return $row ? (int)$row->unread_count : 0;
+    }
+
+    // 获取指定对话的未读消息数量
+    public function getUnreadCountByConversation($conversation_id, $user_id){
+        $this->db->query('SELECT COUNT(*) as unread_count FROM messages WHERE conversation_id = :conversation_id AND sender_id != :user_id AND is_read = 0');
+        $this->db->bind(':conversation_id', $conversation_id);
         $this->db->bind(':user_id', $user_id);
         $row = $this->db->single();
         return $row ? (int)$row->unread_count : 0;

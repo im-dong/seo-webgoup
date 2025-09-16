@@ -5,6 +5,10 @@
     <h2>My Conversations</h2>
     <p>Here you can view all your conversations with buyers and sellers.</p>
 
+    <?php if(!empty($data['pagination'])): ?>
+        <?php echo showPaginationStats($data['pagination']); ?>
+    <?php endif; ?>
+
     <?php if(empty($data['conversations'])): ?>
         <div class="alert alert-info">You have no conversations yet.</div>
     <?php else: ?>
@@ -12,7 +16,7 @@
             <?php foreach($data['conversations'] as $groupedConversation): ?>
                 <div class="list-group-item">
                     <h5 class="mb-1">
-                        Conversation with 
+                        Conversation with
                         <strong>
                             <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $groupedConversation['other_user_id']; ?>">
                                 <?php echo htmlspecialchars($groupedConversation['other_user_username']); ?>
@@ -35,6 +39,12 @@
                 </div>
             <?php endforeach; ?>
         </div>
+
+        <?php if(!empty($data['pagination']) && $data['pagination']['total_pages'] > 1): ?>
+            <div class="d-flex justify-content-center mt-4">
+                <?php echo paginate($data['pagination']['current_page'], $data['pagination']['total_pages'], $data['base_url'], []); ?>
+            </div>
+        <?php endif; ?>
     <?php endif; ?>
 </div>
 

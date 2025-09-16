@@ -14,7 +14,7 @@ class Services extends Controller {
     public function index($category = null){
         // Sanitize category, allowing null
         $category = $category ? filter_var($category, FILTER_SANITIZE_STRING) : null;
-        
+
         // Get industry from query string
         $industry_id = isset($_GET['industry']) ? filter_input(INPUT_GET, 'industry', FILTER_VALIDATE_INT) : null;
 
@@ -23,9 +23,29 @@ class Services extends Controller {
             'industry_id' => $industry_id
         ];
 
-        // 获取所有服务
-        $services = $this->serviceModel->getServices($filters);
-        
+        // 分页设置
+        $current_page = getCurrentPage();
+        $per_page = 12; // 每页显示12个服务
+
+        // 获取服务总数
+        $total_services = $this->serviceModel->getServicesCount($filters);
+
+        // 计算分页信息
+        $pagination = calculatePagination($total_services, $current_page, $per_page);
+
+        // 获取分页后的服务
+        $services = $this->serviceModel->getServices($filters, [
+            'per_page' => $pagination['per_page'],
+            'offset' => $pagination['offset']
+        ]);
+
+        // 构建基础URL（保留GET参数）
+        $base_url = URLROOT . '/services' . ($category ? '/' . $category : '');
+        $get_params = [];
+        if ($industry_id) {
+            $get_params['industry'] = $industry_id;
+        }
+
         $data = [
             'title' => 'Marketplace',
             'description' => 'Browse and buy SEO services from our community marketplace. Find the perfect service to boost your website\'s ranking.',
@@ -33,7 +53,10 @@ class Services extends Controller {
             'services' => $services,
             'industries' => $this->industryModel->getIndustries(),
             'current_category' => $category,
-            'current_industry' => $industry_id
+            'current_industry' => $industry_id,
+            'pagination' => $pagination,
+            'base_url' => $base_url,
+            'get_params' => $get_params
         ];
         $this->view('services/index', $data);
     }

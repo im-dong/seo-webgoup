@@ -38,17 +38,47 @@ class Order {
     }
 
     // 根据买家ID获取订单
-    public function getOrdersByBuyerId($buyer_id){
-        $this->db->query('SELECT o.*, s.title as service_title, u.username as seller_name, CASE WHEN r.id IS NOT NULL THEN 1 ELSE 0 END as has_reviewed FROM orders o JOIN services s ON o.service_id = s.id JOIN users u ON o.seller_id = u.id LEFT JOIN reviews r ON o.id = r.order_id WHERE o.buyer_id = :buyer_id ORDER BY o.created_at DESC');
+    public function getOrdersByBuyerId($buyer_id, $pagination = []){
+        $sql = 'SELECT o.*, s.title as service_title, u.username as seller_name, CASE WHEN r.id IS NOT NULL THEN 1 ELSE 0 END as has_reviewed FROM orders o JOIN services s ON o.service_id = s.id JOIN users u ON o.seller_id = u.id LEFT JOIN reviews r ON o.id = r.order_id WHERE o.buyer_id = :buyer_id ORDER BY o.created_at DESC';
+
+        // 添加分页
+        if (!empty($pagination['per_page']) && !empty($pagination['offset'])) {
+            $sql .= ' LIMIT ' . intval($pagination['per_page']) . ' OFFSET ' . intval($pagination['offset']);
+        }
+
+        $this->db->query($sql);
         $this->db->bind(':buyer_id', $buyer_id);
         return $this->db->resultSet();
     }
 
     // 根据卖家ID获取订单
-    public function getOrdersBySellerId($seller_id){
-        $this->db->query('SELECT o.*, s.title as service_title, CASE WHEN r.id IS NOT NULL THEN 1 ELSE 0 END as has_reviewed FROM orders o JOIN services s ON o.service_id = s.id LEFT JOIN reviews r ON o.id = r.order_id WHERE o.seller_id = :seller_id ORDER BY o.created_at DESC');
+    public function getOrdersBySellerId($seller_id, $pagination = []){
+        $sql = 'SELECT o.*, s.title as service_title, CASE WHEN r.id IS NOT NULL THEN 1 ELSE 0 END as has_reviewed FROM orders o JOIN services s ON o.service_id = s.id LEFT JOIN reviews r ON o.id = r.order_id WHERE o.seller_id = :seller_id ORDER BY o.created_at DESC';
+
+        // 添加分页
+        if (!empty($pagination['per_page']) && !empty($pagination['offset'])) {
+            $sql .= ' LIMIT ' . intval($pagination['per_page']) . ' OFFSET ' . intval($pagination['offset']);
+        }
+
+        $this->db->query($sql);
         $this->db->bind(':seller_id', $seller_id);
         return $this->db->resultSet();
+    }
+
+    // 获取买家订单总数（用于分页）
+    public function getOrdersByBuyerIdCount($buyer_id){
+        $this->db->query('SELECT COUNT(*) as total FROM orders o WHERE o.buyer_id = :buyer_id');
+        $this->db->bind(':buyer_id', $buyer_id);
+        $result = $this->db->single();
+        return $result->total;
+    }
+
+    // 获取卖家订单总数（用于分页）
+    public function getOrdersBySellerIdCount($seller_id){
+        $this->db->query('SELECT COUNT(*) as total FROM orders o WHERE o.seller_id = :seller_id');
+        $this->db->bind(':seller_id', $seller_id);
+        $result = $this->db->single();
+        return $result->total;
     }
 
     // 卖家标记订单为完成

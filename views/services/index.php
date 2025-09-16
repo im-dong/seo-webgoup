@@ -33,6 +33,10 @@
         </div>
     </div>
 
+    <?php if(!empty($data['pagination'])): ?>
+        <?php echo showPaginationStats($data['pagination']); ?>
+    <?php endif; ?>
+
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         <?php if(empty($data['services'])): ?>
             <div class="col-12">
@@ -64,6 +68,12 @@
             <?php endforeach; ?>
         <?php endif; ?>
     </div>
+
+    <?php if(!empty($data['pagination']) && $data['pagination']['total_pages'] > 1): ?>
+        <div class="d-flex justify-content-center mt-4">
+            <?php echo paginate($data['pagination']['current_page'], $data['pagination']['total_pages'], $data['base_url'], $data['get_params']); ?>
+        </div>
+    <?php endif; ?>
 </div>
 
 <?php require APPROOT . '/views/layouts/footer.php'; ?>
