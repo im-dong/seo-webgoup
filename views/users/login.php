@@ -1,32 +1,38 @@
 <?php require APPROOT . '/views/layouts/header.php'; ?>
 
-<div class="row">
-    <div class="col-md-6 mx-auto">
-        <div class="card card-body bg-light mt-5">
-            <?php flash('register_success'); ?>
-            <h2>Login</h2>
-            <p>Please fill in your credentials to log in</p>
-            <form action="<?php echo URLROOT; ?>/users/login" method="post">
-                <div class="form-group mb-3">
-                    <label for="email">Email or Username: <sup>*</sup></label>
-                    <input type="text" name="email" class="form-control form-control-lg <?php echo (!empty($data['email_err'])) ? 'is-invalid' : ''; ?>" value="<?php echo $data['email']; ?>" placeholder="Enter your email or username">
-                    <span class="invalid-feedback"><?php echo $data['email_err']; ?></span>
-                    <small class="form-text text-muted">You can login with either your email address or username</small>
+<div class="d-flex align-items-center justify-content-center" style="min-height: 75vh;">
+    <div class="col-md-6 col-lg-5 col-xl-4">
+        <div class="card shadow-sm">
+            <div class="card-body p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold">Welcome Back</h2>
+                    <p class="text-muted">Please sign in to continue.</p>
                 </div>
-                <div class="form-group mb-3">
-                    <label for="password">Password: <sup>*</sup></label>
-                    <input type="password" name="password" class="form-control form-control-lg <?php echo (!empty($data['password_err'])) ? 'is-invalid' : ''; ?>" value="<?php echo $data['password']; ?>">
-                    <span class="invalid-feedback"><?php echo $data['password_err']; ?></span>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <input type="submit" value="Login" class="btn btn-success btn-block">
+                
+                <?php flash('register_success'); ?>
+
+                <form action="<?php echo URLROOT; ?>/users/login" method="post">
+                    <div class="form-floating mb-3">
+                        <input type="text" name="email" id="email" class="form-control <?php echo (!empty($data['email_err'])) ? 'is-invalid' : ''; ?>" value="<?php echo $data['email']; ?>" placeholder="Email or Username">
+                        <label for="email">Email or Username</label>
+                        <div class="invalid-feedback"><?php echo $data['email_err']; ?></div>
                     </div>
-                    <div class="col">
-                        <a href="<?php echo URLROOT; ?>/users/register" class="btn btn-light btn-block">No account? Register</a>
+
+                    <div class="form-floating mb-3">
+                        <input type="password" name="password" id="password" class="form-control <?php echo (!empty($data['password_err'])) ? 'is-invalid' : ''; ?>" placeholder="Password">
+                        <label for="password">Password</label>
+                        <div class="invalid-feedback"><?php echo $data['password_err']; ?></div>
                     </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">Login</button>
+                    </div>
+                </form>
+
+                <div class="text-center mt-4">
+                    <p class="text-muted">Don't have an account? <a href="<?php echo URLROOT; ?>/users/register">Sign up</a></p>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>

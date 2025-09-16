@@ -15,7 +15,7 @@ define('DB_NAME', 'webgoup');
 // URL根目录
 // URL Root
 //define('URLROOT', 'http://webgoup'); // 请根据您的实际URL修改
-define('URLROOT', 'https://b149d569771d.ngrok-free.app'); // 调试paypal时的地址
+define('URLROOT', 'http://webgoup'); // 调试paypal时的地址
 
 // Site Name
 define('SITENAME', 'WebGoup');

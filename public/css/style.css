@@ -1,9 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
 /* General Body Styles */
+html {
+    height: 100%;
+}
+
 body {
+    min-height: 100vh;
     background-color: #f8f9fa;
     font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Main content area */
+.container {
+    flex: 1;
 }
 
 /* Service Card Customizations */
@@ -54,13 +66,13 @@ body {
 }
 
 .btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
 }
 
 .btn-primary:hover {
-    background-color: #0056b3;
-    border-color: #0056b3;
+    background-color: #065f73;
+    border-color: #065f73;
     transform: translateY(-1px);
 }
 
@@ -75,14 +87,14 @@ body {
 
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
-    color: #007bff;
+    color: var(--bs-primary);
     background-color: transparent;
-    border-bottom: 2px solid #007bff;
+    border-bottom: 2px solid var(--bs-primary);
 }
 
 .nav-tabs .nav-link:hover {
-    color: #0056b3;
-    border-bottom: 2px solid #0056b3;
+    color: #065f73;
+    border-bottom: 2px solid #065f73;
 }
 
 .service-description {
@@ -91,12 +103,12 @@ body {
 
 /* Logo */
 .navbar-brand b {
-    color: #007bff;
+    color: var(--bs-primary);
     transition: color 0.3s ease;
 }
 
 .navbar-brand:hover b {
-    color: #0056b3;
+    color: #065f73;
 }
 
 /* Footer */
@@ -109,12 +121,13 @@ body {
 }
 
 .footer a {
+    color: var(--bs-link-color);
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .footer a:hover {
-    color: #007bff !important;
+    color: var(--bs-primary) !important;
 }
 
 .card-text img {

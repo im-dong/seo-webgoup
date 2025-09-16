@@ -73,7 +73,7 @@ class EmailHelper {
                 .header { text-align: center; padding: 30px 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px 10px 0 0; }
                 .content { background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; }
                 .verification-code {
-                    background: #007bff;
+                    background: #087990;
                     color: white;
                     padding: 15px 25px;
                     font-size: 24px;

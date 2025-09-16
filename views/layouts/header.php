@@ -8,25 +8,26 @@
     <meta name="keywords" content="<?php echo !empty($data['seo_keywords']) ? $data['seo_keywords'] : (!empty($data['keywords']) ? $data['keywords'] : 'seo, webgoup, services'); ?>">
     <link rel="canonical" href="<?php echo 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ?>" />
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<?php echo URLROOT; ?>/assets/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/assets/css/all.min.css"/>
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/style.css?v=1.1">
+    <link rel="stylesheet" href="<?php echo URLROOT; ?>/css/custom.css?v=1.1">
     
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
   <div class="container">
-    <a class="navbar-brand" href="<?php echo URLROOT; ?>">web<b>Goup</b></a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <a class="navbar-brand" href="<?php echo URLROOT; ?>">web<b class="text-primary">Goup</b></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav" aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <div class="collapse navbar-collapse" id="main-nav">
       <?php $current_uri = $_SERVER['REQUEST_URI']; ?>
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link <?php echo ($current_uri === '/' || $current_uri === '/index.php') ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>">Home</a>
+          <a class="nav-link <?php echo ($current_uri === '/' || strpos($current_uri, '/pages/index') !== false) ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>">Home</a>
         </li>
         <li class="nav-item">
           <a class="nav-link <?php echo (strpos($current_uri, '/official') !== false) ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>/official">Our Services</a>
@@ -41,29 +42,33 @@
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <?php if(isset($_SESSION['user_id'])) : ?>
           <li class="nav-item">
-            <a id="messages-link" class="nav-link <?php echo (strpos($current_uri, '/conversations') !== false) ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>/conversations">Messages</a>
+            <a class="nav-link <?php echo (strpos($current_uri, '/services/add') !== false) ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>/services/add">
+              <i class="fas fa-plus-circle"></i> Add Service
+            </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link <?php echo (strpos($current_uri, '/services/add') !== false) ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>/services/add">Add Service</a>
+            <a id="messages-link" class="nav-link <?php echo (strpos($current_uri, '/conversations') !== false) ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>/conversations">Messages</a>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="<?php echo URLROOT; ?>/users/dashboard" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Welcome <?php echo $_SESSION['user_name']; ?>
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <?php echo $_SESSION['user_name']; ?>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
               <?php if($_SESSION['user_role'] == 'admin') : ?>
-                <li><a class="dropdown-item" href="<?php echo URLROOT; ?>/admin">Admin</a></li>
+                <li><a class="dropdown-item" href="<?php echo URLROOT; ?>/admin"><i class="fas fa-user-shield"></i> Admin</a></li>
               <?php endif; ?>
-              <li><a class="dropdown-item" href="<?php echo URLROOT; ?>/users/dashboard">Dashboard</a></li>
-              <li><a class="dropdown-item" href="<?php echo URLROOT; ?>/users/logout">Logout</a></li>
+              <li><a class="dropdown-item" href="<?php echo URLROOT; ?>/users/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+              <li><a class="dropdown-item" href="<?php echo URLROOT; ?>/users/profile/<?php echo $_SESSION['user_id']; ?>"><i class="fas fa-user-circle"></i> Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="<?php echo URLROOT; ?>/users/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
           </li>
         <?php else : ?>
           <li class="nav-item">
-            <a class="nav-link <?php echo (strpos($current_uri, '/users/register') !== false) ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>/users/register">Register</a>
+            <a class="nav-link" href="<?php echo URLROOT; ?>/users/login">Login</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link <?php echo (strpos($current_uri, '/users/login') !== false) ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>/users/login">Login</a>
+            <a class="btn btn-primary" href="<?php echo URLROOT; ?>/users/register">Register</a>
           </li>
         <?php endif; ?>
       </ul>

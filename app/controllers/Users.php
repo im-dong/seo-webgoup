@@ -186,6 +186,7 @@ class Users extends Controller {
         $_SESSION['user_email'] = $user->email;
         $_SESSION['user_name'] = $user->username;
         $_SESSION['user_role'] = $user->role;
+        $_SESSION['user_avatar'] = $user->profile_image_url ?? 'default.png'; // Store avatar URL
         header('location: ' . URLROOT);
     }
 
@@ -291,8 +292,16 @@ class Users extends Controller {
             if(empty($data['profile_image_err']) && empty($data['website_url_err'])){
                 unset($data['profile_image_err']);
                 unset($data['website_url_err']);
+                // 移除不属于用户表的字段，避免SQL错误
+                unset($data['title']);
+                unset($data['description']);
+                unset($data['keywords']);
 
                 if($this->userModel->updateProfile($data)){
+                    // Update session avatar if it was changed
+                    if(isset($data['profile_image_url'])){
+                        $_SESSION['user_avatar'] = $data['profile_image_url'];
+                    }
                     flash('profile_message', 'Profile updated successfully.');
                     header('location: ' . URLROOT . '/users/dashboard');
                 } else {

@@ -1,0 +1,130 @@
+[2025-09-16 06:04:55] PayPal Request Parameters: Array
+(
+    [cmd] => _xclick
+    [business] => sb-skb47i38000699@personal.example.com
+    [item_name] => 阿斯蒂芬 - Order #20
+    [amount] => 333.00
+    [currency_code] => USD
+    [notify_url] => https://b149d569771d.ngrok-free.app/orders/ipn
+    [return] => https://b149d569771d.ngrok-free.app/orders/details/20
+    [custom] => 20
+    [charset] => utf-8
+)
+
+[2025-09-16 06:08:31] PayPal Request Parameters: Array
+(
+    [cmd] => _xclick
+    [business] => sb-skb47i38000699@personal.example.com
+    [item_name] => Service Purchase - Order #22
+    [amount] => 1104.00
+    [currency_code] => USD
+    [notify_url] => https://b149d569771d.ngrok-free.app/orders/ipn
+    [return] => https://b149d569771d.ngrok-free.app/orders/details/22
+    [custom] => 22
+    [charset] => utf-8
+)
+
+[2025-09-16 06:09:33] PayPal Request Parameters: Array
+(
+    [cmd] => _xclick
+    [business] => sb-skb47i38000699@personal.example.com
+    [item_name] => Service Purchase - Order #23
+    [amount] => 1104.00
+    [currency_code] => USD
+    [notify_url] => https://b149d569771d.ngrok-free.app/orders/ipn
+    [return] => https://b149d569771d.ngrok-free.app/orders/details/23
+    [custom] => 23
+    [charset] => utf-8
+)
+
+[2025-09-16 06:14:12] PayPal Request Parameters: Array
+(
+    [cmd] => _xclick
+    [business] => sb-skb47i38000699@personal.example.com
+    [item_name] => 超级牛逼服务 - Order #24
+    [amount] => 1104.00
+    [currency_code] => USD
+    [notify_url] => https://b149d569771d.ngrok-free.app/orders/ipn
+    [return] => https://b149d569771d.ngrok-free.app/orders/details/24
+    [custom] => 24
+    [charset] => utf-8
+)
+
+[2025-09-16 06:15:40] PayPal Request Parameters: Array
+(
+    [cmd] => _xclick
+    [business] => sb-cjv2546256182@personal.example.com
+    [item_name] => 阿斯蒂芬 - Order #25
+    [amount] => 333.00
+    [currency_code] => USD
+    [notify_url] => https://b149d569771d.ngrok-free.app/orders/ipn
+    [return] => https://b149d569771d.ngrok-free.app/orders/details/25
+    [custom] => 25
+    [charset] => utf-8
+)
+
+[2025-09-16 06:16:46] PayPal Request Parameters: Array
+(
+    [cmd] => _xclick
+    [business] => sb-8zyhz34050318@business.example.com
+    [item_name] => 超级牛逼服务 - Order #26
+    [amount] => 1104.00
+    [currency_code] => USD
+    [notify_url] => https://b149d569771d.ngrok-free.app/orders/ipn
+    [return] => https://b149d569771d.ngrok-free.app/orders/details/26
+    [custom] => 26
+    [charset] => utf-8
+)
+
+[2025-09-16 06:19:08] PayPal Request Parameters: Array
+(
+    [cmd] => _xclick
+    [business] => sb-8zyhz34050318@business.example.com
+    [item_name] => 阿斯蒂芬 - Order #27
+    [amount] => 333.00
+    [currency_code] => USD
+    [notify_url] => https://b149d569771d.ngrok-free.app/orders/ipn
+    [return] => https://b149d569771d.ngrok-free.app/orders/details/27
+    [custom] => 27
+    [charset] => utf-8
+)
+
+[2025-09-16 06:20:17] PayPal Request Parameters: Array
+(
+    [cmd] => _xclick
+    [business] => sb-8zyhz34050318@business.example.com
+    [item_name] => 阿斯蒂芬 - Order #28
+    [amount] => 333.00
+    [currency_code] => USD
+    [notify_url] => https://b149d569771d.ngrok-free.app/orders/ipn
+    [return] => https://b149d569771d.ngrok-free.app/orders/details/28
+    [custom] => 28
+    [charset] => utf-8
+)
+
+[2025-09-16 06:39:57] PayPal Request Parameters: Array
+(
+    [cmd] => _xclick
+    [business] => sb-8zyhz34050318@business.example.com
+    [item_name] => asdf - Order #29
+    [amount] => 100.00
+    [currency_code] => USD
+    [notify_url] => https://b149d569771d.ngrok-free.app/orders/ipn
+    [return] => https://b149d569771d.ngrok-free.app/orders/details/29
+    [custom] => 29
+    [charset] => utf-8
+)
+
+[2025-09-16 06:59:33] PayPal Request Parameters: Array
+(
+    [cmd] => _xclick
+    [business] => sb-upqa4346278769@personal.example.com
+    [item_name] => 阿斯蒂芬 - Order #30
+    [amount] => 333.00
+    [currency_code] => USD
+    [notify_url] => https://b149d569771d.ngrok-free.app/orders/ipn
+    [return] => https://b149d569771d.ngrok-free.app/orders/details/30
+    [custom] => 30
+    [charset] => utf-8
+)
+

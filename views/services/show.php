@@ -1,57 +1,137 @@
 <?php require APPROOT . '/views/layouts/header.php'; ?>
 
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-8">
-            <!-- Service Thumbnail -->
-            <?php if(!empty($data['service']->thumbnail_url)): ?>
-                <div class="mb-4">
-                    <img src="<?php echo htmlspecialchars($data['service']->thumbnail_url); ?>"
-                         class="img-fluid rounded shadow-sm"
-                         alt="<?php echo htmlspecialchars($data['service']->title); ?>"
-                         style="max-height: 300px; object-fit: cover;"
-                         onerror="this.src='https://via.placeholder.com/800x400?text=No+Image+Available'">
-                </div>
-            <?php endif; ?>
+<div class="bg-white py-4">
+<div class="container">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="<?php echo URLROOT; ?>/services">Marketplace</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><?php echo htmlspecialchars($data['service']->title); ?></li>
+        </ol>
+    </nav>
 
-            <h2><?php echo htmlspecialchars($data['service']->title); ?></h2>
-            <hr>
-            <p><strong>Sold by:</strong> <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $data['service']->userId; ?>"><strong><?php echo htmlspecialchars($data['service']->username); ?></strong></a></p>
-            <p><strong>Website:</strong> <a href="<?php echo htmlspecialchars($data['service']->site_url); ?>" target="_blank"><?php echo htmlspecialchars($data['service']->site_url); ?></a></p>
-            <hr>
-            <h4>Service Description</h4>
-            <div class="service-description">
-                <?php if(isset($data['service']->role) && $data['service']->role == 'admin') : ?>
-                    <?php echo $data['service']->description; // Admin发布的商品显示完整HTML ?>
-                <?php else : ?>
-                    <?php echo nl2br(htmlspecialchars(strip_tags($data['service']->description))); // 普通用户发布的商品显示纯文本 ?>
-                <?php endif; ?>
+    <div class="row g-5 mt-2">
+        <!-- Left Column: Service Details -->
+        <div class="col-lg-8">
+            <h1 class="display-6 fw-bold mb-3"><?php echo htmlspecialchars($data['service']->title); ?></h1>
+            
+            <!-- Service Image -->
+            <div class="mb-4">
+                <img src="<?php echo !empty($data['service']->thumbnail_url) ? htmlspecialchars(URLROOT . '/' . $data['service']->thumbnail_url) : URLROOT . '/uploads/images/thumbnails/default.png'; ?>"
+                     class="img-fluid rounded-3 shadow-sm w-100"
+                     alt="<?php echo htmlspecialchars($data['service']->title); ?>"
+                     style="max-height: 450px; object-fit: cover;">
+            </div>
+
+            <!-- Tabs for Description, Reviews etc. -->
+            <ul class="nav nav-tabs nav-fill mb-4" id="serviceTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="true">Description</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="seller-tab" data-bs-toggle="tab" data-bs-target="#seller" type="button" role="tab" aria-controls="seller" aria-selected="false">About Seller</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false">Reviews (<?php echo is_array($data['reviews']) ? count($data['reviews']) : 0; ?>)</button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="serviceTabContent">
+                <!-- Description Pane -->
+                <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
+                    <h4 class="mb-3">Service Details</h4>
+                    <div class="service-description">
+                        <?php if(isset($data['service']->role) && $data['service']->role == 'admin') :
+                            echo $data['service']->description; // Admin posts show full HTML
+                        else :
+                            echo nl2br(htmlspecialchars(strip_tags($data['service']->description))); // User posts show plain text
+                        endif; ?>
+                    </div>
+                </div>
+
+                <!-- Seller Pane -->
+                <div class="tab-pane fade" id="seller" role="tabpanel" aria-labelledby="seller-tab">
+                    <div class="d-flex align-items-center">
+                        <img src="<?php echo URLROOT . '/uploads/images/avatars/' . ($data['service']->avatar ?? 'default.png'); ?>" alt="Seller Avatar" class="rounded-circle me-3" style="width: 80px; height: 80px; object-fit: cover;">
+                        <div>
+                            <h4 class="mb-0"><?php echo htmlspecialchars($data['service']->username); ?></h4>
+                            <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $data['service']->userId; ?>">View Profile</a>
+                        </div>
+                    </div>
+                    <hr>
+                    <p>More seller details and stats can be added here.</p>
+                </div>
+
+                <!-- Reviews Pane -->
+                <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                    <?php if(empty($data['reviews'])) : ?>
+                        <div class="alert alert-light text-center">No reviews for this service yet.</div>
+                    <?php else: ?>
+                        <?php foreach($data['reviews'] as $review): ?>
+                            <div class="d-flex mb-4">
+                                <img src="<?php echo URLROOT . '/uploads/images/avatars/' . ($review->avatar ?? 'default.png'); ?>" alt="Reviewer Avatar" class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                <div>
+                                    <strong><?php echo htmlspecialchars($review->username); ?></strong>
+                                    <div class="text-warning mb-1">
+                                        <?php for($i = 0; $i < 5; $i++): ?>
+                                            <i class="fas fa-star<?php echo ($i < $review->rating) ? '' : '-o'; ?>"></i>
+                                        <?php endfor; ?>
+                                    </div>
+                                    <p class="mb-1"><?php echo htmlspecialchars($review->comment); ?></p>
+                                    <small class="text-muted"><?php echo date('F j, Y', strtotime($review->created_at)); ?></small>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="card-title text-center fw-bold text-primary">$<?php echo htmlspecialchars($data['service']->price); ?></h2>
-                    <hr>
-                    <p class="text-center"><strong>Sold by:</strong> <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $data['service']->userId; ?>"><strong><?php echo htmlspecialchars($data['service']->username); ?></strong></a></p>
-                    <hr>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><strong>Delivery Time:</strong> <span class="badge bg-primary"><?php echo htmlspecialchars($data['service']->delivery_time); ?> days</span></li>
-                        <li class="mb-2"><strong>Link Duration:</strong> <span class="badge bg-info"><?php echo htmlspecialchars($data['service']->duration); ?> days</span></li>
-                        <li class="mb-2"><strong>Link Type:</strong> <span class="badge bg-<?php echo ($data['service']->link_type == 'follow') ? 'success' : 'secondary'; ?>"><?php echo htmlspecialchars($data['service']->link_type); ?></span></li>
-                        <li class="mb-2"><strong>Category:</strong> <span class="badge bg-warning text-dark"><?php echo ucwords(str_replace('_', ' ', htmlspecialchars($data['service']->service_category))); ?></span></li>
+
+        <!-- Right Column: Purchase Card -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm position-sticky" style="top: 100px;">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">Service Package</h5>
+                        <p class="h3 fw-bold text-primary mb-0">$<?php echo htmlspecialchars($data['service']->price); ?></p>
+                    </div>
+                    
+                    <ul class="list-group list-group-flush mb-4">
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            Delivery Time
+                            <span class="badge bg-primary rounded-pill"><?php echo htmlspecialchars($data['service']->delivery_time); ?> days</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            Link Type
+                            <span class="badge bg-<?php echo ($data['service']->link_type == 'follow') ? 'success' : 'secondary'; ?> rounded-pill"><?php echo htmlspecialchars($data['service']->link_type); ?></span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            Category
+                            <span class="badge bg-info text-dark rounded-pill"><?php echo ucwords(str_replace('_', ' ', htmlspecialchars($data['service']->service_category))); ?></span>
+                        </li>
                         <?php if(!empty($data['service']->industry_name)): ?>
-                            <li class="mb-2"><strong>Industry:</strong> <span class="badge bg-secondary"><?php echo htmlspecialchars($data['service']->industry_name); ?></span></li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            Industry
+                            <span class="badge bg-light text-dark rounded-pill"><?php echo htmlspecialchars($data['service']->industry_name); ?></span>
+                        </li>
                         <?php endif; ?>
-                        <li class="mb-2"><strong>New Window:</strong> <?php echo ($data['service']->is_new_window) ? '<span class="badge bg-success">Yes</span>' : '<span class="badge bg-danger">No</span>'; ?></li>
-                        <li class="mb-2"><strong>Adult Content:</strong> <?php echo ($data['service']->is_adult_allowed) ? '<span class="badge bg-success">Allowed</span>' : '<span class="badge bg-danger">Not Allowed</span>'; ?></li>
                     </ul>
-                    <hr>
-                    <div class="d-grid">
+
+                    <div class="d-grid gap-2">
                         <?php if(isset($_SESSION['user_id']) && $_SESSION['user_id'] != $data['service']->userId): ?>
-                            <a href="<?php echo URLROOT; ?>/orders/startInquiry/<?php echo $data['service']->serviceId; ?>" class="btn btn-primary btn-lg mb-2">Message Seller</a>
-                            <a href="<?php echo URLROOT; ?>/orders/create_and_pay/<?php echo $data['service']->serviceId; ?>" class="btn btn-success btn-lg">Buy Now ($<?php echo htmlspecialchars($data['service']->price); ?>)</a>
+                            <a href="<?php echo URLROOT; ?>/orders/create_and_pay/<?php echo $data['service']->serviceId; ?>" class="btn btn-primary btn-lg">Order Now</a>
+                            <a href="<?php echo URLROOT; ?>/orders/startInquiry/<?php echo $data['service']->serviceId; ?>" class="btn btn-outline-secondary">Message Seller</a>
                         <?php elseif(!isset($_SESSION['user_id'])): ?>
-                             <a href="<?php echo URLROOT; ?>/users/login" class="btn btn-primary btn-lg">Login to Purchase</a>
+                             <a href="<?php echo URLROOT; ?>/users/login" class="btn btn-primary btn-lg">Login to Order</a>
+                        <?php else: ?>
+                            <button class="btn btn-light btn-lg" disabled>This is your own service</button>
                         <?php endif; ?>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<?php require APPROOT . '/views/layouts/footer.php'; ?>
