@@ -1,0 +1,5 @@
+# Config file with sensitive information
+config/config.php
+
+# User uploaded files
+public/uploads/
