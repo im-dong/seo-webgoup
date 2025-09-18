@@ -45,7 +45,8 @@ if (!function_exists('get_status_badge')) {
             <div class="card h-100 shadow-sm">
                 <div class="card-body d-flex align-items-center p-4">
                     <div class="bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center me-4" style="width: 60px; height: 60px;">
-                        <i class="fas fa-wallet fa-2x"></i>
+                        <!-- 钱包图标 -->
+                        <span style="font-size: 32px;">💰</span>
                     </div>
                     <div>
                         <h6 class="card-subtitle text-muted">Total Balance</h6>
@@ -59,7 +60,8 @@ if (!function_exists('get_status_badge')) {
             <div class="card h-100 shadow-sm">
                 <div class="card-body d-flex align-items-center p-4">
                     <div class="bg-success bg-opacity-10 text-success rounded-3 d-flex align-items-center justify-content-center me-4" style="width: 60px; height: 60px;">
-                        <i class="fas fa-hand-holding-usd fa-2x"></i>
+                        <!-- 美元图标 -->
+                        <span style="font-size: 32px;">💵</span>
                     </div>
                     <div>
                         <h6 class="card-subtitle text-muted">Withdrawable Balance</h6>

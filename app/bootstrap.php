@@ -8,6 +8,7 @@ require_once APPROOT . '/config/config.php';
 require_once APPROOT . '/app/helpers/session_helper.php';
 require_once APPROOT . '/app/helpers/email_helper.php';
 require_once APPROOT . '/app/helpers/pagination_helper.php';
+require_once APPROOT . '/app/helpers/csrf_helper.php';
 
 // 自动加载核心库
 spl_autoload_register(function($className){

@@ -30,4 +30,22 @@ class Pages extends Controller {
         ];
         $this->view('pages/terms', $data);
     }
+
+    public function seoGuidelines(){
+        $data = [
+            'title' => 'SEO Guidelines & Compliance',
+            'description' => 'Essential guidelines for safe and compliant SEO practices on webGoup platform.',
+            'keywords' => 'SEO guidelines, Google policies, search engine optimization, compliance, webmaster guidelines'
+        ];
+        $this->view('pages/seo-guidelines', $data);
+    }
+
+    public function privacy(){
+        $data = [
+            'title' => 'Privacy Policy',
+            'description' => 'Learn how webGoup collects, uses, and protects your personal information.',
+            'keywords' => 'privacy policy, data protection, personal information, webGoup privacy'
+        ];
+        $this->view('pages/privacy', $data);
+    }
 }

@@ -140,5 +140,112 @@ class EmailHelper {
 
         return $this->sendEmail($email, $subject, $message);
     }
+
+    // 发送BCC邮件（用于Newsletter等群发）
+    public function sendBCCEmail($to, $subject, $message, $bcc_emails = [], $isHtml = true) {
+        // Gmail SMTP限制：每封邮件最多100个收件人（包括TO、CC、BCC）
+        // 为了安全，我们限制每封邮件最多50个BCC收件人
+        $max_bcc_per_email = 50;
+
+        if (count($bcc_emails) <= $max_bcc_per_email) {
+            // 如果数量不多，直接发送
+            return $this->sendSingleBCCEmail($to, $subject, $message, $bcc_emails, $isHtml);
+        } else {
+            // 如果数量多，分批发送
+            return $this->sendMultipleBCCEmails($to, $subject, $message, $bcc_emails, $isHtml, $max_bcc_per_email);
+        }
+    }
+
+    // 发送单封BCC邮件
+    private function sendSingleBCCEmail($to, $subject, $message, $bcc_emails, $isHtml) {
+        $mail = new PHPMailer(true);
+
+        try {
+            // 服务器设置
+            $mail->isSMTP();
+            $mail->Host = $this->host;
+            $mail->Port = $this->port;
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->SMTPAuth = true;
+            $mail->Username = $this->username;
+            $mail->Password = $this->password;
+            $mail->CharSet = 'UTF-8';
+
+            // 发件人和收件人
+            $mail->setFrom($this->fromEmail, $this->fromName);
+            $mail->addAddress($to);
+
+            // 添加BCC收件人
+            foreach ($bcc_emails as $bcc_email) {
+                $mail->addBCC($bcc_email);
+            }
+
+            // 内容设置
+            $mail->Subject = $subject;
+            $mail->Body = $message;
+            $mail->isHTML($isHtml);
+
+            // 调试信息
+            $mail->SMTPDebug = 0;
+
+            return $mail->send();
+        } catch (Exception $e) {
+            error_log("单封BCC邮件发送失败: " . $mail->ErrorInfo);
+            return false;
+        }
+    }
+
+    // 发送多封BCC邮件（分批发送）
+    private function sendMultipleBCCEmails($to, $subject, $message, $bcc_emails, $isHtml, $batch_size) {
+        $batches = array_chunk($bcc_emails, $batch_size);
+        $success_count = 0;
+
+        foreach ($batches as $index => $batch) {
+            try {
+                // 为每批创建新的邮件实例
+                $mail = new PHPMailer(true);
+
+                // 服务器设置
+                $mail->isSMTP();
+                $mail->Host = $this->host;
+                $mail->Port = $this->port;
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->SMTPAuth = true;
+                $mail->Username = $this->username;
+                $mail->Password = $this->password;
+                $mail->CharSet = 'UTF-8';
+
+                // 发件人和收件人
+                $mail->setFrom($this->fromEmail, $this->fromName);
+                $mail->addAddress($to);
+
+                // 添加这批的BCC收件人
+                foreach ($batch as $bcc_email) {
+                    $mail->addBCC($bcc_email);
+                }
+
+                // 修改主题以标识这是第几批
+                $batch_subject = $subject . " [" . ($index + 1) . "/" . count($batches) . "]";
+
+                // 内容设置
+                $mail->Subject = $batch_subject;
+                $mail->Body = $message;
+                $mail->isHTML($isHtml);
+
+                // 发送邮件
+                if ($mail->send()) {
+                    $success_count += count($batch);
+                    // 避免发送过快，Gmail限制每秒最多1封
+                    sleep(2);
+                } else {
+                    error_log("BCC邮件批次 " . ($index + 1) . " 发送失败: " . $mail->ErrorInfo);
+                }
+            } catch (Exception $e) {
+                error_log("BCC邮件批次 " . ($index + 1) . " 异常: " . $e->getMessage());
+            }
+        }
+
+        return $success_count > 0;
+    }
 }
 ?>

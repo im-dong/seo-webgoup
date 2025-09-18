@@ -165,4 +165,16 @@ class User {
         }
         return false;
     }
+
+    // 更新用户密码
+    public function updatePassword($user_id, $hashedPassword){
+        $this->db->query('UPDATE users SET password = :password WHERE id = :id');
+        $this->db->bind(':password', $hashedPassword);
+        $this->db->bind(':id', $user_id);
+
+        if($this->db->execute()){
+            return true;
+        }
+        return false;
+    }
 }

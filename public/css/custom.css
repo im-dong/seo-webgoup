@@ -306,8 +306,46 @@ a:not(.btn):not(.nav-link):not(.dropdown-item):hover {
     color: #065f73 !important;
 }
 
+/* Dashboard icon fixes - ensure icons are visible on light backgrounds */
+.bg-primary.bg-opacity-10 .fas,
+.bg-primary.bg-opacity-10 .far,
+.bg-primary.bg-opacity-10 .fab,
+.bg-primary.bg-opacity-10.text-primary .fas,
+.bg-primary.bg-opacity-10.text-primary .far,
+.bg-primary.bg-opacity-10.text-primary .fab {
+    color: #087990 !important;
+}
+
+.bg-success.bg-opacity-10 .fas,
+.bg-success.bg-opacity-10 .far,
+.bg-success.bg-opacity-10 .fab {
+    color: #198754 !important;
+}
+
+/* Force dashboard wallet icon visibility */
+.card-body .bg-primary.bg-opacity-10 i.fa-wallet {
+    color: #087990 !important;
+}
+
+.card-body .bg-success.bg-opacity-10 i.fa-hand-holding-usd {
+    color: #198754 !important;
+}
+
+/* Make sure nav pills text is readable */
+.nav-pills .nav-link {
+    color: #495057 !important;
+}
+
+.nav-pills .nav-link:hover {
+    color: #087990 !important;
+}
+
+.nav-pills .nav-link.active {
+    color: #fff !important;
+}
+
 /* 导航栏激活状态 - 只改变文字颜色，不显示背景框 */
-.nav-link.active {
+.navbar .nav-link.active {
     color: #087990 !important;
     background-color: transparent !important;
     border: none !important;

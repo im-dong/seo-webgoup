@@ -2,6 +2,23 @@
 
 <?php flash('service_message'); ?>
 
+<!-- Legal Notice Banner -->
+<div class="alert alert-warning alert-dismissible fade show mb-0" role="alert">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-10">
+                <strong>⚠️ Important Legal Notice:</strong> webGoup is a technology platform connecting service providers and buyers.
+                We do not provide SEO services directly. All users must comply with search engine guidelines.
+                <a href="<?php echo URLROOT; ?>/pages/terms" class="alert-link">Read our Terms of Service</a> and
+                <a href="<?php echo URLROOT; ?>/pages/seoGuidelines" class="alert-link">SEO Guidelines</a>.
+            </div>
+            <div class="col-md-2 text-end">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Hero Section -->
 <section class="hero-section-new">
     <div class="container text-center">
@@ -76,12 +93,12 @@
     </div>
 </section>
 
-<!-- Official Services Section -->
+<!-- Professional Services Section -->
 <section class="py-5">
     <div class="container">
         <div class="text-center mb-5">
-            <h2>Our Premium Services</h2>
-            <p class="lead text-muted">Directly offered by webGoup for guaranteed quality.</p>
+            <h2>Professional Services</h2>
+            <p class="lead text-muted">Vetted providers with enhanced guarantees and refund protection.</p>
         </div>
         <div class="row g-4">
             <?php
@@ -107,12 +124,12 @@
             else:
             ?>
             <div class="col-12 text-center">
-                <p class="text-muted">No official services available at the moment.</p>
+                <p class="text-muted">Professional services coming soon. We're currently vetting the best providers!</p>
             </div>
             <?php endif; ?>
         </div>
         <div class="text-center mt-5">
-            <a href="<?php echo URLROOT; ?>/official" class="btn btn-primary btn-lg">View All Official Services</a>
+            <a href="<?php echo URLROOT; ?>/official" class="btn btn-primary btn-lg">View All Professional Services</a>
         </div>
     </div>
 </section>

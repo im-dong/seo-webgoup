@@ -3,6 +3,8 @@ class Users extends Controller {
     protected $userModel;
     protected $orderModel;
     protected $walletModel;
+    protected $reviewModel;
+    protected $serviceModel;
     protected $emailHelper;
     public function __construct(){
         $this->userModel = $this->model('User');
@@ -397,5 +399,86 @@ class Users extends Controller {
             'order_id_for_chat' => $order_id_for_chat
         ];
         $this->view('users/profile', $data);
+    }
+
+    public function changePassword(){
+        if(!isLoggedIn()){
+            header('location: ' . URLROOT . '/users/login');
+            exit();
+        }
+
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+            $data = [
+                'title' => 'Change Password',
+                'description' => 'Change your account password for better security.',
+                'keywords' => 'change password, update password, account security',
+                'current_password' => trim($_POST['current_password']),
+                'new_password' => trim($_POST['new_password']),
+                'confirm_password' => trim($_POST['confirm_password']),
+                'current_password_err' => '',
+                'new_password_err' => '',
+                'confirm_password_err' => ''
+            ];
+
+            // 验证当前密码
+            if(empty($data['current_password'])){
+                $data['current_password_err'] = 'Please enter your current password';
+            } else {
+                // 获取当前用户数据验证密码
+                $currentUser = $this->userModel->getUserById($_SESSION['user_id']);
+                if(!$currentUser || !password_verify($data['current_password'], $currentUser->password)){
+                    $data['current_password_err'] = 'Current password is incorrect';
+                }
+            }
+
+            // 验证新密码
+            if(empty($data['new_password'])){
+                $data['new_password_err'] = 'Please enter a new password';
+            } elseif(strlen($data['new_password']) < 6){
+                $data['new_password_err'] = 'Password must be at least 6 characters';
+            }
+
+            // 验证确认密码
+            if(empty($data['confirm_password'])){
+                $data['confirm_password_err'] = 'Please confirm your new password';
+            } elseif($data['new_password'] != $data['confirm_password']){
+                $data['confirm_password_err'] = 'Passwords do not match';
+            }
+
+            // 如果没有错误，更新密码
+            if(empty($data['current_password_err']) && empty($data['new_password_err']) && empty($data['confirm_password_err'])){
+                // 生成新密码哈希
+                $hashedPassword = password_hash($data['new_password'], PASSWORD_DEFAULT);
+
+                // 更新密码
+                if($this->userModel->updatePassword($_SESSION['user_id'], $hashedPassword)){
+                    flash('user_message', 'Password updated successfully!', 'alert alert-success');
+                    header('location: ' . URLROOT . '/users/dashboard');
+                    exit();
+                } else {
+                    die('Something went wrong. Please try again.');
+                }
+            }
+
+            // 如果有错误，重新显示表单
+            $this->view('users/change_password', $data);
+
+        } else {
+            // GET请求，显示表单
+            $data = [
+                'title' => 'Change Password',
+                'description' => 'Change your account password for better security.',
+                'keywords' => 'change password, update password, account security',
+                'current_password' => '',
+                'new_password' => '',
+                'confirm_password' => '',
+                'current_password_err' => '',
+                'new_password_err' => '',
+                'confirm_password_err' => ''
+            ];
+            $this->view('users/change_password', $data);
+        }
     }
 }

@@ -2,6 +2,7 @@
 class Services extends Controller {
     protected $serviceModel;
     protected $industryModel;
+    protected $orderModel;
 
     public function __construct(){
         if(!isLoggedIn()){

@@ -101,17 +101,36 @@
                 <div class="form-check mb-3">
                     <input class="form-check-input" type="checkbox" name="is_official" id="is_official">
                     <label class="form-check-label" for="is_official">
-                        Official Service (will appear in Our Services)
+                        Professional Service (will appear in Professional Services section)
                     </label>
                 </div>
                 <?php endif; ?>
 
-                <div class="form-check mb-3">
-                    <input class="form-check-input <?php echo (!empty($data['terms_err'])) ? 'is-invalid' : ''; ?>" type="checkbox" name="terms" id="terms">
-                    <label class="form-check-label" for="terms">
-                        I agree to the <a href="#">Terms of Service</a>.
-                    </label>
-                    <div class="invalid-feedback"><?php echo $data['terms_err']; ?></div>
+                <div class="card border-danger mb-4">
+                    <div class="card-body">
+                        <h6 class="card-title text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Service Provider Legal Agreement</h6>
+                        <p class="card-text small">
+                            As a service provider, you must comply with all applicable laws and search engine guidelines. By publishing a service, you agree to:
+                        </p>
+                        <ul class="small mb-3">
+                            <li>Follow Google's Search Essentials and all search engine policies</li>
+                            <li>Not engage in link schemes or black hat SEO practices</li>
+                            <li>Provide accurate service descriptions without false guarantees</li>
+                            <li>Accept full responsibility for your services</li>
+                            <li>Indemnify webGoup from any claims related to your services</li>
+                        </ul>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input <?php echo (!empty($data['terms_err'])) ? 'is-invalid' : ''; ?>" type="checkbox" name="terms" id="terms" required>
+                            <label class="form-check-label" for="terms">
+                                <strong>I have read the <a href="<?php echo URLROOT; ?>/pages/terms" target="_blank">Terms of Service</a> and <a href="<?php echo URLROOT; ?>/pages/seoGuidelines" target="_blank">SEO Guidelines</a>. I certify that my service complies with all applicable laws and search engine policies.</strong>
+                            </label>
+                            <div class="invalid-feedback"><?php echo $data['terms_err']; ?></div>
+                        </div>
+                        <p class="card-text small text-muted mb-0">
+                            <i class="fas fa-gavel me-1"></i>
+                            Violation of these terms may result in service removal, account suspension, or legal action.
+                        </p>
+                    </div>
                 </div>
                 <input type="submit" class="btn btn-success" value="Publish Service">
             </form>

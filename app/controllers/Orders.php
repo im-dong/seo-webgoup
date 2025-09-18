@@ -3,6 +3,8 @@ class Orders extends Controller {
     protected $orderModel;
     protected $serviceModel;
     protected $walletModel;
+    protected $conversationModel;
+    protected $userModel;
 
     public function __construct(){
         // Models are loaded here, but authentication checks are moved to specific methods.
@@ -66,28 +68,67 @@ class Orders extends Controller {
 
         if ($order_id) {
             $this->orderModel->createServiceSnapshot($order_id, $service);
-
-            $paypal_url = PAYPAL_URL . '?';
-            $paypal_data = [
-                'cmd'           => '_xclick',
-                'business'      => PAYPAL_RECEIVER_EMAIL,
-                'item_name'     => $service->title . ' - Order #' . $order_id,
-                'amount'        => $service->price,
-                'currency_code' => 'USD',
-                'notify_url'    => URLROOT . '/orders/ipn',
-                'return'        => URLROOT . '/orders/details/' . $order_id,
-                'custom'        => $order_id,
-                'charset'       => 'utf-8'
-            ];
-            $paypal_url .= http_build_query($paypal_data);
-
-            header('Location: ' . $paypal_url);
+            // 重定向到统一的支付方法
+            header('Location: ' . URLROOT . '/orders/pay/' . $order_id);
             exit();
         } else {
             flash('service_message', 'Could not create order. Please try again.', 'alert alert-danger');
             header('Location: ' . URLROOT . '/services/show/' . $service_id);
             exit();
         }
+    }
+
+    // 统一的PayPal支付方法 - 可以被任何地方调用
+    public function pay($order_id) {
+        if (!isLoggedIn()) {
+            header('Location: ' . URLROOT . '/users/login');
+            exit();
+        }
+
+        $order = $this->orderModel->getOrderById($order_id);
+
+        // 检查订单是否存在且属于当前用户
+        if (!$order || $order->buyer_id != $_SESSION['user_id']) {
+            flash('order_message', 'Invalid order or you are not authorized.', 'alert alert-danger');
+            header('Location: ' . URLROOT . '/users/dashboard');
+            exit();
+        }
+
+        // 检查订单是否已经支付
+        if ($order->status == 'paid' || $order->paid_at) {
+            flash('order_message', 'This order has already been paid.', 'alert alert-warning');
+            header('Location: ' . URLROOT . '/orders/details/' . $order_id);
+            exit();
+        }
+
+        // 获取服务信息用于PayPal描述
+        $service = $this->serviceModel->getServiceById($order->service_id);
+        if (!$service) {
+            flash('order_message', 'Service not found.', 'alert alert-danger');
+            header('Location: ' . URLROOT . '/users/dashboard');
+            exit();
+        }
+
+        // 构建PayPal支付URL
+        $amount = number_format($order->amount, 2, '.', '');
+        $return_url = URLROOT . '/orders/details/' . $order_id;
+        $paypal_url = PAYPAL_URL . '?notify_url=' . PAYPAL_NOTIFY_URL . '&cmd=_xclick&business=' . PAYPAL_RECEIVER_EMAIL . '&item_name=' . $order_id . '&amount=' . $amount . '&currency_code=USD&return=' . $return_url . '&custom=' . $order_id;
+
+        // 记录发送到PayPal的请求
+        $paypal_data = [
+            'notify_url'    => PAYPAL_NOTIFY_URL,
+            'cmd'           => '_xclick',
+            'business'      => PAYPAL_RECEIVER_EMAIL,
+            'item_name'     => $order_id,
+            'amount'        => $amount,
+            'currency_code' => 'USD',
+            'return'        => $return_url,
+            'custom'        => $order_id
+        ];
+        $this->log_paypal_request($order_id, $paypal_data, $paypal_url);
+
+        header('Location: ' . $paypal_url);
+        exit();
     }
 
     // API端点：创建订单 (被PayPal JS SDK调用) - 保留但现在需要登录检查
@@ -121,7 +162,7 @@ class Orders extends Controller {
     // API端点：捕获支付 (被PayPal JS SDK调用) - 保留但现在需要登录检查
     public function capture($order_id){
         if(!isLoggedIn()){ http_response_code(401); echo json_encode(['error' => 'Unauthorized']); return; }
-        
+
         header('Content-Type: application/json');
         $paypal_order_id = json_decode(file_get_contents('php://input'))->orderID;
         $service = $this->serviceModel->getServiceByOrderId($order_id);
@@ -320,6 +361,33 @@ class Orders extends Controller {
     private function log_ipn($message) {
         $log_file = APPROOT . '/doc/ipn.log';
         $log_message = "[" . date("Y-m-d H:i:s") . "] " . $message . "\n";
+        error_log($log_message, 3, $log_file);
+    }
+
+    private function log_paypal_request($order_id, $paypal_data, $paypal_url) {
+        $log_file = APPROOT . '/doc/paypal_requests.log';
+        $log_message = "[" . date("Y-m-d H:i:s") . "] PayPal Request Sent for Order #$order_id\n";
+        $log_message .= "=====================================================================\n";
+        $log_message .= "Order ID: $order_id\n";
+        $log_message .= "User ID: " . $_SESSION['user_id'] . "\n";
+        $log_message .= "Username: " . $_SESSION['user_name'] . "\n";
+        $log_message .= "User Email: " . ($_SESSION['user_email'] ?? 'N/A') . "\n";
+        $log_message .= "User IP: " . ($_SERVER['REMOTE_ADDR'] ?? 'N/A') . "\n";
+        $log_message .= "User Agent: " . ($_SERVER['HTTP_USER_AGENT'] ?? 'N/A') . "\n";
+        $log_message .= "Request URI: " . ($_SERVER['REQUEST_URI'] ?? 'N/A') . "\n";
+        $log_message .= "HTTP Referer: " . ($_SERVER['HTTP_REFERER'] ?? 'N/A') . "\n";
+        $log_message .= "\n";
+        $log_message .= "PayPal Data Parameters:\n";
+        $log_message .= "---------------------------------------------------------------------\n";
+        foreach ($paypal_data as $key => $value) {
+            $log_message .= "$key: $value\n";
+        }
+        $log_message .= "\n";
+        $log_message .= "Complete PayPal URL:\n";
+        $log_message .= "---------------------------------------------------------------------\n";
+        $log_message .= $paypal_url . "\n";
+        $log_message .= "=====================================================================\n\n";
+
         error_log($log_message, 3, $log_file);
     }
 }

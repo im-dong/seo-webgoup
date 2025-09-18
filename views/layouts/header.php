@@ -33,7 +33,7 @@
           <a class="nav-link <?php echo ($current_uri === '/' || strpos($current_uri, '/pages/index') !== false) ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link <?php echo (strpos($current_uri, '/official') !== false) ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>/official">Our Services</a>
+          <a class="nav-link <?php echo (strpos($current_uri, '/official') !== false) ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>/official">Professional Services</a>
         </li>
         <li class="nav-item">
           <a class="nav-link <?php echo (strpos($current_uri, '/services') !== false && strpos($current_uri, '/services/add') === false) ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>/services">Marketplace</a>
@@ -41,7 +41,7 @@
         <li class="nav-item">
           <a class="nav-link <?php echo (strpos($current_uri, '/pages/about') !== false) ? 'active' : ''; ?>" href="<?php echo URLROOT; ?>/pages/about">About</a>
         </li>
-      </ul>
+              </ul>
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <?php if(isset($_SESSION['user_id'])) : ?>
           <li class="nav-item">
@@ -61,9 +61,10 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
               <?php if($_SESSION['user_role'] == 'admin') : ?>
-                <li><a class="dropdown-item" href="<?php echo URLROOT; ?>/admin"><i class="fas fa-user-shield"></i> Admin</a></li>
+                <li><a class="dropdown-item" href="<?php echo URLROOT; ?>/newsletter/admin"><i class="fas fa-user-shield"></i> Admin Panel</a></li>
               <?php endif; ?>
               <li><a class="dropdown-item" href="<?php echo URLROOT; ?>/users/profile/<?php echo $_SESSION['user_id']; ?>"><i class="fas fa-user-circle"></i> Profile</a></li>
+              <li><a class="dropdown-item" href="<?php echo URLROOT; ?>/users/changePassword"><i class="fas fa-key"></i> Change Password</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="<?php echo URLROOT; ?>/users/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>

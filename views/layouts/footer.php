@@ -9,39 +9,48 @@
                     Our mission is to empower website owners and businesses by providing a decentralized platform for SEO services. We believe in the power of the collective to elevate every member's online presence.
                 </p>
             </div>
+            <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                <h5 class="text-uppercase text-dark">Legal & Compliance</h5>
+                <ul class="list-unstyled mb-0">
+                    <li>
+                        <a href="<?php echo URLROOT; ?>/pages/terms" class="text-muted">
+                            <i class="fas fa-gavel me-1"></i>Terms of Service
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?php echo URLROOT; ?>/pages/seoGuidelines" class="text-muted">
+                            <i class="fas fa-shield-alt me-1"></i>SEO Guidelines
+                        </a>
+                    </li>
+                    <li>
+                        <a href="<?php echo URLROOT; ?>/pages/privacy" class="text-muted">
+                            <i class="fas fa-lock me-1"></i>Privacy Policy
+                        </a>
+                    </li>
+                </ul>
+            </div>
             <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
-                <h5 class="text-uppercase text-dark">Links</h5>
+                <h5 class="text-uppercase text-dark">Platform</h5>
                 <ul class="list-unstyled mb-0">
                     <li>
                         <a href="<?php echo URLROOT; ?>/pages/about" class="text-muted">About Us</a>
                     </li>
                     <li>
-                        <a href="<?php echo URLROOT; ?>/pages/terms" class="text-muted">Terms</a>
-                    </li>
-                    <li>
                         <a href="<?php echo URLROOT; ?>/services" class="text-muted">Marketplace</a>
                     </li>
                     <li>
-                        <a href="<?php echo URLROOT; ?>/official" class="text-muted">Our Services</a>
+                        <a href="<?php echo URLROOT; ?>/official" class="text-muted">Professional Services</a>
                     </li>
                 </ul>
             </div>
-            <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-                <h5 class="text-uppercase text-dark">Connect</h5>
-                <div>
-                    <a href="#" class="btn btn-outline-secondary btn-floating m-1" role="button"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="btn btn-outline-secondary btn-floating m-1" role="button"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="btn btn-outline-secondary btn-floating m-1" role="button"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="#" class="btn btn-outline-secondary btn-floating m-1" role="button"><i class="fab fa-github"></i></a>
-                </div>
-            </div>
             <div class="col-lg-3 col-md-12 mb-4 mb-md-0">
                 <h5 class="text-uppercase text-dark">Newsletter</h5>
-                <p>Stay up to date with our latest news and offers.</p>
+                <p>Latest news and offers.</p>
                 <div class="input-group mb-3">
-                    <input type="email" class="form-control" placeholder="Enter your email" aria-label="Enter your email">
-                    <button class="btn btn-primary" type="button">Subscribe</button>
+                    <input type="email" id="newsletter-email" class="form-control" placeholder="Enter your email" aria-label="Enter your email">
+                    <button class="btn btn-primary" type="button" id="newsletter-subscribe">Subscribe</button>
                 </div>
+                <div id="newsletter-message" class="small mt-2"></div>
             </div>
         </div>
     </div>
@@ -91,6 +100,72 @@ $(document).ready(function() {
 
     // Fetch count every 30 seconds
     setInterval(fetchUnreadCount, 30000);
+
+    // Newsletter subscription
+    $('#newsletter-subscribe').on('click', function() {
+        const email = $('#newsletter-email').val().trim();
+        const messageDiv = $('#newsletter-message');
+        const button = $(this);
+
+        if (!email) {
+            showMessage('Please enter your email address.', 'danger');
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            showMessage('Please enter a valid email address.', 'danger');
+            return;
+        }
+
+        // Disable button and show loading
+        button.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span>Subscribing...');
+        showMessage('', '');
+
+        $.ajax({
+            url: '<?php echo URLROOT; ?>/newsletter/subscribe',
+            type: 'POST',
+            data: {
+                email: email,
+                csrf_token: '<?php echo generateCSRFToken(); ?>'
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    showMessage(response.message, 'success');
+                    $('#newsletter-email').val('');
+                } else {
+                    showMessage(response.message, 'warning');
+                }
+            },
+            error: function() {
+                showMessage('An error occurred. Please try again.', 'danger');
+            },
+            complete: function() {
+                button.prop('disabled', false).html('Subscribe');
+            }
+        });
+    });
+
+    // Enter key support for email input
+    $('#newsletter-email').on('keypress', function(e) {
+        if (e.which === 13) {
+            $('#newsletter-subscribe').click();
+        }
+    });
+
+    function showMessage(message, type) {
+        const messageDiv = $('#newsletter-message');
+        if (message) {
+            messageDiv.html('<div class="alert alert-' + type + ' alert-sm py-1 mb-0">' + message + '</div>');
+        } else {
+            messageDiv.html('');
+        }
+    }
+
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
 });
 </script>
 

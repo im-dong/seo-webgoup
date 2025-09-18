@@ -1,0 +1,529 @@
+[2025-09-16 17:26:06] PayPal Request Sent for Order #135
+=====================================================================
+Order ID: 135
+User ID: 7
+Username: test
+User Email: china.keychains@gmail.com
+User IP: 127.0.0.1
+User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+Request URI: /orders/pay/135
+HTTP Referer: https://8ddee074ab9a.ngrok-free.app/orders/details/135
+
+PayPal Data Parameters:
+---------------------------------------------------------------------
+cmd: _xclick
+business: sb-trcnm46278750@personal.example.com
+item_name: 高效社交媒体优化 - 管理 - Order #135
+amount: 126.26
+currency_code: USD
+notify_url: https://8ddee074ab9a.ngrok-free.app/orders/ipn
+return: https://8ddee074ab9a.ngrok-free.app/orders/details/135
+custom: 135
+charset: utf-8
+
+Complete PayPal URL:
+---------------------------------------------------------------------
+https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&business=sb-trcnm46278750%40personal.example.com&item_name=%E9%AB%98%E6%95%88%E7%A4%BE%E4%BA%A4%E5%AA%92%E4%BD%93%E4%BC%98%E5%8C%96+-+%E7%AE%A1%E7%90%86+-+Order+%23135&amount=126.26&currency_code=USD&notify_url=https%3A%2F%2F8ddee074ab9a.ngrok-free.app%2Forders%2Fipn&return=https%3A%2F%2F8ddee074ab9a.ngrok-free.app%2Forders%2Fdetails%2F135&custom=135&charset=utf-8
+=====================================================================
+
+[2025-09-16 17:35:24] PayPal Request Sent for Order #136
+=====================================================================
+Order ID: 136
+User ID: 7
+Username: test
+User Email: china.keychains@gmail.com
+User IP: 127.0.0.1
+User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+Request URI: /orders/pay/136
+HTTP Referer: https://8ddee074ab9a.ngrok-free.app/services/show/20
+
+PayPal Data Parameters:
+---------------------------------------------------------------------
+cmd: _xclick
+business: sb-trcnm46278750@personal.example.com
+item_name: 经济网站速度优化 - 套餐 - Order #136
+amount: 221.40
+currency_code: USD
+notify_url: https://8ddee074ab9a.ngrok-free.app/orders/ipn
+return: https://8ddee074ab9a.ngrok-free.app/orders/details/136
+custom: 136
+charset: utf-8
+
+Complete PayPal URL:
+---------------------------------------------------------------------
+https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&business=sb-trcnm46278750%40personal.example.com&item_name=%E7%BB%8F%E6%B5%8E%E7%BD%91%E7%AB%99%E9%80%9F%E5%BA%A6%E4%BC%98%E5%8C%96+-+%E5%A5%97%E9%A4%90+-+Order+%23136&amount=221.40&currency_code=USD&notify_url=https%3A%2F%2F8ddee074ab9a.ngrok-free.app%2Forders%2Fipn&return=https%3A%2F%2F8ddee074ab9a.ngrok-free.app%2Forders%2Fdetails%2F136&custom=136&charset=utf-8
+=====================================================================
+
+[2025-09-16 17:37:31] PayPal Request Sent for Order #136
+=====================================================================
+Order ID: 136
+User ID: 7
+Username: test
+User Email: china.keychains@gmail.com
+User IP: 127.0.0.1
+User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+Request URI: /orders/pay/136
+HTTP Referer: https://8ddee074ab9a.ngrok-free.app/orders/details/136
+
+PayPal Data Parameters:
+---------------------------------------------------------------------
+cmd: _xclick
+business: zhongshan@126.com
+item_name: 经济网站速度优化 - 套餐 - Order #136
+amount: 221.40
+currency_code: USD
+notify_url: https://8ddee074ab9a.ngrok-free.app/orders/ipn
+return: https://8ddee074ab9a.ngrok-free.app/orders/details/136
+custom: 136
+charset: utf-8
+
+Complete PayPal URL:
+---------------------------------------------------------------------
+https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=zhongshan%40126.com&item_name=%E7%BB%8F%E6%B5%8E%E7%BD%91%E7%AB%99%E9%80%9F%E5%BA%A6%E4%BC%98%E5%8C%96+-+%E5%A5%97%E9%A4%90+-+Order+%23136&amount=221.40&currency_code=USD&notify_url=https%3A%2F%2F8ddee074ab9a.ngrok-free.app%2Forders%2Fipn&return=https%3A%2F%2F8ddee074ab9a.ngrok-free.app%2Forders%2Fdetails%2F136&custom=136&charset=utf-8
+=====================================================================
+
+[2025-09-17 23:25:09] PayPal Request Sent for Order #1
+=====================================================================
+Order ID: 1
+User ID: 2
+Username: test
+User Email: test@webgoup.com
+User IP: 127.0.0.1
+User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+Request URI: /orders/pay/1
+HTTP Referer: http://webgoup/services/show/1
+
+PayPal Data Parameters:
+---------------------------------------------------------------------
+cmd: _xclick
+business: sb-gjh0d46332348@personal.example.com
+item_name: test - Order #1
+amount: 333.00
+currency_code: USD
+notify_url: http://webgoup/orders/ipn
+return: http://webgoup/orders/details/1
+custom: 1
+charset: utf-8
+
+Complete PayPal URL:
+---------------------------------------------------------------------
+https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&business=sb-gjh0d46332348%40personal.example.com&item_name=test+-+Order+%231&amount=333.00&currency_code=USD&notify_url=http%3A%2F%2Fwebgoup%2Forders%2Fipn&return=http%3A%2F%2Fwebgoup%2Forders%2Fdetails%2F1&custom=1&charset=utf-8
+=====================================================================
+
+[2025-09-18 04:48:16] PayPal Request Sent for Order #2
+=====================================================================
+Order ID: 2
+User ID: 2
+Username: test
+User Email: test@webgoup.com
+User IP: 127.0.0.1
+User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+Request URI: /orders/pay/2
+HTTP Referer: http://webgoup/orders/details/2
+
+PayPal Data Parameters:
+---------------------------------------------------------------------
+cmd: _xclick
+business: sb-gjh0d46332348@personal.example.com
+item_name: test - Order #2
+amount: 0.00
+currency_code: USD
+notify_url: https://paypal.webgoup.com/webhook/paypal
+return: http://webgoup/orders/details/2
+custom: 2
+charset: utf-8
+
+Complete PayPal URL:
+---------------------------------------------------------------------
+https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&business=sb-gjh0d46332348%40personal.example.com&item_name=test+-+Order+%232&amount=0.00&currency_code=USD&notify_url=https%3A%2F%2Fpaypal.webgoup.com%2Fwebhook%2Fpaypal&return=http%3A%2F%2Fwebgoup%2Forders%2Fdetails%2F2&custom=2&charset=utf-8
+=====================================================================
+
+[2025-09-18 04:49:57] PayPal Request Sent for Order #3
+=====================================================================
+Order ID: 3
+User ID: 2
+Username: test
+User Email: test@webgoup.com
+User IP: 127.0.0.1
+User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+Request URI: /orders/pay/3
+HTTP Referer: http://webgoup/services/show/1
+
+PayPal Data Parameters:
+---------------------------------------------------------------------
+cmd: _xclick
+business: sb-gjh0d46332348@personal.example.com
+item_name: test - Order #3
+amount: 333.00
+currency_code: USD
+notify_url: https://paypal.webgoup.com/webhook/paypal
+return: http://webgoup/orders/details/3
+custom: 3
+charset: utf-8
+
+Complete PayPal URL:
+---------------------------------------------------------------------
+https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&business=sb-gjh0d46332348%40personal.example.com&item_name=test+-+Order+%233&amount=333.00&currency_code=USD&notify_url=https%3A%2F%2Fpaypal.webgoup.com%2Fwebhook%2Fpaypal&return=http%3A%2F%2Fwebgoup%2Forders%2Fdetails%2F3&custom=3&charset=utf-8
+=====================================================================
+
+[2025-09-18 04:51:22] PayPal Request Sent for Order #3
+=====================================================================
+Order ID: 3
+User ID: 2
+Username: test
+User Email: test@webgoup.com
+User IP: 127.0.0.1
+User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+Request URI: /orders/pay/3
+HTTP Referer: http://webgoup/orders/details/3
+
+PayPal Data Parameters:
+---------------------------------------------------------------------
+cmd: _xclick
+business: 9481346@qq.com
+item_name: test - Order #3
+amount: 333.00
+currency_code: USD
+notify_url: https://paypal.webgoup.com/webhook/paypal
+return: http://webgoup/orders/details/3
+custom: 3
+charset: utf-8
+
+Complete PayPal URL:
+---------------------------------------------------------------------
+https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=9481346%40qq.com&item_name=test+-+Order+%233&amount=333.00&currency_code=USD&notify_url=https%3A%2F%2Fpaypal.webgoup.com%2Fwebhook%2Fpaypal&return=http%3A%2F%2Fwebgoup%2Forders%2Fdetails%2F3&custom=3&charset=utf-8
+=====================================================================
+
+[2025-09-18 04:52:44] PayPal Request Sent for Order #3
+=====================================================================
+Order ID: 3
+User ID: 2
+Username: test
+User Email: test@webgoup.com
+User IP: 127.0.0.1
+User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+Request URI: /orders/pay/3
+HTTP Referer: http://webgoup/orders/details/3
+
+PayPal Data Parameters:
+---------------------------------------------------------------------
+cmd: _xclick
+business: zhongshan@126.com
+item_name: test - Order #3
+amount: 333.00
+currency_code: USD
+notify_url: https://paypal.webgoup.com/webhook/paypal
+return: http://webgoup/orders/details/3
+custom: 3
+charset: utf-8
+
+Complete PayPal URL:
+---------------------------------------------------------------------
+https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=zhongshan%40126.com&item_name=test+-+Order+%233&amount=333.00&currency_code=USD&notify_url=https%3A%2F%2Fpaypal.webgoup.com%2Fwebhook%2Fpaypal&return=http%3A%2F%2Fwebgoup%2Forders%2Fdetails%2F3&custom=3&charset=utf-8
+=====================================================================
+
+[2025-09-18 04:59:13] PayPal Request Sent for Order #3
+=====================================================================
+Order ID: 3
+User ID: 2
+Username: test
+User Email: test@webgoup.com
+User IP: 127.0.0.1
+User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+Request URI: /orders/pay/3
+HTTP Referer: https://58e1b68ecff3.ngrok-free.app/orders/details/3
+
+PayPal Data Parameters:
+---------------------------------------------------------------------
+cmd: _xclick
+business: sb-gjh0d46332348@personal.example.com
+item_name: test - Order #3
+amount: 333.00
+currency_code: USD
+notify_url: https://paypal.webgoup.com/webhook/paypal
+return:  https://58e1b68ecff3.ngrok-free.app/orders/details/3
+custom: 3
+charset: utf-8
+
+Complete PayPal URL:
+---------------------------------------------------------------------
+https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&business=sb-gjh0d46332348%40personal.example.com&item_name=test+-+Order+%233&amount=333.00&currency_code=USD&notify_url=https%3A%2F%2Fpaypal.webgoup.com%2Fwebhook%2Fpaypal&return=+https%3A%2F%2F58e1b68ecff3.ngrok-free.app%2Forders%2Fdetails%2F3&custom=3&charset=utf-8
+=====================================================================
+
+[2025-09-18 05:11:48] PayPal Request Sent for Order #3
+=====================================================================
+Order ID: 3
+User ID: 2
+Username: test
+User Email: test@webgoup.com
+User IP: 127.0.0.1
+User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+Request URI: /orders/pay/3
+HTTP Referer: https://58e1b68ecff3.ngrok-free.app/orders/details/3
+
+PayPal Data Parameters:
+---------------------------------------------------------------------
+cmd: _xclick
+business: sb-gjh0d46332348@personal.example.com
+item_name: 3
+amount: 333.00
+currency_code: USD
+notify_url: https://paypal.webgoup.com/webhook/paypal
+return:  https://58e1b68ecff3.ngrok-free.app/orders/details/3
+custom: 3
+charset: utf-8
+
+Complete PayPal URL:
+---------------------------------------------------------------------
+https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&business=sb-gjh0d46332348%40personal.example.com&item_name=3&amount=333.00&currency_code=USD&notify_url=https%3A%2F%2Fpaypal.webgoup.com%2Fwebhook%2Fpaypal&return=+https%3A%2F%2F58e1b68ecff3.ngrok-free.app%2Forders%2Fdetails%2F3&custom=3&charset=utf-8
+=====================================================================
+
+[2025-09-18 05:18:01] PayPal Request Sent for Order #3
+=====================================================================
+Order ID: 3
+User ID: 2
+Username: test
+User Email: test@webgoup.com
+User IP: 127.0.0.1
+User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+Request URI: /orders/pay/3
+HTTP Referer: https://58e1b68ecff3.ngrok-free.app/orders/details/3
+
+PayPal Data Parameters:
+---------------------------------------------------------------------
+cmd: _xclick
+business: sb-gjh0d46332348@personal.example.com
+item_name: 3
+amount: 333.00
+currency_code: USD
+notify_url: https://paypal.webgoup.com/webhook/paypal
+return: https://58e1b68ecff3.ngrok-free.app/orders/details/3
+custom: 3
+charset: utf-8
+
+Complete PayPal URL:
+---------------------------------------------------------------------
+https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&business=sb-gjh0d46332348%40personal.example.com&item_name=3&amount=333.00&currency_code=USD&notify_url=https%3A%2F%2Fpaypal.webgoup.com%2Fwebhook%2Fpaypal&return=https%3A%2F%2F58e1b68ecff3.ngrok-free.app%2Forders%2Fdetails%2F3&custom=3&charset=utf-8
+=====================================================================
+
+[2025-09-18 05:21:48] PayPal Request Sent for Order #3
+=====================================================================
+Order ID: 3
+User ID: 2
+Username: test
+User Email: test@webgoup.com
+User IP: 127.0.0.1
+User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+Request URI: /orders/pay/3
+HTTP Referer: https://58e1b68ecff3.ngrok-free.app/orders/details/3?PayerID=VJE4AXCZPWY3Y
+
+PayPal Data Parameters:
+---------------------------------------------------------------------
+cmd: _xclick
+business: sb-dppv046338241@personal.example.com
+item_name: 3
+amount: 333.00
+currency_code: USD
+notify_url: https://paypal.webgoup.com/webhook/paypal
+return: https://58e1b68ecff3.ngrok-free.app/orders/details/3
+custom: 3
+charset: utf-8
+
+Complete PayPal URL:
+---------------------------------------------------------------------
+https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&business=sb-dppv046338241%40personal.example.com&item_name=3&amount=333.00&currency_code=USD&notify_url=https%3A%2F%2Fpaypal.webgoup.com%2Fwebhook%2Fpaypal&return=https%3A%2F%2F58e1b68ecff3.ngrok-free.app%2Forders%2Fdetails%2F3&custom=3&charset=utf-8
+=====================================================================
+
+[2025-09-18 05:36:05] PayPal Request Sent for Order #3
+=====================================================================
+Order ID: 3
+User ID: 2
+Username: test
+User Email: test@webgoup.com
+User IP: 127.0.0.1
+User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+Request URI: /orders/pay/3
+HTTP Referer: https://58e1b68ecff3.ngrok-free.app/orders/details/3
+
+PayPal Data Parameters:
+---------------------------------------------------------------------
+cmd: _xclick
+business: sb-dppv046338241@personal.example.com
+item_name: 3
+amount: 333.00
+currency_code: USD
+notify_url: https://seo-tip.com/test2.php
+return: https://58e1b68ecff3.ngrok-free.app/orders/details/3
+custom: 3
+charset: utf-8
+
+Complete PayPal URL:
+---------------------------------------------------------------------
+https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&business=sb-dppv046338241%40personal.example.com&item_name=3&amount=333.00&currency_code=USD&notify_url=https%3A%2F%2Fseo-tip.com%2Ftest2.php&return=https%3A%2F%2F58e1b68ecff3.ngrok-free.app%2Forders%2Fdetails%2F3&custom=3&charset=utf-8
+=====================================================================
+
+[2025-09-18 05:41:06] PayPal Request Sent for Order #2
+=====================================================================
+Order ID: 2
+User ID: 2
+Username: test
+User Email: test@webgoup.com
+User IP: 127.0.0.1
+User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+Request URI: /orders/pay/2
+HTTP Referer: https://58e1b68ecff3.ngrok-free.app/orders/details/2
+
+PayPal Data Parameters:
+---------------------------------------------------------------------
+cmd: _xclick
+business: sb-dppv046338241@personal.example.com
+item_name: 2
+amount: 0.00
+currency_code: USD
+notify_url: https://58e1b68ecff3.ngrok-free.app/orders/ipn
+return: https://58e1b68ecff3.ngrok-free.app/orders/details/2
+custom: 2
+charset: utf-8
+
+Complete PayPal URL:
+---------------------------------------------------------------------
+https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&business=sb-dppv046338241%40personal.example.com&item_name=2&amount=0.00&currency_code=USD&notify_url=https%3A%2F%2F58e1b68ecff3.ngrok-free.app%2Forders%2Fipn&return=https%3A%2F%2F58e1b68ecff3.ngrok-free.app%2Forders%2Fdetails%2F2&custom=2&charset=utf-8
+=====================================================================
+
+[2025-09-18 05:41:34] PayPal Request Sent for Order #4
+=====================================================================
+Order ID: 4
+User ID: 2
+Username: test
+User Email: test@webgoup.com
+User IP: 127.0.0.1
+User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+Request URI: /orders/pay/4
+HTTP Referer: https://58e1b68ecff3.ngrok-free.app/services/show/1
+
+PayPal Data Parameters:
+---------------------------------------------------------------------
+cmd: _xclick
+business: sb-dppv046338241@personal.example.com
+item_name: 4
+amount: 333.00
+currency_code: USD
+notify_url: https://58e1b68ecff3.ngrok-free.app/orders/ipn
+return: https://58e1b68ecff3.ngrok-free.app/orders/details/4
+custom: 4
+charset: utf-8
+
+Complete PayPal URL:
+---------------------------------------------------------------------
+https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&business=sb-dppv046338241%40personal.example.com&item_name=4&amount=333.00&currency_code=USD&notify_url=https%3A%2F%2F58e1b68ecff3.ngrok-free.app%2Forders%2Fipn&return=https%3A%2F%2F58e1b68ecff3.ngrok-free.app%2Forders%2Fdetails%2F4&custom=4&charset=utf-8
+=====================================================================
+
+[2025-09-18 05:41:50] PayPal Request Sent for Order #3
+=====================================================================
+Order ID: 3
+User ID: 2
+Username: test
+User Email: test@webgoup.com
+User IP: 127.0.0.1
+User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+Request URI: /orders/pay/3
+HTTP Referer: https://58e1b68ecff3.ngrok-free.app/orders/details/3?PayerID=VJE4AXCZPWY3Y
+
+PayPal Data Parameters:
+---------------------------------------------------------------------
+cmd: _xclick
+business: sb-dppv046338241@personal.example.com
+item_name: 3
+amount: 333.00
+currency_code: USD
+notify_url: https://58e1b68ecff3.ngrok-free.app/orders/ipn
+return: https://58e1b68ecff3.ngrok-free.app/orders/details/3
+custom: 3
+charset: utf-8
+
+Complete PayPal URL:
+---------------------------------------------------------------------
+https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&business=sb-dppv046338241%40personal.example.com&item_name=3&amount=333.00&currency_code=USD&notify_url=https%3A%2F%2F58e1b68ecff3.ngrok-free.app%2Forders%2Fipn&return=https%3A%2F%2F58e1b68ecff3.ngrok-free.app%2Forders%2Fdetails%2F3&custom=3&charset=utf-8
+=====================================================================
+
+[2025-09-18 06:26:40] PayPal Request Sent for Order #4
+=====================================================================
+Order ID: 4
+User ID: 2
+Username: test
+User Email: test@webgoup.com
+User IP: 127.0.0.1
+User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+Request URI: /orders/pay/4
+HTTP Referer: https://58e1b68ecff3.ngrok-free.app/orders/details/4
+
+PayPal Data Parameters:
+---------------------------------------------------------------------
+notify_url: https://paypal.webgoup.com
+cmd: _xclick
+business: sb-dppv046338241@personal.example.com
+item_name: 4
+amount: 333.00
+currency_code: USD
+return: https://58e1b68ecff3.ngrok-free.app/orders/details/4
+custom: 4
+
+Complete PayPal URL:
+---------------------------------------------------------------------
+https://www.sandbox.paypal.com/cgi-bin/webscr?notify_url=https://paypal.webgoup.com&cmd=_xclick&business=sb-dppv046338241@personal.example.com&item_name=4&amount=333.00&currency_code=USD&return=https://58e1b68ecff3.ngrok-free.app/orders/details/4&custom=4
+=====================================================================
+
+[2025-09-18 06:31:10] PayPal Request Sent for Order #4
+=====================================================================
+Order ID: 4
+User ID: 2
+Username: test
+User Email: test@webgoup.com
+User IP: 127.0.0.1
+User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+Request URI: /orders/pay/4
+HTTP Referer: https://58e1b68ecff3.ngrok-free.app/orders/details/4
+
+PayPal Data Parameters:
+---------------------------------------------------------------------
+notify_url: https://paypal.webgoup.com
+cmd: _xclick
+business: sb-gjh0d46332348@personal.example.com
+item_name: 4
+amount: 333.00
+currency_code: USD
+return: https://58e1b68ecff3.ngrok-free.app/orders/details/4
+custom: 4
+
+Complete PayPal URL:
+---------------------------------------------------------------------
+https://www.sandbox.paypal.com/cgi-bin/webscr?notify_url=https://paypal.webgoup.com&cmd=_xclick&business=sb-gjh0d46332348@personal.example.com&item_name=4&amount=333.00&currency_code=USD&return=https://58e1b68ecff3.ngrok-free.app/orders/details/4&custom=4
+=====================================================================
+
+[2025-09-18 06:31:49] PayPal Request Sent for Order #5
+=====================================================================
+Order ID: 5
+User ID: 2
+Username: test
+User Email: test@webgoup.com
+User IP: 127.0.0.1
+User Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+Request URI: /orders/pay/5
+HTTP Referer: https://58e1b68ecff3.ngrok-free.app/services/show/1
+
+PayPal Data Parameters:
+---------------------------------------------------------------------
+notify_url: https://paypal.webgoup.com
+cmd: _xclick
+business: sb-gjh0d46332348@personal.example.com
+item_name: 5
+amount: 333.00
+currency_code: USD
+return: https://58e1b68ecff3.ngrok-free.app/orders/details/5
+custom: 5
+
+Complete PayPal URL:
+---------------------------------------------------------------------
+https://www.sandbox.paypal.com/cgi-bin/webscr?notify_url=https://paypal.webgoup.com&cmd=_xclick&business=sb-gjh0d46332348@personal.example.com&item_name=5&amount=333.00&currency_code=USD&return=https://58e1b68ecff3.ngrok-free.app/orders/details/5&custom=5
+=====================================================================
+

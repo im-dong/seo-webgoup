@@ -63,21 +63,7 @@
                     <div class="card-header">Pay for Order</div>
                     <div class="card-body">
                         <p>Click the button below to pay with PayPal.</p>
-                        <form action="<?php echo PAYPAL_URL; ?>" method="post" target="_blank">
-                            <!-- PayPal Variables -->
-                            <input type="hidden" name="cmd" value="_xclick">
-                            <input type="hidden" name="business" value="<?php echo PAYPAL_RECEIVER_EMAIL; ?>">
-                            <input type="hidden" name="item_name" value="<?php echo htmlspecialchars($data['snapshot']->title) . ' - Order #' . $data['order']->id; ?>">
-                            <input type="hidden" name="amount" value="<?php echo $data['snapshot']->price; ?>">
-                            <input type="hidden" name="currency_code" value="USD">
-                            <input type="hidden" name="notify_url" value="<?php echo URLROOT; ?>/orders/ipn">
-                            <input type="hidden" name="return" value="<?php echo URLROOT; ?>/orders/details/<?php echo $data['order']->id; ?>">
-                            <input type="hidden" name="custom" value="<?php echo $data['order']->id; ?>">
-                            <input type="hidden" name="charset" value="utf-8">
-
-                            <!-- Button -->
-                            <button type="submit" class="btn btn-primary btn-block">Pay with PayPal</button>
-                        </form>
+                        <a href="<?php echo URLROOT; ?>/orders/pay/<?php echo $data['order']->id; ?>" class="btn btn-primary btn-block">Pay with PayPal</a>
                     </div>
                 </div>
             <?php endif; ?>
