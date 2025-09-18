@@ -14,8 +14,8 @@ define('DB_NAME', 'webgoup');
 
 // URL根目录
 // URL Root
-//define('URLROOT', 'http://webgoup'); // 请根据您的实际URL修改
-define('URLROOT', 'https://58e1b68ecff3.ngrok-free.app'); // 调试paypal时的地址
+define('URLROOT', 'http://webgoup'); // 请根据您的实际URL修改
+//define('URLROOT', 'https://58e1b68ecff3.ngrok-free.app'); // 调试paypal时的地址
 
 // Site Name
 define('SITENAME', 'WebGoup');
@@ -39,4 +39,8 @@ define('EMAIL_USERNAME', 'webgoup.service@gmail.com');
 define('EMAIL_PASSWORD', 'pnla cdab hjpp lblb');
 define('EMAIL_FROM_NAME', 'WebGoup Team');
 define('EMAIL_FROM_EMAIL', 'webgoup.service@gmail.com');
+
+// Registration Settings
+define('EMAIL_VERIFICATION_ENABLED', false); // Set to false to disable email verification on registration
+
 

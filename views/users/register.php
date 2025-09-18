@@ -36,8 +36,32 @@
                             <div class="invalid-feedback"><?php echo $data['confirm_password_err']; ?></div>
                         </div>
 
+                        <div class="card border-warning mb-3">
+                            <div class="card-body">
+                                <h6 class="card-title text-warning"><i class="fas fa-exclamation-triangle me-2"></i>Important Legal Agreement</h6>
+                                <p class="card-text small">
+                                    By registering, you acknowledge that you have read and agree to our
+                                    <a href="<?php echo URLROOT; ?>/pages/terms" target="_blank">Terms of Service</a> and
+                                    <a href="<?php echo URLROOT; ?>/pages/seoGuidelines" target="_blank">SEO Guidelines</a>.
+                                </p>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input <?php echo (!empty($data['terms_err'])) ? 'is-invalid' : ''; ?>" type="checkbox" name="terms" id="terms" value="1" <?php echo (!empty($data['terms'])) ? 'checked' : ''; ?>>
+                                    <label class="form-check-label" for="terms">
+                                        <strong>I have read and agree to the Terms of Service and SEO Guidelines. I understand the risks associated with SEO services.</strong>
+                                    </label>
+                                    <div class="invalid-feedback d-block"><?php echo $data['terms_err']; ?></div>
+                                </div>
+                                <p class="card-text small text-muted mb-0">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    SEO services may carry risks including search engine penalties. Use at your own risk.
+                                </p>
+                            </div>
+                        </div>
+
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg">Send Verification Code</button>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <?php echo EMAIL_VERIFICATION_ENABLED ? 'Send Verification Code' : 'Register'; ?>
+                            </button>
                         </div>
                     </form>
                     <div class="text-center mt-4">
@@ -67,28 +91,6 @@
                             <input type="text" name="verification_code" id="verification_code" class="form-control <?php echo (!empty($data['verification_code_err'])) ? 'is-invalid' : ''; ?>" value="<?php echo $data['verification_code']; ?>" placeholder="6-digit code" maxlength="6">
                             <label for="verification_code">Verification Code</label>
                             <div class="invalid-feedback"><?php echo $data['verification_code_err']; ?></div>
-                        </div>
-
-                        <div class="card border-warning mb-3">
-                            <div class="card-body">
-                                <h6 class="card-title text-warning"><i class="fas fa-exclamation-triangle me-2"></i>Important Legal Agreement</h6>
-                                <p class="card-text small">
-                                    By registering, you acknowledge that you have read and agree to our
-                                    <a href="<?php echo URLROOT; ?>/pages/terms" target="_blank">Terms of Service</a> and
-                                    <a href="<?php echo URLROOT; ?>/pages/seoGuidelines" target="_blank">SEO Guidelines</a>.
-                                </p>
-                                <div class="form-check mb-3">
-                                    <input class="form-check-input <?php echo (!empty($data['terms_err'])) ? 'is-invalid' : ''; ?>" type="checkbox" name="terms" id="terms" value="1" <?php echo (!empty($data['terms'])) ? 'checked' : ''; ?>>
-                                    <label class="form-check-label" for="terms">
-                                        <strong>I have read and agree to the Terms of Service and SEO Guidelines. I understand the risks associated with SEO services.</strong>
-                                    </label>
-                                    <div class="invalid-feedback d-block"><?php echo $data['terms_err']; ?></div>
-                                </div>
-                                <p class="card-text small text-muted mb-0">
-                                    <i class="fas fa-info-circle me-1"></i>
-                                    SEO services may carry risks including search engine penalties. Use at your own risk.
-                                </p>
-                            </div>
                         </div>
 
                         <div class="d-grid gap-2">

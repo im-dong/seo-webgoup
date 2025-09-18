@@ -43,31 +43,53 @@ class Users extends Controller {
                 elseif(strlen($data['password']) < 6){ $data['password_err'] = 'Password must be at least 6 characters'; }
                 if(empty($data['confirm_password'])){ $data['confirm_password_err'] = 'Please confirm password'; }
                 else { if($data['password'] != $data['confirm_password']){ $data['confirm_password_err'] = 'Passwords do not match'; }}
+                if(empty($data['terms'])){ $data['terms_err'] = 'You must agree to the Terms of Service to register'; }
 
-                if(empty($data['email_err']) && empty($data['username_err']) && empty($data['password_err']) && empty($data['confirm_password_err'])){
-                    // 生成验证码
-                    $verificationCode = sprintf('%06d', mt_rand(100000, 999999));
-                    $expiresAt = date('Y-m-d H:i:s', strtotime('+10 minutes'));
+                if(empty($data['email_err']) && empty($data['username_err']) && empty($data['password_err']) && empty($data['confirm_password_err']) && empty($data['terms_err'])){
+                    // 检查是否需要邮箱验证
+                    if(EMAIL_VERIFICATION_ENABLED){
+                        // 生成验证码
+                        $verificationCode = sprintf('%06d', mt_rand(100000, 999999));
+                        $expiresAt = date('Y-m-d H:i:s', strtotime('+10 minutes'));
 
-                    // 保存验证码到数据库
-                    if($this->userModel->saveVerificationCode($data['email'], $verificationCode, $expiresAt)){
-                        // 发送验证邮件
-                        if($this->emailHelper->sendVerificationEmail($data['email'], $verificationCode)){
-                            // 临时存储用户信息在session中
-                            $_SESSION['temp_registration'] = [
-                                'username' => $data['username'],
-                                'email' => $data['email'],
-                                'password' => password_hash($data['password'], PASSWORD_DEFAULT)
-                            ];
+                        // 保存验证码到数据库
+                        if($this->userModel->saveVerificationCode($data['email'], $verificationCode, $expiresAt)){
+                            // 发送验证邮件
+                            if($this->emailHelper->sendVerificationEmail($data['email'], $verificationCode)){
+                                // 临时存储用户信息在session中
+                                $_SESSION['temp_registration'] = [
+                                    'username' => $data['username'],
+                                    'email' => $data['email'],
+                                    'password' => password_hash($data['password'], PASSWORD_DEFAULT)
+                                ];
 
-                            $data['step'] = '2';
-                            $this->view('users/register', $data);
+                                $data['step'] = '2';
+                                $this->view('users/register', $data);
+                            } else {
+                                $data['email_err'] = 'Failed to send verification email. Please try again.';
+                                $this->view('users/register', $data);
+                            }
                         } else {
-                            $data['email_err'] = 'Failed to send verification email. Please try again.';
-                            $this->view('users/register', $data);
+                            die('Something went wrong with verification code generation');
                         }
                     } else {
-                        die('Something went wrong with verification code generation');
+                        // 无需验证，直接注册
+                        $userData = [
+                            'username' => $data['username'],
+                            'email' => $data['email'],
+                            'password' => password_hash($data['password'], PASSWORD_DEFAULT)
+                        ];
+
+                        if($user_id = $this->userModel->register($userData)){
+                            // 创建钱包
+                            $this->walletModel = $this->model('Wallet');
+                            $this->walletModel->createWallet($user_id);
+
+                            flash('register_success', 'Registration successful! You can now log in.');
+                            header('location: ' . URLROOT . '/users/login');
+                        } else {
+                            die('Something went wrong during registration');
+                        }
                     }
                 } else { $this->view('users/register', $data); }
             }
@@ -81,8 +103,6 @@ class Users extends Controller {
 
                 if(empty($data['verification_code'])){
                     $data['verification_code_err'] = 'Please enter verification code';
-                } elseif(empty($data['terms'])){
-                    $data['terms_err'] = 'You must agree to the Terms of Service to register';
                 } else {
                     // 验证验证码
                     $tempRegistration = $_SESSION['temp_registration'] ?? null;
@@ -293,6 +313,9 @@ class Users extends Controller {
             if(isset($_POST['country'])){
                 $data['country'] = trim($_POST['country']);
             }
+            if(isset($_POST['contact_method'])){
+                $data['contact_method'] = trim($_POST['contact_method']);
+            }
 
             // Handle file upload
             if(isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] == 0){
@@ -361,6 +384,7 @@ class Users extends Controller {
                 'profile_image_url' => $user->profile_image_url,
                 'website_url' => $user->website_url,
                 'country' => $user->country,
+                'contact_method' => $user->contact_method,
                 'profile_image_err' => '',
                 'website_url_err' => ''
             ];
@@ -388,6 +412,9 @@ class Users extends Controller {
             }
         }
 
+        // Check if the logged-in user is an admin
+        $is_admin_viewing = (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin');
+
         $data = [
             'title' => $user->username . "'s Profile",
             'description' => 'View the profile, reviews, and services of ' . $user->username . ' on webGoup.',
@@ -396,7 +423,8 @@ class Users extends Controller {
             'seller_reviews' => $seller_reviews,
             'buyer_reviews' => $buyer_reviews,
             'average_rating' => $average_rating,
-            'order_id_for_chat' => $order_id_for_chat
+            'order_id_for_chat' => $order_id_for_chat,
+            'is_admin_viewing' => $is_admin_viewing
         ];
         $this->view('users/profile', $data);
     }

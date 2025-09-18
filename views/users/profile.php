@@ -19,6 +19,12 @@
                         <?php endif; ?>
                     </div>
                 </div>
+                <?php if ($data['is_admin_viewing'] && !empty($data['user']->contact_method)): ?>
+                <div class="alert alert-warning mt-3">
+                    <h5 class="alert-heading"><i class="fas fa-user-secret"></i> Admin Information</h5>
+                    <p class="mb-0"><strong>Contact Method:</strong> <?php echo htmlspecialchars($data['user']->contact_method); ?></p>
+                </div>
+                <?php endif; ?>
                 <hr>
                 <h4>Bio:</h4>
                 <p><?php echo nl2br(htmlspecialchars($data['user']->bio)); ?></p>

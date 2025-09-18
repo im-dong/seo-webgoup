@@ -1,65 +1,44 @@
 <?php require APPROOT . '/views/layouts/header.php'; ?>
 
-<!-- Hero Section -->
-<section class="py-5 bg-primary text-white">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-8">
-                <h1 class="display-4 fw-bold mb-4">Professional Services</h1>
-                <p class="lead mb-4">Premium SEO services from vetted providers with webGoup quality guarantees and enhanced refund protection.</p>
-                <div class="d-flex gap-3">
-                    <span class="badge bg-light text-primary fs-6"><i class="fas fa-check-circle me-1"></i> Vetted Providers</span>
-                    <span class="badge bg-light text-primary fs-6"><i class="fas fa-shield-alt me-1"></i> Quality Guaranteed</span>
-                    <span class="badge bg-light text-primary fs-6"><i class="fas fa-money-bill-wave me-1"></i> Enhanced Refund Policy</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+<!-- Merged Hero and Features Section -->
+<section class="py-5 bg-light">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold mb-3">Professional Services by webGoup</h1>
+        <p class="lead text-muted mb-5 col-lg-8 mx-auto">
+            Experience the best of our marketplace with Professional Services. These offerings are from top-tier providers, rigorously vetted for quality and reliability. Every Professional Service comes with our webGoup quality guarantee, enhanced refund protection, and priority support.
+        </p>
 
-<!-- What Makes Professional Services Different -->
-<section class="py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="alert alert-info border-0 bg-primary bg-opacity-10">
-                    <h3 class="alert-heading"><i class="fas fa-star me-2"></i>What Makes Professional Services Special?</h3>
-                    <p class="mb-0">Professional Services are carefully selected from our marketplace providers who demonstrate exceptional quality, reliability, and compliance with SEO best practices. When you choose Professional Services, webGoup provides enhanced protection and guarantees that aren't available in the regular marketplace.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="row g-4 mt-4">
+        <div class="row g-4">
             <div class="col-md-4">
                 <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <div class="icon-circle bg-success text-white mb-3">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-circle bg-success text-white mb-3 mx-auto">
                             <i class="fas fa-award fa-2x"></i>
                         </div>
                         <h5>Vetted Providers</h5>
-                        <p>All Professional Service providers undergo rigorous screening including portfolio review, compliance checks, and performance verification.</p>
+                        <p class="mb-0">All providers undergo rigorous screening including portfolio reviews, compliance checks, and performance verification.</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <div class="icon-circle bg-primary text-white mb-3">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-circle bg-primary text-white mb-3 mx-auto">
                             <i class="fas fa-handshake fa-2x"></i>
                         </div>
                         <h5>Enhanced Guarantees</h5>
-                        <p>Professional Services come with specific, measurable deliverables and enhanced refund protections beyond standard marketplace offerings.</p>
+                        <p class="mb-0">Services come with specific, measurable deliverables and enhanced refund protections beyond standard offerings.</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <div class="icon-circle bg-warning text-white mb-3">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-circle bg-warning text-white mb-3 mx-auto">
                             <i class="fas fa-headset fa-2x"></i>
                         </div>
                         <h5>Priority Support</h5>
-                        <p>Get priority customer support and dedicated account management for all Professional Services orders.</p>
+                        <p class="mb-0">Get priority customer support and dedicated account management for all Professional Services orders.</p>
                     </div>
                 </div>
             </div>
