@@ -3,3 +3,9 @@ config/config.php
 
 # User uploaded files
 public/uploads/
+
+# macOS specific
+.DS_Store
+
+# JetBrains IDE
+.idea/
