@@ -209,15 +209,28 @@ class Users extends Controller {
         $_SESSION['user_name'] = $user->username;
         $_SESSION['user_role'] = $user->role;
         $_SESSION['user_avatar'] = $user->profile_image_url ?? 'default.png'; // Store avatar URL
+        unset($_SESSION['legal_notice_shown']); // Reset legal notice flag for new login
         header('location: ' . URLROOT);
     }
 
-    public function logout(){
-        unset($_SESSION['user_id']);
-        unset($_SESSION['user_email']);
-        unset($_SESSION['user_name']);
-        session_destroy();
-        header('location: ' . URLROOT . '/users/login');
+    public function markLegalNoticeShown(){
+    if($_SERVER['REQUEST_METHOD'] == 'POST'){
+        $_SESSION['legal_notice_shown'] = true;
+        echo json_encode(['success' => true]);
+    } else {
+        echo json_encode(['success' => false]);
+    }
+}
+
+public function logout(){
+    unset($_SESSION['user_id']);
+    unset($_SESSION['user_email']);
+    unset($_SESSION['user_name']);
+    unset($_SESSION['user_role']);
+    unset($_SESSION['user_avatar']);
+    unset($_SESSION['legal_notice_shown']);
+    session_destroy();
+    header('location: ' . URLROOT . '/users/login');
     }
 
     public function dashboard(){

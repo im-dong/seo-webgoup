@@ -6,7 +6,7 @@
             <div class="card card-body bg-light">
                 <div class="row">
                     <div class="col-md-3 text-center">
-                        <img src="<?php echo !empty($data['user']->profile_image_url) ? htmlspecialchars($data['user']->profile_image_url) : URLROOT . '/uploads/images/avatars/default.png'; ?>" class="img-fluid rounded-circle mb-3" alt="Profile Picture">
+                        <img src="<?php echo !empty($data['user']->profile_image_url) ? (strpos($data['user']->profile_image_url, 'http') === 0 ? $data['user']->profile_image_url : URLROOT . $data['user']->profile_image_url) : '/assets/default.png'; ?>" class="img-fluid rounded-circle mb-3" alt="Profile Picture">
                     </div>
                     <div class="col-md-9">
                         <h2><?php echo htmlspecialchars($data['user']->username); ?>'s Profile</h2>
@@ -27,7 +27,7 @@
                 <?php endif; ?>
                 <hr>
                 <h4>Bio:</h4>
-                <p><?php echo nl2br(htmlspecialchars($data['user']->bio)); ?></p>
+                <p><?php echo !empty($data['user']->bio) ? nl2br(htmlspecialchars($data['user']->bio)) : 'No bio available.'; ?></p>
                 <hr>
                 <h4>Average Rating: 
                     <?php if($data['average_rating'] > 0): ?>

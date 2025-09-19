@@ -64,16 +64,24 @@
                 <div class="col-lg-6">
                     <div class="card h-100 border-primary shadow-sm">
                         <?php if(!empty($service->thumbnail_url)): ?>
-                        <img src="<?php echo URLROOT . $service->thumbnail_url; ?>" class="card-img-top" alt="<?php echo htmlspecialchars($service->title); ?>" style="height: 300px; object-fit: cover;">
+                        <a href="<?php echo URLROOT; ?>/services/show/<?php echo $service->serviceId; ?>">
+                            <img src="<?php echo URLROOT . $service->thumbnail_url; ?>" class="card-img-top" alt="<?php echo htmlspecialchars($service->title); ?>" style="height: 350px; object-fit: cover;">
+                        </a>
                         <?php else: ?>
-                        <img src="<?php echo URLROOT; ?>/uploads/images/thumbnails/default.png" class="card-img-top" alt="<?php echo htmlspecialchars($service->title); ?>" style="height: 300px; object-fit: cover;">
+                        <a href="<?php echo URLROOT; ?>/services/show/<?php echo $service->serviceId; ?>">
+                            <img src="<?php echo URLROOT; ?>/uploads/images/thumbnails/default.png" class="card-img-top" alt="<?php echo htmlspecialchars($service->title); ?>" style="height: 350px; object-fit: cover;">
+                        </a>
                         <?php endif; ?>
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start mb-3">
-                                <h5 class="card-title"><?php echo htmlspecialchars($service->title); ?></h5>
+                                <h5 class="card-title">
+                                    <a href="<?php echo URLROOT; ?>/services/show/<?php echo $service->serviceId; ?>" class="text-decoration-none text-dark"><?php echo htmlspecialchars($service->title); ?></a>
+                                </h5>
                                 <span class="badge bg-success">Professional</span>
                             </div>
-                            <p class="card-text"><?php echo $service->description; ?></p>
+                            <div class="description-container" style="max-height: 800px; overflow-y: auto;">
+                                <p class="card-text mb-0"><?php echo $service->description; ?></p>
+                            </div>
 
                             <div class="row g-3 mb-3">
                                 <div class="col-6">

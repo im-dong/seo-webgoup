@@ -115,7 +115,7 @@ class Service {
     // 通过ID获取单个服务
     public function getServiceById($id){
         try {
-            $sql = 'SELECT s.*, s.id as serviceId, u.id as userId, u.username, u.role, i.name as industry_name
+            $sql = 'SELECT s.*, s.id as serviceId, u.id as userId, u.username, u.role, u.profile_image_url, u.bio, i.name as industry_name
                     FROM services s
                     JOIN users u ON s.user_id = u.id
                     LEFT JOIN industries i ON s.industry_id = i.id
@@ -212,5 +212,74 @@ class Service {
             return true;
         }
         return false;
+    }
+
+    // 获取服务的评价
+    public function getReviewsByServiceId($serviceId, $limit = 50){
+        try {
+            // 通过service_id直接获取评价
+            $sql = "SELECT r.*, u.username, u.profile_image_url
+                    FROM reviews r
+                    JOIN users u ON r.reviewer_id = u.id
+                    WHERE r.service_id = :service_id
+                    ORDER BY r.created_at DESC
+                    LIMIT :limit";
+
+            $this->db->query($sql);
+            $this->db->bind(':service_id', $serviceId);
+            $this->db->bind(':limit', $limit, PDO::PARAM_INT);
+
+            return $this->db->resultSet();
+        } catch (Exception $e) {
+            error_log('Error in getReviewsByServiceId: ' . $e->getMessage());
+            return [];
+        }
+    }
+
+    // 获取服务的评价（通过订单关联）
+    public function getReviewsByOrderId($serviceId, $limit = 50){
+        try {
+            // 通过orders表关联获取评价
+            $sql = "SELECT r.*, u.username, u.profile_image_url
+                    FROM reviews r
+                    JOIN users u ON r.reviewer_id = u.id
+                    JOIN orders o ON r.order_id = o.id
+                    WHERE o.service_id = :service_id
+                    ORDER BY r.created_at DESC
+                    LIMIT :limit";
+
+            $this->db->query($sql);
+            $this->db->bind(':service_id', $serviceId);
+            $this->db->bind(':limit', $limit, PDO::PARAM_INT);
+
+            return $this->db->resultSet();
+        } catch (Exception $e) {
+            error_log('Error in getReviewsByOrderId: ' . $e->getMessage());
+            return [];
+        }
+    }
+
+    // 获取服务的所有评价（合并两种方式）
+    public function getAllServiceReviews($serviceId, $limit = 50){
+        try {
+            // 合并通过service_id和通过order_id关联的评价
+            $sql = "SELECT r.*, u.username, u.profile_image_url
+                    FROM reviews r
+                    JOIN users u ON r.reviewer_id = u.id
+                    LEFT JOIN orders o ON r.order_id = o.id
+                    WHERE r.service_id = :service_id OR o.service_id = :service_id2
+                    ORDER BY r.created_at DESC
+                    LIMIT :limit";
+
+            $this->db->query($sql);
+            $this->db->bind(':service_id', $serviceId);
+            $this->db->bind(':service_id2', $serviceId);
+            $this->db->bind(':limit', $limit, PDO::PARAM_INT);
+
+            return $this->db->resultSet();
+        } catch (Exception $e) {
+            error_log('Error in getAllServiceReviews: ' . $e->getMessage());
+            return [];
+        }
     }
 }

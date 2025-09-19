@@ -52,14 +52,14 @@
                 <!-- Seller Pane -->
                 <div class="tab-pane fade" id="seller" role="tabpanel" aria-labelledby="seller-tab">
                     <div class="d-flex align-items-center">
-                        <img src="<?php echo URLROOT . '/uploads/images/avatars/default.png'; ?>" alt="Seller Avatar" class="rounded-circle me-3" style="width: 80px; height: 80px; object-fit: cover;">
+                        <img src="<?php echo !empty($data['service']->profile_image_url) ? (strpos($data['service']->profile_image_url, 'http') === 0 ? $data['service']->profile_image_url : URLROOT . $data['service']->profile_image_url) : '/assets/default.png'; ?>" alt="Seller Avatar" class="rounded-circle me-3" style="width: 80px; height: 80px; object-fit: cover;">
                         <div>
                             <h4 class="mb-0"><?php echo htmlspecialchars($data['service']->username); ?></h4>
                             <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $data['service']->userId; ?>">View Profile</a>
                         </div>
                     </div>
                     <hr>
-                    <p>More seller details and stats can be added here.</p>
+                    <p><?php echo !empty($data['service']->bio) ? nl2br(htmlspecialchars($data['service']->bio)) : 'No bio available for this seller.'; ?></p>
                 </div>
 
                 <!-- Reviews Pane -->
@@ -69,7 +69,7 @@
                     <?php else: ?>
                         <?php foreach($data['reviews'] as $review): ?>
                             <div class="d-flex mb-4">
-                                <img src="<?php echo URLROOT . '/uploads/images/avatars/' . ($review->avatar ?? 'default.png'); ?>" alt="Reviewer Avatar" class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                <img src="<?php echo !empty($review->profile_image_url) ? (strpos($review->profile_image_url, 'http') === 0 ? $review->profile_image_url : URLROOT . $review->profile_image_url) : '/assets/default.png'; ?>" alt="Reviewer Avatar" class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover;">
                                 <div>
                                     <strong><?php echo htmlspecialchars($review->username); ?></strong>
                                     <div class="text-warning mb-1">

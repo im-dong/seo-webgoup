@@ -93,9 +93,8 @@ class Services extends Controller {
                 }
             }
 
-            // 获取服务评论
-            $reviews = [];
-            // 这里暂时使用空数组，你可以根据需要添加获取评论的逻辑
+            // 获取服务评论（使用合并方式获取service_id和order_id关联的评价）
+            $reviews = $this->serviceModel->getAllServiceReviews($id);
 
             $data = [
                 'title' => $service->title,
