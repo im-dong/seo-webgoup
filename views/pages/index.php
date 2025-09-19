@@ -109,6 +109,11 @@
             ?>
             <div class="col-lg-3 col-md-6">
                 <div class="card service-card h-100">
+                    <?php if(!empty($service->thumbnail_url)): ?>
+                    <img src="<?php echo URLROOT . $service->thumbnail_url; ?>" class="card-img-top" alt="<?php echo htmlspecialchars($service->title); ?>" style="height: 200px; object-fit: cover;">
+                    <?php else: ?>
+                    <img src="<?php echo URLROOT; ?>/uploads/images/thumbnails/default.png" class="card-img-top" alt="<?php echo htmlspecialchars($service->title); ?>" style="height: 200px; object-fit: cover;">
+                    <?php endif; ?>
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title"><?php echo htmlspecialchars($service->title); ?></h5>
                         <p class="card-text"><?php echo substr(strip_tags($service->description), 0, 80); ?>...</p>
@@ -149,6 +154,11 @@
             ?>
             <div class="col-lg-3 col-md-6">
                 <div class="card service-card h-100">
+                    <?php if(!empty($service->thumbnail_url)): ?>
+                    <img src="<?php echo URLROOT . $service->thumbnail_url; ?>" class="card-img-top" alt="<?php echo htmlspecialchars($service->title); ?>" style="height: 200px; object-fit: cover;">
+                    <?php else: ?>
+                    <img src="<?php echo URLROOT; ?>/uploads/images/thumbnails/default.png" class="card-img-top" alt="<?php echo htmlspecialchars($service->title); ?>" style="height: 200px; object-fit: cover;">
+                    <?php endif; ?>
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title"><?php echo htmlspecialchars($service->title); ?></h5>
                         <div class="d-flex justify-content-between align-items-center my-2">

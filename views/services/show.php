@@ -32,7 +32,7 @@
                     <button class="nav-link" id="seller-tab" data-bs-toggle="tab" data-bs-target="#seller" type="button" role="tab" aria-controls="seller" aria-selected="false">About Seller</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false">Reviews (<?php echo is_array($data['reviews']) ? count($data['reviews']) : 0; ?>)</button>
+                    <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false">Reviews (<?php echo isset($data['reviews']) && is_array($data['reviews']) ? count($data['reviews']) : 0; ?>)</button>
                 </li>
             </ul>
 
@@ -42,7 +42,7 @@
                     <h4 class="mb-3">Service Details</h4>
                     <div class="service-description">
                         <?php if(isset($data['service']->role) && $data['service']->role == 'admin') :
-                            echo $data['service']->description; // Admin posts show full HTML
+                            echo $data['service']->description; // Admin posts show full HTML - 不过滤
                         else :
                             echo nl2br(htmlspecialchars(strip_tags($data['service']->description))); // User posts show plain text
                         endif; ?>
@@ -52,7 +52,7 @@
                 <!-- Seller Pane -->
                 <div class="tab-pane fade" id="seller" role="tabpanel" aria-labelledby="seller-tab">
                     <div class="d-flex align-items-center">
-                        <img src="<?php echo URLROOT . '/uploads/images/avatars/' . ($data['service']->avatar ?? 'default.png'); ?>" alt="Seller Avatar" class="rounded-circle me-3" style="width: 80px; height: 80px; object-fit: cover;">
+                        <img src="<?php echo URLROOT . '/uploads/images/avatars/default.png'; ?>" alt="Seller Avatar" class="rounded-circle me-3" style="width: 80px; height: 80px; object-fit: cover;">
                         <div>
                             <h4 class="mb-0"><?php echo htmlspecialchars($data['service']->username); ?></h4>
                             <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $data['service']->userId; ?>">View Profile</a>
@@ -64,7 +64,7 @@
 
                 <!-- Reviews Pane -->
                 <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
-                    <?php if(empty($data['reviews'])) : ?>
+                    <?php if(!isset($data['reviews']) || empty($data['reviews'])) : ?>
                         <div class="alert alert-light text-center">No reviews for this service yet.</div>
                     <?php else: ?>
                         <?php foreach($data['reviews'] as $review): ?>

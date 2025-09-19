@@ -63,25 +63,57 @@ class Services extends Controller {
     }
 
     public function show($id){
-        $service = $this->serviceModel->getServiceById($id);
-        // 尝试获取与此服务相关的最新订单ID，以便用于聊天
-        $order_id_for_chat = null;
-        if(isset($_SESSION['user_id'])){
-            $this->orderModel = $this->model('Order');
-            $latest_order = $this->orderModel->getLatestOrderByServiceAndUsers($id, $_SESSION['user_id'], $service->userId);
-            if($latest_order) {
-                $order_id_for_chat = $latest_order->id;
-            }
-        }
+        try {
+            // 调试信息
+            error_log("Services::show() called with id: $id");
 
-        $data = [
-            'title' => $service->title,
-            'description' => substr(strip_tags($service->description), 0, 160),
-            'keywords' => $service->title . ', ' . $service->service_category . ', SEO service',
-            'service' => $service,
-            'order_id_for_chat' => $order_id_for_chat
-        ];
-        $this->view('services/show', $data);
+            $service = $this->serviceModel->getServiceById($id);
+            if(!$service) {
+                error_log("Service not found with id: $id");
+                // 如果服务不存在，重定向到服务列表
+                header('location: ' . URLROOT . '/services');
+                exit();
+            }
+
+            error_log("Service found: " . $service->title);
+            error_log("Service role: " . $service->role);
+
+            // 尝试获取与此服务相关的最新订单ID，以便用于聊天
+            $order_id_for_chat = null;
+            if(isset($_SESSION['user_id'])){
+                try {
+                    $this->orderModel = $this->model('Order');
+                    $latest_order = $this->orderModel->getLatestOrderByServiceAndUsers($id, $_SESSION['user_id'], $service->userId);
+                    if($latest_order) {
+                        $order_id_for_chat = $latest_order->id;
+                    }
+                } catch (Exception $e) {
+                    // Order模型可能不存在或方法不可用，忽略错误
+                    error_log('Order model error: ' . $e->getMessage());
+                }
+            }
+
+            // 获取服务评论
+            $reviews = [];
+            // 这里暂时使用空数组，你可以根据需要添加获取评论的逻辑
+
+            $data = [
+                'title' => $service->title,
+                'description' => substr(strip_tags($service->description), 0, 160),
+                'keywords' => $service->title . ', ' . $service->service_category . ', SEO service',
+                'service' => $service,
+                'reviews' => $reviews,
+                'order_id_for_chat' => $order_id_for_chat
+            ];
+
+            error_log("Data prepared for view, calling view()");
+            $this->view('services/show', $data);
+            error_log("View call completed");
+        } catch (Exception $e) {
+            // 捕获并显示错误
+            error_log("Exception in show method: " . $e->getMessage());
+            die('Error in show method: ' . $e->getMessage());
+        }
     }
 
     public function add(){
@@ -93,7 +125,7 @@ class Services extends Controller {
                 'seo_description' => 'Offer your own SEO services to the community. Create a listing and start earning.',
                 'seo_keywords' => 'add service, sell SEO services, offer services',
                 'title' => trim($_POST['title']),
-                'description' => $this->_sanitize_html($_POST['description']),
+                'description' => isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin' ? $_POST['description'] : $this->_sanitize_html($_POST['description']),
                 'thumbnail_url' => '', // 默认设为空
                 'site_url' => trim($_POST['site_url']),
                 'price' => trim($_POST['price']),
@@ -151,7 +183,7 @@ class Services extends Controller {
             if(empty($data['delivery_time'])){ $data['delivery_time_err'] = 'Please enter a delivery time'; }
             if(empty($data['duration'])){ $data['duration_err'] = 'Please enter the link duration'; }
             if(empty($data['service_category'])){ $data['service_category_err'] = 'Please select a category'; }
-            if(empty($data['industry_id'])){ $data['industry_id_err'] = 'Please select an industry'; }
+            if(!isset($data['industry_id'])){ $data['industry_id_err'] = 'Please select an industry'; }
             if(empty($data['terms'])){ $data['terms_err'] = 'You must agree to the terms'; }
 
             // 检查所有错误是否为空
@@ -191,7 +223,7 @@ class Services extends Controller {
                 'seo_keywords' => 'edit service, update service, manage service',
                 'id' => $id,
                 'title' => trim($_POST['title']),
-                'description' => $this->_sanitize_html($_POST['description']),
+                'description' => isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin' ? $_POST['description'] : $this->_sanitize_html($_POST['description']),
                 'thumbnail_url' => trim($_POST['current_thumbnail_url']),
                 'site_url' => trim($_POST['site_url']),
                 'price' => trim($_POST['price']),
@@ -251,7 +283,7 @@ class Services extends Controller {
             if(empty($data['delivery_time'])){ $data['delivery_time_err'] = 'Please enter a delivery time'; }
             if(empty($data['duration'])){ $data['duration_err'] = 'Please enter the link duration'; }
             if(empty($data['service_category'])){ $data['service_category_err'] = 'Please select a category'; }
-            if(empty($data['industry_id'])){ $data['industry_id_err'] = 'Please select an industry'; }
+            if(!isset($data['industry_id'])){ $data['industry_id_err'] = 'Please select an industry'; }
 
             // 检查所有错误是否为空
             if(empty($data['title_err']) && empty($data['description_err']) && empty($data['thumbnail_err']) && empty($data['site_url_err']) && empty($data['price_err']) && empty($data['delivery_time_err']) && empty($data['duration_err']) && empty($data['service_category_err']) && empty($data['industry_id_err'])){
@@ -346,7 +378,7 @@ class Services extends Controller {
     }
 
     private function _sanitize_html($html) {
-        $allowed_tags = '<p><a><h1><h2><h3><h4><h5><h6><strong><em><u><ul><ol><li><br><img>';
+        $allowed_tags = '<p><a><h1><h2><h3><h4><h5><h6><strong><em><u><ul><ol><li><br><img><span>';
         return strip_tags($html, $allowed_tags);
     }
 }

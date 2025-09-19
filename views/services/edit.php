@@ -73,7 +73,6 @@
                     <div class="col-md-6">
                         <label for="industry_id">Industry: <sup>*</sup></label>
                         <select name="industry_id" class="form-select <?php echo (!empty($data['industry_id_err'])) ? 'is-invalid' : ''; ?>">
-                            <option value="" disabled>Select an industry</option>
                             <?php foreach($data['industries'] as $industry): ?>
                                 <option value="<?php echo $industry->id; ?>" <?php echo ($data['industry_id'] == $industry->id) ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars($industry->name); ?>

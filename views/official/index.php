@@ -46,54 +46,6 @@
     </div>
 </section>
 
-<!-- Real Example: DR40 Guarantee -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <h2 class="text-center mb-5">Real Example: Our DR40 Guarantee</h2>
-
-        <div class="row">
-            <div class="col-lg-8 mx-auto">
-                <div class="card border-0 shadow">
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-center mb-4">
-                            <div class="icon-circle bg-success text-white me-3">
-                                <i class="fas fa-chart-line fa-2x"></i>
-                            </div>
-                            <div>
-                                <h4 class="mb-1">Domain Authority Boost Service</h4>
-                                <p class="text-muted mb-0">Professional Service with DR40 Guarantee</p>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h5><i class="fas fa-check text-success me-2"></i>What We Guarantee</h5>
-                                <ul class="list-unstyled">
-                                    <li><strong>✓ Minimum DR 40:</strong> We guarantee your website will achieve Domain Rating 40 or higher</li>
-                                    <li><strong>✓ Full Refund:</strong> If DR40 isn't achieved within the specified timeframe, you get a complete refund</li>
-                                    <li><strong>✓ White Hat Only:</strong> All methods comply with Google's guidelines</li>
-                                </ul>
-                            </div>
-                            <div class="col-md-6">
-                                <h5><i class="fas fa-times text-danger me-2"></i>What We Don't Promise</h5>
-                                <ul class="list-unstyled">
-                                    <li><strong>✗ Search Rankings:</strong> We don't guarantee specific positions in search results</li>
-                                    <li><strong>✗ Traffic Numbers:</strong> No promises about exact visitor counts</li>
-                                    <li><strong>✗ Indexation Rates:</strong> We don't guarantee how many pages get indexed</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="alert alert-warning mt-4">
-                            <h6><i class="fas fa-lightbulb me-2"></i>Why This Approach?</h6>
-                            <p class="mb-0">We guarantee what we can control (quality backlinks, DR improvement) but don't make promises about search engine algorithms, which we cannot influence. This is honest, transparent, and sustainable SEO.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
 <!-- Professional Services List -->
 <section class="py-5">
@@ -111,6 +63,11 @@
                 <?php foreach($data['officialServices'] as $service): ?>
                 <div class="col-lg-6">
                     <div class="card h-100 border-primary shadow-sm">
+                        <?php if(!empty($service->thumbnail_url)): ?>
+                        <img src="<?php echo URLROOT . $service->thumbnail_url; ?>" class="card-img-top" alt="<?php echo htmlspecialchars($service->title); ?>" style="height: 300px; object-fit: cover;">
+                        <?php else: ?>
+                        <img src="<?php echo URLROOT; ?>/uploads/images/thumbnails/default.png" class="card-img-top" alt="<?php echo htmlspecialchars($service->title); ?>" style="height: 300px; object-fit: cover;">
+                        <?php endif; ?>
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start mb-3">
                                 <h5 class="card-title"><?php echo htmlspecialchars($service->title); ?></h5>
@@ -197,6 +154,55 @@
                             <li class="mb-2"><i class="fas fa-times text-secondary me-2"></i>Self-service quality checks</li>
                             <li class="mb-2"><i class="fas fa-times text-secondary me-2"></i>Direct provider communication</li>
                         </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Real Example: DR40 Guarantee -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Real Example: Our DR40 Guarantee</h2>
+
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card border-0 shadow">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="icon-circle bg-success text-white me-3">
+                                <i class="fas fa-chart-line fa-2x"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-1">Domain Authority Boost Service</h4>
+                                <p class="text-muted mb-0">Professional Service with DR40 Guarantee</p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5><i class="fas fa-check text-success me-2"></i>What We Guarantee</h5>
+                                <ul class="list-unstyled">
+                                    <li><strong>✓ Minimum DR 40:</strong> We guarantee your website will achieve Domain Rating 40 or higher</li>
+                                    <li><strong>✓ Full Refund:</strong> If DR40 isn't achieved within the specified timeframe, you get a complete refund</li>
+                                    <li><strong>✓ White Hat Only:</strong> All methods comply with Google's guidelines</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h5><i class="fas fa-times text-danger me-2"></i>What We Don't Promise</h5>
+                                <ul class="list-unstyled">
+                                    <li><strong>✗ Search Rankings:</strong> We don't guarantee specific positions in search results</li>
+                                    <li><strong>✗ Traffic Numbers:</strong> No promises about exact visitor counts</li>
+                                    <li><strong>✗ Indexation Rates:</strong> We don't guarantee how many pages get indexed</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-warning mt-4">
+                            <h6><i class="fas fa-lightbulb me-2"></i>Why This Approach?</h6>
+                            <p class="mb-0">We guarantee what we can control (quality backlinks, DR improvement) but don't make promises about search engine algorithms, which we cannot influence. This is honest, transparent, and sustainable SEO.</p>
+                        </div>
                     </div>
                 </div>
             </div>

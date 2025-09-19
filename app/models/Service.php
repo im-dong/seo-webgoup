@@ -114,15 +114,21 @@ class Service {
 
     // 通过ID获取单个服务
     public function getServiceById($id){
-        $sql = 'SELECT s.*, s.id as serviceId, u.id as userId, u.username, u.role, i.name as industry_name
-                FROM services s
-                JOIN users u ON s.user_id = u.id
-                LEFT JOIN industries i ON s.industry_id = i.id
-                WHERE s.id = :id';
-        $this->db->query($sql);
-        $this->db->bind(':id', $id);
-        $row = $this->db->single();
-        return $row;
+        try {
+            $sql = 'SELECT s.*, s.id as serviceId, u.id as userId, u.username, u.role, i.name as industry_name
+                    FROM services s
+                    JOIN users u ON s.user_id = u.id
+                    LEFT JOIN industries i ON s.industry_id = i.id
+                    WHERE s.id = :id';
+            $this->db->query($sql);
+            $this->db->bind(':id', $id);
+            $row = $this->db->single();
+            return $row;
+        } catch (Exception $e) {
+            // 记录错误并返回null
+            error_log('Error in getServiceById: ' . $e->getMessage());
+            return null;
+        }
     }
 
     // 通过订单ID获取服务信息
