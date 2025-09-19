@@ -117,10 +117,31 @@ class Services extends Controller {
                 'duration_err' => '',
                 'service_category_err' => '',
                 'industry_id_err' => '',
-                'terms_err' => ''
-            ];
+            'terms_err' => ''
+        ];
 
-            // ... (file upload logic is the same)
+        // -- 文件上传逻辑 --
+        if(isset($_FILES['thumbnail_image']) && $_FILES['thumbnail_image']['error'] == 0){
+                $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
+                $max_size = 5 * 1024 * 1024; // 5MB
+
+                if(in_array($_FILES['thumbnail_image']['type'], $allowed_types) && $_FILES['thumbnail_image']['size'] <= $max_size){
+                    $upload_dir = 'uploads/images/';
+                    if (!is_dir($upload_dir)) {
+                        mkdir($upload_dir, 0777, true);
+                    }
+                    $filename = uniqid() . '-' . basename($_FILES['thumbnail_image']['name']);
+                    $target_file = $upload_dir . $filename;
+
+                    if(move_uploaded_file($_FILES['thumbnail_image']['tmp_name'], $target_file)){
+                        $data['thumbnail_url'] = '/' . $target_file;
+                    } else {
+                        $data['thumbnail_err'] = 'Failed to move uploaded file.';
+                    }
+                } else {
+                    $data['thumbnail_err'] = 'Invalid file type or size (Max 5MB, JPG, PNG, GIF).';
+                }
+            }
 
             // -- 数据验证 --
             if(empty($data['title'])){ $data['title_err'] = 'Please enter a title'; }
@@ -194,7 +215,33 @@ class Services extends Controller {
                 'industry_id_err' => ''
             ];
 
-            // ... (file upload logic is the same)
+            // -- 文件上传逻辑 --
+            if(isset($_FILES['thumbnail_image']) && $_FILES['thumbnail_image']['error'] == 0){
+                $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
+                $max_size = 5 * 1024 * 1024; // 5MB
+
+                if(in_array($_FILES['thumbnail_image']['type'], $allowed_types) && $_FILES['thumbnail_image']['size'] <= $max_size){
+                    $upload_dir = 'uploads/images/';
+                    if (!is_dir($upload_dir)) {
+                        mkdir($upload_dir, 0777, true);
+                    }
+                    $filename = uniqid() . '-' . basename($_FILES['thumbnail_image']['name']);
+                    $target_file = $upload_dir . $filename;
+
+                    if(move_uploaded_file($_FILES['thumbnail_image']['tmp_name'], $target_file)){
+                        // 如果上传了新图片，并且存在旧图片，则删除旧图片
+                        $old_thumbnail = str_replace(URLROOT . '/', '', $data['thumbnail_url']);
+                        if(file_exists($old_thumbnail)){
+                            unlink($old_thumbnail);
+                        }
+                        $data['thumbnail_url'] = '/' . $target_file;
+                    } else {
+                        $data['thumbnail_err'] = 'Failed to move uploaded file.';
+                    }
+                } else {
+                    $data['thumbnail_err'] = 'Invalid file type or size (Max 5MB, JPG, PNG, GIF).';
+                }
+            }
 
             // -- 数据验证 --
             if(empty($data['title'])){ $data['title_err'] = 'Please enter a title'; }

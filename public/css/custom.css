@@ -370,3 +370,25 @@ a:not(.btn):not(.nav-link):not(.dropdown-item):hover {
 .pagination .page-link:hover {
     color: #065f73;
 }
+
+/* Summernote编辑器按钮样式修复 */
+.note-toolbar .btn,
+.note-toolbar .note-btn {
+    color: #333 !important;
+    background-color: #fff !important;
+    border-color: #ddd !important;
+}
+
+.note-toolbar .btn:hover,
+.note-toolbar .note-btn:hover {
+    background-color: #f8f9fa !important;
+    border-color: #adb5bd !important;
+    color: #333 !important;
+}
+
+.note-toolbar .btn.active,
+.note-toolbar .note-btn.active {
+    color: #087990 !important;
+    background-color: #e9ecef !important;
+    border-color: #087990 !important;
+}
