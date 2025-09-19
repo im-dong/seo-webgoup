@@ -6,7 +6,11 @@
             <div class="col-lg-4 col-md-12 mb-4 mb-md-0">
                 <h5 class="text-uppercase text-dark">webGoup</h5>
                 <p>
-                    Our mission is to empower website owners and businesses by providing a decentralized platform for SEO services. We believe in the power of the collective to elevate every member's online presence.
+                    Connecting businesses with SEO experts through our trusted marketplace platform.
+                </p>
+                <p class="mb-0">
+                    <i class="fas fa-envelope me-2"></i>
+                    <a href="mailto:info@webgoup.com" class="text-muted text-decoration-none">info@webgoup.com</a>
                 </p>
             </div>
             <div class="col-lg-3 col-md-6 mb-4 mb-md-0">

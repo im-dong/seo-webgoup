@@ -220,9 +220,9 @@
                     <h2 class="fw-bold mb-4 mt-5">11. Contact Information</h2>
                     <p>For questions about these terms, please contact us at:</p>
                     <ul>
-                        <li>Email: legal@webgoup.com</li>
+                        <li>Email: info@webgoup.com</li>
                         <li>Support: Available through your account dashboard</li>
-                        <li>Legal Inquiries: legal@webgoup.com</li>
+                        <li>Legal Inquiries: info@webgoup.com</li>
                     </ul>
                 </div>
             </div>

@@ -43,7 +43,7 @@
                     <p>Our platform uses third-party services for payment processing and other functions. These services have their own privacy policies.</p>
 
                     <h2 class="fw-bold mb-4 mt-5">Contact Information</h2>
-                    <p>For privacy-related questions, please contact us at: privacy@webgoup.com</p>
+                    <p>For privacy-related questions, please contact us at: info@webgoup.com</p>
 
                     <div class="alert alert-info mt-5">
                         <strong>Note:</strong> This privacy policy may be updated from time to time. Continued use of our platform constitutes acceptance of any changes.
