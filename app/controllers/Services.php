@@ -312,7 +312,38 @@ class Services extends Controller {
         }
     }
 
-    // ... (delete and _process_and_crop_image methods are the same)
+    public function delete($id){
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            // 获取服务信息
+            $service = $this->serviceModel->getServiceById($id);
+
+            // 确保是服务所有者
+            if($service->userId != $_SESSION['user_id']){
+                flash('service_message', 'You are not authorized to delete this service.', 'alert alert-danger');
+                header('location: ' . URLROOT . '/users/dashboard');
+                exit();
+            }
+
+            // 删除服务图片文件
+            if(!empty($service->thumbnail_url)){
+                $thumbnail_path = ltrim($service->thumbnail_url, '/');
+                if(file_exists($thumbnail_path)){
+                    unlink($thumbnail_path);
+                }
+            }
+
+            // 删除服务
+            if($this->serviceModel->deleteService($id)){
+                flash('service_message', 'Service removed successfully', 'alert alert-success');
+                header('location: ' . URLROOT . '/users/dashboard');
+            } else {
+                flash('service_message', 'Something went wrong', 'alert alert-danger');
+                header('location: ' . URLROOT . '/users/dashboard');
+            }
+        } else {
+            header('location: ' . URLROOT . '/users/dashboard');
+        }
+    }
 
     private function _sanitize_html($html) {
         $allowed_tags = '<p><a><h1><h2><h3><h4><h5><h6><strong><em><u><ul><ol><li><br><img>';
