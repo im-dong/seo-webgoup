@@ -205,13 +205,31 @@ class Service {
     }
 
     public function deleteService($id){
-        $this->db->query('DELETE FROM services WHERE id = :id');
-        $this->db->bind(':id', $id);
+        try {
+            // 首先检查是否有相关订单
+            $this->db->query('SELECT COUNT(*) as order_count FROM orders WHERE service_id = :id');
+            $this->db->bind(':id', $id);
+            $result = $this->db->single();
 
-        if($this->db->execute()){
-            return true;
+            if ($result->order_count > 0) {
+                // 如果有相关订单，先删除订单
+                $this->db->query('DELETE FROM orders WHERE service_id = :id');
+                $this->db->bind(':id', $id);
+                $this->db->execute();
+            }
+
+            // 然后删除服务
+            $this->db->query('DELETE FROM services WHERE id = :id');
+            $this->db->bind(':id', $id);
+
+            if($this->db->execute()){
+                return true;
+            }
+            return false;
+        } catch (Exception $e) {
+            error_log('Error deleting service: ' . $e->getMessage());
+            return false;
         }
-        return false;
     }
 
     // 获取服务的评价
