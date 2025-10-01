@@ -199,5 +199,27 @@ class Order {
         $this->db->bind(':order_id', $order_id);
         return $this->db->single();
     }
+
+    public function getTotalOrdersCount(){
+        $this->db->query('SELECT COUNT(*) as count FROM orders');
+        $row = $this->db->single();
+        return $row->count;
+    }
+
+    public function getAllOrdersWithPagination($per_page = 20, $offset = 0){
+        $this->db->query('SELECT o.*,
+                                 s.title as service_title,
+                                 buyer.username as buyer_username,
+                                 seller.username as seller_username
+                          FROM orders o
+                          LEFT JOIN services s ON o.service_id = s.id
+                          LEFT JOIN users buyer ON o.buyer_id = buyer.id
+                          LEFT JOIN users seller ON o.seller_id = seller.id
+                          ORDER BY o.created_at DESC
+                          LIMIT :limit OFFSET :offset');
+        $this->db->bind(':limit', $per_page);
+        $this->db->bind(':offset', $offset);
+        return $this->db->resultSet();
+    }
 }
 

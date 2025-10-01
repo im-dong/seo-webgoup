@@ -177,4 +177,24 @@ class User {
         }
         return false;
     }
+
+    public function getTotalUsersCount(){
+        $this->db->query('SELECT COUNT(*) as count FROM users');
+        $row = $this->db->single();
+        return $row->count;
+    }
+
+    public function getUsersWithPagination($per_page = 20, $offset = 0){
+        $this->db->query('SELECT * FROM users ORDER BY created_at DESC LIMIT :limit OFFSET :offset');
+        $this->db->bind(':limit', $per_page);
+        $this->db->bind(':offset', $offset);
+        return $this->db->resultSet();
+    }
+
+    public function updateUserStatus($user_id, $status){
+        $this->db->query('UPDATE users SET status = :status WHERE id = :id');
+        $this->db->bind(':status', $status);
+        $this->db->bind(':id', $user_id);
+        return $this->db->execute();
+    }
 }

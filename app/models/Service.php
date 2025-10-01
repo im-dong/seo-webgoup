@@ -300,4 +300,34 @@ class Service {
             return [];
         }
     }
+
+    public function getTotalServicesCount(){
+        $this->db->query('SELECT COUNT(*) as count FROM services');
+        $row = $this->db->single();
+        return $row->count;
+    }
+
+    public function getServicesWithPagination($per_page = 20, $offset = 0){
+        $this->db->query('SELECT s.*, u.username
+                          FROM services s
+                          JOIN users u ON s.user_id = u.id
+                          ORDER BY s.created_at DESC
+                          LIMIT :limit OFFSET :offset');
+        $this->db->bind(':limit', $per_page);
+        $this->db->bind(':offset', $offset);
+        return $this->db->resultSet();
+    }
+
+    public function updateServiceStatus($service_id, $status){
+        // 如果services表有status字段，使用这个方法
+        try {
+            $this->db->query('UPDATE services SET status = :status WHERE id = :id');
+            $this->db->bind(':status', $status);
+            $this->db->bind(':id', $service_id);
+            return $this->db->execute();
+        } catch (Exception $e) {
+            error_log('Error updating service status (column may not exist): ' . $e->getMessage());
+            return false;
+        }
+    }
 }
