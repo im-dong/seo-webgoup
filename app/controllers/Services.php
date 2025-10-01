@@ -3,6 +3,7 @@ class Services extends Controller {
     protected $serviceModel;
     protected $industryModel;
     protected $orderModel;
+    protected $userModel;
 
     public function __construct(){
         if(!isLoggedIn()){
@@ -96,13 +97,21 @@ class Services extends Controller {
             // 获取服务评论（使用合并方式获取service_id和order_id关联的评价）
             $reviews = $this->serviceModel->getAllServiceReviews($id);
 
+            // 获取完整的用户信息（管理员需要）
+            $sellerFullInfo = null;
+            if(isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin') {
+                $this->userModel = $this->model('User');
+                $sellerFullInfo = $this->userModel->getUserById($service->userId);
+            }
+
             $data = [
                 'title' => $service->title,
                 'description' => substr(strip_tags($service->description), 0, 160),
                 'keywords' => $service->title . ', ' . $service->service_category . ', SEO service',
                 'service' => $service,
                 'reviews' => $reviews,
-                'order_id_for_chat' => $order_id_for_chat
+                'order_id_for_chat' => $order_id_for_chat,
+                'sellerFullInfo' => $sellerFullInfo
             ];
 
             error_log("Data prepared for view, calling view()");

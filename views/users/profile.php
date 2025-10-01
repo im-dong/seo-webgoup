@@ -19,10 +19,98 @@
                         <?php endif; ?>
                     </div>
                 </div>
-                <?php if ($data['is_admin_viewing'] && !empty($data['user']->contact_method)): ?>
-                <div class="alert alert-warning mt-3">
-                    <h5 class="alert-heading"><i class="fas fa-user-secret"></i> Admin Information</h5>
-                    <p class="mb-0"><strong>Contact Method:</strong> <?php echo htmlspecialchars($data['user']->contact_method); ?></p>
+                <?php if ($data['is_admin_viewing']): ?>
+                <div class="card border-danger mt-4">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0"><i class="fas fa-user-shield"></i> Admin Panel - Complete User Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="text-primary">Basic Information</h6>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>User ID:</strong></td>
+                                        <td><code><?php echo htmlspecialchars($data['user']->id); ?></code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Username:</strong></td>
+                                        <td><?php echo htmlspecialchars($data['user']->username); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Email:</strong></td>
+                                        <td><?php echo htmlspecialchars($data['user']->email); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Display Name:</strong></td>
+                                        <td><?php echo htmlspecialchars($data['user']->display_name ?? 'Not set'); ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Role:</strong></td>
+                                        <td><span class="badge bg-<?php echo ($data['user']->role == 'admin') ? 'danger' : 'primary'; ?>"><?php echo htmlspecialchars($data['user']->role ?? 'user'); ?></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Account Status:</strong></td>
+                                        <td><span class="badge bg-<?php echo ($data['user']->status ?? 1) ? 'success' : 'secondary'; ?>"><?php echo ($data['user']->status ?? 1) ? 'Active' : 'Inactive'; ?></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Email Verified:</strong></td>
+                                        <td>
+                                            <span class="badge bg-<?php echo ($data['user']->email_verified ?? 0) ? 'success' : 'warning'; ?>">
+                                                <?php echo ($data['user']->email_verified ?? 0) ? 'Verified' : 'Not Verified'; ?>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Member Since:</strong></td>
+                                        <td><?php echo date('M j, Y H:i', strtotime($data['user']->created_at)); ?></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="text-primary">Profile Details</h6>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Profile Image:</strong></td>
+                                        <td>
+                                            <?php if(!empty($data['user']->profile_image_url)): ?>
+                                                <img src="<?php echo (strpos($data['user']->profile_image_url, 'http') === 0 ? $data['user']->profile_image_url : URLROOT . $data['user']->profile_image_url); ?>" alt="Profile" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
+                                            <?php else: ?>
+                                                <span class="text-muted">Default avatar</span>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                    <?php if(!empty($data['user']->website_url)): ?>
+                                    <tr>
+                                        <td><strong>Website:</strong></td>
+                                        <td><a href="<?php echo htmlspecialchars($data['user']->website_url); ?>" target="_blank"><?php echo htmlspecialchars($data['user']->website_url); ?></a></td>
+                                    </tr>
+                                    <?php endif; ?>
+                                    <?php if(!empty($data['user']->country)): ?>
+                                    <tr>
+                                        <td><strong>Country:</strong></td>
+                                        <td><?php echo htmlspecialchars($data['user']->country); ?></td>
+                                    </tr>
+                                    <?php endif; ?>
+                                    <?php if(!empty($data['user']->contact_method)): ?>
+                                    <tr>
+                                        <td><strong>Contact Method:</strong></td>
+                                        <td><?php echo htmlspecialchars($data['user']->contact_method); ?></td>
+                                    </tr>
+                                    <?php endif; ?>
+                                    <?php if(!empty($data['user']->bio)): ?>
+                                    <tr>
+                                        <td><strong>Bio:</strong></td>
+                                        <td><?php echo nl2br(htmlspecialchars(substr($data['user']->bio, 0, 200))); ?></td>
+                                    </tr>
+                                    <?php endif; ?>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="alert alert-info mt-3">
+                            <small><i class="fas fa-info-circle"></i> This detailed user information is only visible to administrators for account management purposes.</small>
+                        </div>
+                    </div>
                 </div>
                 <?php endif; ?>
                 <hr>

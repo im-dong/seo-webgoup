@@ -60,6 +60,93 @@
                     </div>
                     <hr>
                     <p><?php echo !empty($data['service']->bio) ? nl2br(htmlspecialchars($data['service']->bio)) : 'No bio available for this seller.'; ?></p>
+
+                    <?php if(isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin' && $data['sellerFullInfo']): ?>
+                        <div class="admin-user-info mt-4">
+                            <div class="card border-warning">
+                                <div class="card-header bg-warning text-dark">
+                                    <h5 class="mb-0"><i class="fas fa-user-shield"></i> Admin Panel - User Information</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6 class="text-primary">Basic Information</h6>
+                                            <table class="table table-sm">
+                                                <tr>
+                                                    <td><strong>User ID:</strong></td>
+                                                    <td><?php echo htmlspecialchars($data['sellerFullInfo']->id); ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Username:</strong></td>
+                                                    <td><?php echo htmlspecialchars($data['sellerFullInfo']->username); ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Email:</strong></td>
+                                                    <td><?php echo htmlspecialchars($data['sellerFullInfo']->email); ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Display Name:</strong></td>
+                                                    <td><?php echo htmlspecialchars($data['sellerFullInfo']->display_name ?? 'Not set'); ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Role:</strong></td>
+                                                    <td><span class="badge bg-<?php echo ($data['sellerFullInfo']->role == 'admin') ? 'danger' : 'primary'; ?>"><?php echo htmlspecialchars($data['sellerFullInfo']->role ?? 'user'); ?></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Account Status:</strong></td>
+                                                    <td><span class="badge bg-<?php echo ($data['sellerFullInfo']->status == 'active') ? 'success' : 'secondary'; ?>"><?php echo htmlspecialchars($data['sellerFullInfo']->status ?? 'unknown'); ?></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Member Since:</strong></td>
+                                                    <td><?php echo date('M j, Y', strtotime($data['sellerFullInfo']->created_at)); ?></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6 class="text-primary">Account Information</h6>
+                                            <table class="table table-sm">
+                                                <tr>
+                                                    <td><strong>Profile Image:</strong></td>
+                                                    <td>
+                                                        <?php if(!empty($data['sellerFullInfo']->profile_image_url)): ?>
+                                                            <img src="<?php echo (strpos($data['sellerFullInfo']->profile_image_url, 'http') === 0 ? $data['sellerFullInfo']->profile_image_url : URLROOT . $data['sellerFullInfo']->profile_image_url); ?>" alt="Profile" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
+                                                        <?php else: ?>
+                                                            <span class="text-muted">Default avatar</span>
+                                                        <?php endif; ?>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Email Verified:</strong></td>
+                                                    <td>
+                                                        <span class="badge bg-<?php echo ($data['sellerFullInfo']->email_verified ?? 0) ? 'success' : 'warning'; ?>">
+                                                            <?php echo ($data['sellerFullInfo']->email_verified ?? 0) ? 'Verified' : 'Not Verified'; ?>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                                <?php if(!empty($data['sellerFullInfo']->bio)): ?>
+                                                <tr>
+                                                    <td><strong>Bio:</strong></td>
+                                                    <td><?php echo nl2br(htmlspecialchars(substr($data['sellerFullInfo']->bio, 0, 200))); ?></td>
+                                                </tr>
+                                                <?php endif; ?>
+                                                <tr>
+                                                    <td><strong>Account Status:</strong></td>
+                                                    <td>
+                                                        <span class="badge bg-<?php echo ($data['sellerFullInfo']->status ?? 0) ? 'success' : 'danger'; ?>">
+                                                            <?php echo ($data['sellerFullInfo']->status ?? 0) ? 'Active' : 'Inactive'; ?>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="alert alert-info mt-3">
+                                        <small><i class="fas fa-info-circle"></i> This information is only visible to administrators for account management purposes.</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
                 <!-- Reviews Pane -->
