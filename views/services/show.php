@@ -126,6 +126,15 @@
                         <?php else: ?>
                             <button class="btn btn-light btn-lg" disabled>This is your own service</button>
                         <?php endif; ?>
+
+                        <!-- Admin Delete Button -->
+                        <?php if(isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin'): ?>
+                            <form action="<?php echo URLROOT; ?>/services/adminDelete/<?php echo $data['service']->serviceId; ?>" method="POST" class="mt-3" onsubmit="return confirm('Are you sure you want to delete this service? This action cannot be undone.');">
+                                <button type="submit" class="btn btn-danger btn-sm w-100">
+                                    <i class="fas fa-trash-alt"></i> Delete Service (Admin)
+                                </button>
+                            </form>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

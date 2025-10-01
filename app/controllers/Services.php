@@ -14,7 +14,7 @@ class Services extends Controller {
 
     public function index($category = null){
         // Sanitize category, allowing null
-        $category = $category ? filter_var($category, FILTER_SANITIZE_STRING) : null;
+        $category = $category ? htmlspecialchars($category, ENT_QUOTES, 'UTF-8') : null;
 
         // Get industry from query string
         $industry_id = isset($_GET['industry']) ? filter_input(INPUT_GET, 'industry', FILTER_VALIDATE_INT) : null;
@@ -373,6 +373,44 @@ class Services extends Controller {
             }
         } else {
             header('location: ' . URLROOT . '/users/dashboard');
+        }
+    }
+
+    public function adminDelete($id){
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            // 检查是否为管理员
+            if(!isset($_SESSION['user_role']) || $_SESSION['user_role'] != 'admin'){
+                flash('service_message', 'You are not authorized to perform this action.', 'alert alert-danger');
+                header('location: ' . URLROOT . '/services');
+                exit();
+            }
+
+            // 获取服务信息
+            $service = $this->serviceModel->getServiceById($id);
+            if(!$service){
+                flash('service_message', 'Service not found.', 'alert alert-danger');
+                header('location: ' . URLROOT . '/services');
+                exit();
+            }
+
+            // 删除服务图片文件
+            if(!empty($service->thumbnail_url)){
+                $thumbnail_path = ltrim($service->thumbnail_url, '/');
+                if(file_exists($thumbnail_path)){
+                    unlink($thumbnail_path);
+                }
+            }
+
+            // 删除服务
+            if($this->serviceModel->deleteService($id)){
+                flash('service_message', 'Service deleted successfully by admin.', 'alert alert-success');
+                header('location: ' . URLROOT . '/services');
+            } else {
+                flash('service_message', 'Something went wrong while deleting the service.', 'alert alert-danger');
+                header('location: ' . URLROOT . '/services/show/' . $id);
+            }
+        } else {
+            header('location: ' . URLROOT . '/services');
         }
     }
 

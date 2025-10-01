@@ -9,25 +9,64 @@
             <div class="card mb-4">
                 <div class="card-header">Service Snapshot</div>
                 <div class="card-body">
-                    <!-- Service Thumbnail -->
-                    <?php if(!empty($data['snapshot']->thumbnail_url)): ?>
-                        <div class="mb-3">
-                            <img src="<?php echo htmlspecialchars($data['snapshot']->thumbnail_url); ?>"
-                                 class="img-fluid rounded shadow-sm"
-                                 alt="<?php echo htmlspecialchars($data['snapshot']->title); ?>"
-                                 style="max-height: 250px; object-fit: cover;"
-                                 onerror="this.src='https://via.placeholder.com/800x400?text=No+Image+Available'">
+                    <?php if($data['snapshot']): ?>
+                        <!-- Show snapshot data -->
+                        <?php if(!empty($data['snapshot']->thumbnail_url)): ?>
+                            <div class="mb-3">
+                                <img src="<?php echo htmlspecialchars($data['snapshot']->thumbnail_url); ?>"
+                                     class="img-fluid rounded shadow-sm"
+                                     alt="<?php echo htmlspecialchars($data['snapshot']->title ?? 'Service Image'); ?>"
+                                     style="max-height: 250px; object-fit: cover;"
+                                     onerror="this.src='https://via.placeholder.com/800x400?text=No+Image+Available'">
+                            </div>
+                        <?php endif; ?>
+
+                        <h4 class="card-title"><?php echo htmlspecialchars($data['snapshot']->title ?? 'Service Title Not Available'); ?></h4>
+                        <div class="card-text"><?php echo $data['snapshot']->description ?? 'Service description not available.'; ?></div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><b>Price:</b> $<?php echo number_format($data['snapshot']->price ?? 0, 2); ?></li>
+                            <li class="list-group-item"><b>Delivery Time:</b> <?php echo htmlspecialchars($data['snapshot']->delivery_time ?? 'N/A'); ?> days</li>
+                            <li class="list-group-item"><b>Link Type:</b> <?php echo htmlspecialchars($data['snapshot']->link_type ?? 'N/A'); ?></li>
+                            <li class="list-group-item"><b>Link Duration:</b> <?php echo htmlspecialchars($data['snapshot']->duration ?? 'N/A'); ?> days</li>
+                        </ul>
+                    <?php elseif($data['service']): ?>
+                        <!-- Show current service data when no snapshot -->
+                        <?php if(!empty($data['service']->thumbnail_url)): ?>
+                            <div class="mb-3">
+                                <img src="<?php echo !empty($data['service']->thumbnail_url) ? htmlspecialchars(URLROOT . '/' . $data['service']->thumbnail_url) : 'https://via.placeholder.com/800x400?text=No+Image+Available'; ?>"
+                                     class="img-fluid rounded shadow-sm"
+                                     alt="<?php echo htmlspecialchars($data['service']->title ?? 'Service Image'); ?>"
+                                     style="max-height: 250px; object-fit: cover;"
+                                     onerror="this.src='https://via.placeholder.com/800x400?text=No+Image+Available'">
+                            </div>
+                        <?php endif; ?>
+
+                        <h4 class="card-title"><?php echo htmlspecialchars($data['service']->title ?? 'Service Title Not Available'); ?></h4>
+                        <div class="card-text">
+                            <?php
+                            if(isset($data['service']->role) && $data['service']->role == 'admin') {
+                                echo $data['service']->description; // Admin posts show full HTML
+                            } else {
+                                echo nl2br(htmlspecialchars(strip_tags($data['service']->description ?? 'Service description not available.'))); // User posts show plain text
+                            }
+                            ?>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><b>Price:</b> $<?php echo number_format($data['service']->price ?? 0, 2); ?></li>
+                            <li class="list-group-item"><b>Delivery Time:</b> <?php echo htmlspecialchars($data['service']->delivery_time ?? 'N/A'); ?> days</li>
+                            <li class="list-group-item"><b>Link Type:</b> <?php echo htmlspecialchars($data['service']->link_type ?? 'N/A'); ?></li>
+                            <li class="list-group-item"><b>Link Duration:</b> <?php echo htmlspecialchars($data['service']->duration ?? 'N/A'); ?> days</li>
+                        </ul>
+                        <div class="alert alert-info mt-3">
+                            <small><i class="fas fa-info-circle"></i> Showing current service details (order snapshot not available)</small>
+                        </div>
+                    <?php else: ?>
+                        <!-- No snapshot and no service data -->
+                        <div class="alert alert-warning">
+                            <h4 class="card-title">Service Details Not Available</h4>
+                            <p class="card-text">The service details for this order are not available. The service may have been deleted.</p>
                         </div>
                     <?php endif; ?>
-
-                    <h4 class="card-title"><?php echo htmlspecialchars($data['snapshot']->title); ?></h4>
-                    <div class="card-text"><?php echo $data['snapshot']->description; ?></div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><b>Price:</b> $<?php echo number_format($data['snapshot']->price, 2); ?></li>
-                        <li class="list-group-item"><b>Delivery Time:</b> <?php echo htmlspecialchars($data['snapshot']->delivery_time); ?> days</li>
-                        <li class="list-group-item"><b>Link Type:</b> <?php echo htmlspecialchars($data['snapshot']->link_type); ?></li>
-                        <li class="list-group-item"><b>Link Duration:</b> <?php echo htmlspecialchars($data['snapshot']->duration); ?> days</li>
-                    </ul>
                 </div>
             </div>
         </div>
@@ -46,6 +85,12 @@
                         <a href="<?php echo URLROOT; ?>/users/profile/<?php echo $data['buyer']->id; ?>">
                             <?php echo htmlspecialchars($data['buyer']->username); ?>
                         </a>
+                        <?php if(isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin'): ?>
+                            <br><small class="text-muted">
+                                <i class="fas fa-envelope"></i>
+                                Email: <?php echo htmlspecialchars($data['buyer']->email ?? 'Not available'); ?>
+                            </small>
+                        <?php endif; ?>
                     </p>
                     <?php if ($data['conversation']): ?>
                         <hr>

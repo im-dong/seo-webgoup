@@ -179,7 +179,7 @@ class Orders extends Controller {
         if(!isLoggedIn()){ header('location: ' . URLROOT . '/users/login'); exit(); }
 
         if($_SERVER['REQUEST_METHOD'] == 'POST'){
-            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+            $_POST = filter_input_array(INPUT_POST, FILTER_UNSAFE_RAW);
             $data = [
                 'order_id' => $order_id,
                 'proof_url' => trim($_POST['proof_url']),
@@ -259,6 +259,7 @@ class Orders extends Controller {
             'keywords' => 'order details, order information, transaction',
             'order' => $order,
             'snapshot' => $snapshot,
+            'service' => $service,
             'conversation' => $conversation,
             'seller' => $seller,
             'buyer' => $buyer,
