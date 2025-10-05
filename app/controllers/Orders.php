@@ -112,7 +112,7 @@ class Orders extends Controller {
         // 构建PayPal支付URL
         $amount = number_format($order->amount, 2, '.', '');
         $return_url = URLROOT . '/orders/details/' . $order_id;
-        $paypal_url = PAYPAL_URL . '?notify_url=' . PAYPAL_NOTIFY_URL . '&cmd=_xclick&business=' . PAYPAL_RECEIVER_EMAIL . '&item_name=' . $order_id . '&amount=' . $amount . '&currency_code=USD&return=' . $return_url . '&custom=' . $order_id;
+        $paypal_url = PAYPAL_URL . '?notify_url=' . PAYPAL_NOTIFY_URL . '&cmd=_xclick&business=' . PAYPAL_RECEIVER_EMAIL . '&item_name=' . $order_id . '&amount=' . $amount . '&currency_code=USD&return=' . $return_url . '&custom=wg_' . $order_id;
 
         // 记录发送到PayPal的请求
         $paypal_data = [
@@ -123,7 +123,7 @@ class Orders extends Controller {
             'amount'        => $amount,
             'currency_code' => 'USD',
             'return'        => $return_url,
-            'custom'        => $order_id
+            'custom'        => 'wg_' . $order_id
         ];
         $this->log_paypal_request($order_id, $paypal_data, $paypal_url);
 
