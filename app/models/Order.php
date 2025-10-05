@@ -25,11 +25,19 @@ class Order {
     }
 
     // 捕获并确认订单支付
-    public function captureOrder($order_id, $payment_id){
-        $this->db->query('UPDATE orders SET status = \'paid\', payment_id = :payment_id, paid_at = CURRENT_TIMESTAMP WHERE id = :order_id');
-        
+    public function captureOrder($order_id, $payment_id, $remark = null){
+        $sql = 'UPDATE orders SET status = \'paid\', payment_id = :payment_id, paid_at = CURRENT_TIMESTAMP';
+        if ($remark !== null) {
+            $sql .= ', remark = :remark';
+        }
+        $sql .= ' WHERE id = :order_id';
+
+        $this->db->query($sql);
         $this->db->bind(':payment_id', $payment_id);
         $this->db->bind(':order_id', $order_id);
+        if ($remark !== null) {
+            $this->db->bind(':remark', $remark);
+        }
 
         if($this->db->execute()){
             return true;
