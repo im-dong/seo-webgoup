@@ -1,5 +1,5 @@
 <?php
-class TestEmail extends Controller {
+class Testemail extends Controller {
     private $emailHelper;
 
     public function __construct() {
