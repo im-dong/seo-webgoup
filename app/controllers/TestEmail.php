@@ -3,10 +3,13 @@ class TestEmail extends Controller {
     private $emailHelper;
 
     public function __construct() {
+        echo "TestEmail controller loaded successfully<br>";
         $this->emailHelper = new EmailHelper();
     }
 
     public function index() {
+        echo "Index method called<br>";
+
         // 检查是否是管理员，或者简单允许所有用户访问测试页面
         // 如果需要限制访问，可以在这里添加权限检查
 
