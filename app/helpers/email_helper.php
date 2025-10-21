@@ -510,5 +510,179 @@ class EmailHelper {
 
         return $this->sendEmail($recipient_email, $subject, $message);
     }
+
+    // 发送欢迎邮件给新注册用户
+    public function sendWelcomeEmail($user_email, $user_name, $user_data = array()) {
+        $subject = "Welcome to WebGoup - Start Your SEO Journey Today!";
+
+        $message = "
+        <!DOCTYPE html>
+        <html lang='en'>
+        <head>
+            <meta charset='UTF-8'>
+            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            <title>Welcome to WebGoup</title>
+            <style>
+                body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { text-align: center; padding: 40px 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px 10px 0 0; }
+                .content { background: #f8f9fa; padding: 40px 30px; border-radius: 0 0 10px 10px; }
+                .welcome-text { font-size: 1.2em; color: #495057; margin: 20px 0; }
+                .feature-list { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #667eea; }
+                .feature-list h4 { color: #667eea; margin-top: 0; }
+                .btn { display: inline-block; background: #667eea; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 10px 5px; }
+                .btn-primary { background: #28a745; }
+                .stats { display: flex; justify-content: space-around; margin: 30px 0; text-align: center; }
+                .stat-item { flex: 1; }
+                .stat-number { font-size: 1.8em; font-weight: bold; color: #667eea; }
+                .footer { text-align: center; margin-top: 30px; padding: 20px; background: #e9ecef; border-radius: 10px; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h1>🎉 Welcome to WebGoup!</h1>
+                    <p>Your Gateway to Premium SEO Services</p>
+                </div>
+
+                <div class='content'>
+                    <h2>Hello " . htmlspecialchars($user_name) . "!</h2>
+
+                    <div class='welcome-text'>
+                        <p>🚀 <strong>Welcome to the WebGoup community!</strong> We're thrilled to have you join our platform of SEO professionals and service seekers.</p>
+
+                        <p>Your account has been successfully created and you're now ready to explore our marketplace of high-quality SEO services.</p>
+                    </div>
+
+                    <div class='feature-list'>
+                        <h4>🌟 What Can You Do on WebGoup?</h4>
+                        <ul>
+                            <li><strong>Buy SEO Services:</strong> Browse our curated marketplace of vetted SEO providers</li>
+                            <li><strong>Sell Your Services:</strong> Monetize your SEO expertise by offering services to our global community</li>
+                            <li><strong>Track Orders:</strong> Manage all your orders and communications in one place</li>
+                            <li><strong>Secure Payments:</strong> Enjoy protected transactions with our escrow system</li>
+                        </ul>
+                    </div>
+
+                    <div class='stats'>
+                        <div class='stat-item'>
+                            <div class='stat-number'>70%</div>
+                            <div>Revenue to Sellers</div>
+                        </div>
+                        <div class='stat-item'>
+                            <div class='stat-number'>Global</div>
+                            <div>Marketplace</div>
+                        </div>
+                        <div class='stat-item'>
+                            <div class='stat-number'>Secure</div>
+                            <div>Payments</div>
+                        </div>
+                    </div>
+
+                    <h3>🚀 Get Started Now!</h3>
+                    <div style='text-align: center; margin: 25px 0;'>
+                        <a href='" . URLROOT . "/services' class='btn btn-primary'>Browse Services</a>
+                        <a href='" . URLROOT . "/services/add' class='btn'>Sell Your Services</a>
+                    </div>
+
+                    <div class='feature-list'>
+                        <h4>💡 Pro Tips for Success:</h4>
+                        <ul>
+                            <li>Complete your profile to build trust with other users</li>
+                            <li>As a seller, create detailed service descriptions</li>
+                            <li>Communicate clearly through our messaging system</li>
+                            <li>Deliver quality work on time to build your reputation</li>
+                        </ul>
+                    </div>
+
+                    <h3>📚 Need Help?</h3>
+                    <p>Our team is here to support you every step of the way. If you have any questions or need assistance, don't hesitate to reach out.</p>
+
+                    <div style='text-align: center; margin: 25px 0;'>
+                        <a href='" . URLROOT . "/users/dashboard' class='btn'>Go to Dashboard</a>
+                    </div>
+
+                    <p>We're excited to see you succeed on WebGoup!</p>
+
+                    <p>Best regards,<br>
+                    <strong>The WebGoup Team</strong></p>
+                </div>
+
+                <div class='footer'>
+                    <p>© 2024 WebGoup. All rights reserved.</p>
+                    <p>Empowering SEO professionals worldwide 🌍</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        ";
+
+        return $this->sendEmail($user_email, $subject, $message);
+    }
+
+    // 发送新用户注册通知给管理员
+    public function sendNewUserNotificationToAdmin($user_data) {
+        $subject = "New User Registration - " . $user_data['username'];
+
+        $message = "
+        <!DOCTYPE html>
+        <html lang='en'>
+        <head>
+            <meta charset='UTF-8'>
+            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            <title>New User Registration - WebGoup</title>
+            <style>
+                body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { text-align: center; padding: 30px 0; background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; border-radius: 10px 10px 0 0; }
+                .content { background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; }
+                .user-info { background: #e9ecef; padding: 15px; border-radius: 5px; margin: 15px 0; }
+                .btn { display: inline-block; background: #007bff; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 10px 5px; }
+                .footer { text-align: center; margin-top: 30px; padding: 20px; background: #e9ecef; border-radius: 10px; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h1>👤 New User Registration</h1>
+                    <p>A new user has joined WebGoup</p>
+                </div>
+
+                <div class='content'>
+                    <h2>User Registration Details</h2>
+                    <p>Hello Admin,</p>
+                    <p>A new user has successfully registered on the WebGoup platform:</p>
+
+                    <div class='user-info'>
+                        <h3>User Information:</h3>
+                        <p><strong>Username:</strong> " . htmlspecialchars($user_data['username']) . "</p>
+                        <p><strong>Email:</strong> " . htmlspecialchars($user_data['email']) . "</p>
+                        <p><strong>Registration Date:</strong> " . date('Y-m-d H:i:s') . "</p>
+                        <p><strong>User ID:</strong> " . $user_data['user_id'] . "</p>
+                    </div>
+
+                    <div style='text-align: center; margin: 20px 0;'>
+                        <a href='" . URLROOT . "/users/profile/" . $user_data['user_id'] . "' class='btn'>View User Profile</a>
+                        <a href='" . URLROOT . "/admin/users' class='btn'>Manage Users</a>
+                    </div>
+
+                    <p>This is an automated notification to keep you informed about new user registrations on your platform.</p>
+
+                    <p>Best regards,<br>
+                    <strong>WebGoup System</strong></p>
+                </div>
+
+                <div class='footer'>
+                    <p>© 2024 WebGoup. All rights reserved.</p>
+                    <p>Platform Management Notification 📊</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        ";
+
+        // 发送给管理员邮箱（可以根据需要修改）
+        return $this->sendEmail(EMAIL_FROM_EMAIL, $subject, $message);
+    }
 }
 ?>

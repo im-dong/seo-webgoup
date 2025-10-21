@@ -85,6 +85,30 @@ class Users extends Controller {
                             $this->walletModel = $this->model('Wallet');
                             $this->walletModel->createWallet($user_id);
 
+                            // 在后台异步发送欢迎邮件
+                            register_shutdown_function(function() use ($data, $user_id) {
+                                set_time_limit(30);
+                                ignore_user_abort(true);
+
+                                try {
+                                    // 发送欢迎邮件给新用户
+                                    $this->emailHelper->sendWelcomeEmail($data['email'], $data['username'], array(
+                                        'user_id' => $user_id,
+                                        'username' => $data['username'],
+                                        'email' => $data['email']
+                                    ));
+
+                                    // 可选：发送新用户注册通知给管理员
+                                    $this->emailHelper->sendNewUserNotificationToAdmin(array(
+                                        'user_id' => $user_id,
+                                        'username' => $data['username'],
+                                        'email' => $data['email']
+                                    ));
+                                } catch (Exception $e) {
+                                    error_log("Failed to send welcome email: " . $e->getMessage());
+                                }
+                            });
+
                             flash('register_success', 'Registration successful! You can now log in.');
                             header('location: ' . URLROOT . '/users/login');
                         } else {
@@ -135,6 +159,30 @@ class Users extends Controller {
 
                             // 清除临时数据
                             unset($_SESSION['temp_registration']);
+
+                            // 在后台异步发送欢迎邮件
+                            register_shutdown_function(function() use ($tempRegistration, $user_id) {
+                                set_time_limit(30);
+                                ignore_user_abort(true);
+
+                                try {
+                                    // 发送欢迎邮件给新用户
+                                    $this->emailHelper->sendWelcomeEmail($tempRegistration['email'], $tempRegistration['username'], array(
+                                        'user_id' => $user_id,
+                                        'username' => $tempRegistration['username'],
+                                        'email' => $tempRegistration['email']
+                                    ));
+
+                                    // 可选：发送新用户注册通知给管理员
+                                    $this->emailHelper->sendNewUserNotificationToAdmin(array(
+                                        'user_id' => $user_id,
+                                        'username' => $tempRegistration['username'],
+                                        'email' => $tempRegistration['email']
+                                    ));
+                                } catch (Exception $e) {
+                                    error_log("Failed to send welcome email after verification: " . $e->getMessage());
+                                }
+                            });
 
                             flash('register_success', 'Registration successful! You can now log in.');
                             header('location: ' . URLROOT . '/users/login');
