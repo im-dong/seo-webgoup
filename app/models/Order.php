@@ -23,8 +23,8 @@ class Order {
             $result = $this->db->single();
             $order_id = $result->id;
 
-            // 发送新订单通知给卖家
-            $this->sendNewOrderNotificationToSeller($order_id);
+            // 可选发送新订单通知给卖家（如果需要卖家处理订单）
+            // $this->sendNewOrderNotificationToSeller($order_id);
 
             return $order_id;
         }
@@ -335,7 +335,7 @@ class Order {
                     'funds_release_date' => $orderData->funds_release_date
                 );
 
-                // 通知买家
+                // 优先通知买家 - 买家总是需要知道订单状态变化
                 if ($orderData->buyer_email) {
                     $this->emailHelper->sendOrderStatusUpdateNotification(
                         $orderData->buyer_email,
@@ -346,8 +346,13 @@ class Order {
                     );
                 }
 
-                // 通知卖家
-                if ($orderData->seller_email) {
+                // 选择性通知卖家 - 只在重要状态变更时通知
+                $sellerShouldBeNotified = in_array($new_status, [
+                    'paid',           // 卖家需要知道已付款，可以开始工作
+                    'confirmed'       // 卖家需要知道买家已确认，资金已释放
+                ]);
+
+                if ($sellerShouldBeNotified && $orderData->seller_email) {
                     $this->emailHelper->sendOrderStatusUpdateNotification(
                         $orderData->seller_email,
                         $orderData->seller_name,
