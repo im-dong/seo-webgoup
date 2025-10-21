@@ -7,21 +7,17 @@ class TestEmail extends Controller {
     }
 
     public function index() {
-        // 添加PHP信息检查
-        phpinfo();
-        die();
-
         // 检查是否是管理员，或者简单允许所有用户访问测试页面
         // 如果需要限制访问，可以在这里添加权限检查
 
-        $data = [
+        $data = array(
             'title' => 'Email Test',
             'description' => 'Test email sending functionality',
             'keywords' => 'email test, smtp test',
             'test_result' => '',
             'test_email' => '',
             'email_err' => ''
-        ];
+        );
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_POST = filter_input_array(INPUT_POST, FILTER_UNSAFE_RAW);
