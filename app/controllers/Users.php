@@ -97,13 +97,6 @@ class Users extends Controller {
                                         'username' => $data['username'],
                                         'email' => $data['email']
                                     ));
-
-                                    // 可选：发送新用户注册通知给管理员
-                                    $this->emailHelper->sendNewUserNotificationToAdmin(array(
-                                        'user_id' => $user_id,
-                                        'username' => $data['username'],
-                                        'email' => $data['email']
-                                    ));
                                 } catch (Exception $e) {
                                     error_log("Failed to send welcome email: " . $e->getMessage());
                                 }
@@ -168,13 +161,6 @@ class Users extends Controller {
                                 try {
                                     // 发送欢迎邮件给新用户
                                     $this->emailHelper->sendWelcomeEmail($tempRegistration['email'], $tempRegistration['username'], array(
-                                        'user_id' => $user_id,
-                                        'username' => $tempRegistration['username'],
-                                        'email' => $tempRegistration['email']
-                                    ));
-
-                                    // 可选：发送新用户注册通知给管理员
-                                    $this->emailHelper->sendNewUserNotificationToAdmin(array(
                                         'user_id' => $user_id,
                                         'username' => $tempRegistration['username'],
                                         'email' => $tempRegistration['email']
