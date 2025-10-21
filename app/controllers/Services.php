@@ -423,6 +423,24 @@ class Services extends Controller {
         }
     }
 
+    public function order($service_id) {
+        if (!isLoggedIn()) {
+            header('location: ' . URLROOT . '/users/login');
+            exit();
+        }
+
+        $service = $this->serviceModel->getServiceById($service_id);
+        if (!$service || $service->userId == $_SESSION['user_id']) {
+            flash('service_message', 'Invalid service or you cannot purchase your own service.', 'alert alert-danger');
+            header('location: ' . URLROOT . '/services');
+            exit();
+        }
+
+        // 重定向到统一的订单创建流程
+        header('location: ' . URLROOT . '/orders/create/' . $service_id);
+        exit();
+    }
+
     private function _sanitize_html($html) {
         $allowed_tags = '<p><a><h1><h2><h3><h4><h5><h6><strong><em><u><ul><ol><li><br><img><span>';
         return strip_tags($html, $allowed_tags);

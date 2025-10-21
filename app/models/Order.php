@@ -229,5 +229,27 @@ class Order {
         $this->db->bind(':offset', $offset);
         return $this->db->resultSet();
     }
+
+    // 更新PayPal订单ID
+    public function updatePayPalOrderId($order_id, $paypal_order_id) {
+        $this->db->query('UPDATE orders SET paypal_order_id = :paypal_order_id WHERE id = :order_id');
+        $this->db->bind(':paypal_order_id', $paypal_order_id);
+        $this->db->bind(':order_id', $order_id);
+        return $this->db->execute();
+    }
+
+    // 删除订单
+    public function deleteOrder($order_id) {
+        $this->db->query('DELETE FROM orders WHERE id = :order_id');
+        $this->db->bind(':order_id', $order_id);
+        return $this->db->execute();
+    }
+
+    // 根据PayPal订单ID获取内部订单
+    public function getOrderByPayPalOrderId($paypal_order_id) {
+        $this->db->query('SELECT id FROM orders WHERE paypal_order_id = :paypal_order_id');
+        $this->db->bind(':paypal_order_id', $paypal_order_id);
+        return $this->db->single();
+    }
 }
 

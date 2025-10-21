@@ -204,14 +204,41 @@
                         <?php endif; ?>
                     </ul>
 
+                    <!-- 支付方式信息 -->
+                    <div class="alert alert-success border-0 mb-3 text-center">
+                        <div class="d-flex justify-content-center mb-2">
+                            <i class="fab fa-cc-visa fa-2x text-primary mx-1"></i>
+                            <i class="fab fa-cc-mastercard fa-2x text-danger mx-1"></i>
+                            <i class="fab fa-cc-amex fa-2x text-info mx-1"></i>
+                            <i class="fab fa-cc-discover fa-2x text-warning mx-1"></i>
+                            <i class="fab fa-paypal fa-2x text-primary mx-1"></i>
+                        </div>
+                        <small class="text-success fw-bold">
+                            <i class="fas fa-check-circle"></i> Credit Card & PayPal Accepted<br>
+                            <i class="fas fa-lock"></i> No PayPal Account Required
+                        </small>
+                    </div>
+
                     <div class="d-grid gap-2">
                         <?php if(isset($_SESSION['user_id']) && $_SESSION['user_id'] != $data['service']->userId): ?>
-                            <a href="<?php echo URLROOT; ?>/orders/create_and_pay/<?php echo $data['service']->serviceId; ?>" class="btn btn-primary btn-lg">Order Now</a>
-                            <a href="<?php echo URLROOT; ?>/orders/startInquiry/<?php echo $data['service']->serviceId; ?>" class="btn btn-outline-secondary">Message Seller</a>
+                            <a href="<?php echo URLROOT; ?>/orders/create/<?php echo $data['service']->serviceId; ?>"
+                               class="btn btn-success btn-lg">
+                                <i class="fas fa-shopping-cart"></i> Order Now - $<?php echo htmlspecialchars($data['service']->price); ?>
+                            </a>
+                            <small class="text-muted text-center d-block mb-2">
+                                Pay securely with credit card or PayPal
+                            </small>
+                            <a href="<?php echo URLROOT; ?>/orders/startInquiry/<?php echo $data['service']->serviceId; ?>" class="btn btn-outline-secondary">
+                                <i class="fas fa-envelope"></i> Message Seller
+                            </a>
                         <?php elseif(!isset($_SESSION['user_id'])): ?>
-                             <a href="<?php echo URLROOT; ?>/users/login" class="btn btn-primary btn-lg">Login to Order</a>
+                             <a href="<?php echo URLROOT; ?>/users/login" class="btn btn-primary btn-lg">
+                                <i class="fas fa-sign-in-alt"></i> Login to Order
+                            </a>
                         <?php else: ?>
-                            <button class="btn btn-light btn-lg" disabled>This is your own service</button>
+                            <button class="btn btn-light btn-lg" disabled>
+                                <i class="fas fa-store"></i> This is your own service
+                            </button>
                         <?php endif; ?>
 
                         <!-- Admin Delete Button -->

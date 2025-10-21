@@ -5,12 +5,14 @@ class Orders extends Controller {
     protected $walletModel;
     protected $conversationModel;
     protected $userModel;
+    private $paypalAPI;
 
     public function __construct(){
         // Models are loaded here, but authentication checks are moved to specific methods.
         $this->orderModel = $this->model('Order');
         $this->serviceModel = $this->model('Service');
         $this->walletModel = $this->model('Wallet');
+        $this->paypalAPI = new PayPalAPI();
     }
 
     // 为售前咨询开启一个对话
@@ -46,7 +48,39 @@ class Orders extends Controller {
         }
     }
 
-    // 从服务页面直接创建订单并跳转到PayPal
+    // 简单的订单创建 - 只创建订单并跳转到订单详情页
+    public function create($service_id) {
+        if (!isLoggedIn()) { header('Location: ' . URLROOT . '/users/login'); exit(); }
+
+        $service = $this->serviceModel->getServiceById($service_id);
+        if (!$service || $service->userId == $_SESSION['user_id']) {
+            flash('service_message', 'Invalid service or you cannot purchase your own service.', 'alert alert-danger');
+            header('Location: ' . URLROOT . '/services');
+            exit();
+        }
+
+        $data = [
+            'service_id' => $service_id,
+            'buyer_id'   => $_SESSION['user_id'],
+            'seller_id'  => $service->userId,
+            'amount'     => $service->price
+        ];
+
+        $order_id = $this->orderModel->createOrder($data);
+
+        if ($order_id) {
+            $this->orderModel->createServiceSnapshot($order_id, $service);
+            // 重定向到订单详情页 - 唯一的支付入口
+            header('Location: ' . URLROOT . '/orders/details/' . $order_id);
+            exit();
+        } else {
+            flash('service_message', 'Could not create order. Please try again.', 'alert alert-danger');
+            header('Location: ' . URLROOT . '/services/show/' . $service_id);
+            exit();
+        }
+    }
+
+    // 从服务页面直接创建订单并跳转到PayPal (保留用于向后兼容)
     public function create_and_pay($service_id) {
         if (!isLoggedIn()) { header('Location: ' . URLROOT . '/users/login'); exit(); }
 
@@ -68,8 +102,8 @@ class Orders extends Controller {
 
         if ($order_id) {
             $this->orderModel->createServiceSnapshot($order_id, $service);
-            // 重定向到统一的支付方法
-            header('Location: ' . URLROOT . '/orders/pay/' . $order_id);
+            // 重定向到订单详情页 - 唯一的支付入口
+            header('Location: ' . URLROOT . '/orders/details/' . $order_id);
             exit();
         } else {
             flash('service_message', 'Could not create order. Please try again.', 'alert alert-danger');
@@ -109,31 +143,73 @@ class Orders extends Controller {
             exit();
         }
 
-        // 构建PayPal支付URL
+        // 构建PayPal支付URL - 支持访客结账(信用卡付款)
         $amount = number_format($order->amount, 2, '.', '');
         $return_url = URLROOT . '/orders/details/' . $order_id;
-        $paypal_url = PAYPAL_URL . '?notify_url=' . PAYPAL_NOTIFY_URL . '&cmd=_xclick&business=' . PAYPAL_RECEIVER_EMAIL . '&item_name=' . $order_id . '&amount=' . $amount . '&currency_code=USD&return=' . $return_url . '&custom=wg_' . $order_id;
+        $cancel_url = URLROOT . '/orders/details/' . $order_id;
+
+        // PayPal支付参数 - 启用访客结账功能
+        $paypal_params = [
+            'cmd' => '_xclick',
+            'business' => PAYPAL_RECEIVER_EMAIL,
+            'item_name' => 'Order #' . $order_id . ' - ' . ($service->title ?? 'Service Purchase'),
+            'item_number' => $order_id,
+            'amount' => $amount,
+            'currency_code' => 'USD',
+            'quantity' => '1',
+            'no_shipping' => '1',  // 不需要送货地址
+            'no_note' => '1',      // 不需要备注
+            'cn' => 'Optional Note', // 备注字段标签
+            'rm' => '2',           // Return method: 2 = POST
+            'return' => $return_url,
+            'cancel_return' => $cancel_url,
+            'notify_url' => PAYPAL_NOTIFY_URL,
+            'custom' => 'wg_' . $order_id,
+            'lc' => 'US',          // 地区设置
+            'charset' => 'utf-8',  // 字符编码
+            'discount_amount' => '0', // 折扣金额
+            'discount_amount_cart' => '0', // 购物车折扣
+            'tax' => '0',         // 税费
+            'handling' => '0',     // 手续费
+            // 控制默认选项的参数
+            'landing_page' => 'Billing', // 默认显示账单页面而非登录页面
+            'useraction' => 'commit', // 默认显示"Pay Now"按钮
+            'paymentaction' => 'sale', // 立即销售
+            'upload' => '0',        // 不预上传地址信息
+            'address_override' => '0', // 不覆盖地址
+            'bn' => 'PP-BuyNowBF',  // 购买按钮类型，减少额外选项
+            'invoice' => 'INV-' . $order_id, // 发票号
+            'button_subtype' => 'services', // 服务类型，减少地址相关选项
+            'subtotal' => $amount,
+            'shipping' => '0',     // 运费
+            // 强制虚拟产品设置
+            'digital' => '1',        // 标记为数字产品
+            'noshipping' => '1',      // 明确标记不需要运输
+            'undefined_quantity' => '0',
+            'vari' => '0',
+            // 尝试禁用账户创建的参数
+            'buyer_credit_limit' => '0', // 禁用买家信用额度
+        ];
+
+        $paypal_query = http_build_query($paypal_params);
+        $paypal_url = PAYPAL_URL . '?' . $paypal_query;
 
         // 记录发送到PayPal的请求
-        $paypal_data = [
-            'notify_url'    => PAYPAL_NOTIFY_URL,
-            'cmd'           => '_xclick',
-            'business'      => PAYPAL_RECEIVER_EMAIL,
-            'item_name'     => $order_id,
-            'amount'        => $amount,
-            'currency_code' => 'USD',
-            'return'        => $return_url,
-            'custom'        => 'wg_' . $order_id
-        ];
+        $paypal_data = $paypal_params;
+        $paypal_data['order_id'] = $order_id;
         $this->log_paypal_request($order_id, $paypal_data, $paypal_url);
 
         header('Location: ' . $paypal_url);
         exit();
     }
 
-    // API端点：创建订单 (被PayPal JS SDK调用) - 保留但现在需要登录检查
-    public function create($service_id){
-        if(!isLoggedIn()){ http_response_code(401); echo json_encode(['error' => 'Unauthorized']); return; }
+    // API端点：创建PayPal订单 (被PayPal JS SDK调用)
+    public function createApi($service_id){
+        if(!isLoggedIn()){
+            http_response_code(401);
+            echo json_encode(['error' => 'Unauthorized']);
+            return;
+        }
 
         header('Content-Type: application/json');
         $service = $this->serviceModel->getServiceById($service_id);
@@ -142,6 +218,7 @@ class Orders extends Controller {
             return;
         }
 
+        // 先创建内部订单
         $data = [
             'service_id' => $service_id,
             'buyer_id' => $_SESSION['user_id'],
@@ -151,27 +228,86 @@ class Orders extends Controller {
 
         $order_id = $this->orderModel->createOrder($data);
 
-        if($order_id){
-            $this->orderModel->createServiceSnapshot($order_id, $service);
-            echo json_encode(['orderID' => $order_id]);
-        } else {
+        if(!$order_id){
             echo json_encode(['error' => 'Failed to create order']);
+            return;
+        }
+
+        // 创建服务快照
+        $this->orderModel->createServiceSnapshot($order_id, $service);
+
+        try {
+            // 创建PayPal订单
+            $paypal_order = $this->paypalAPI->createOrder(
+                $service->price,
+                'USD',
+                'Order #' . $order_id . ' - ' . $service->title
+            );
+
+            // 保存PayPal订单ID到内部订单
+            $this->orderModel->updatePayPalOrderId($order_id, $paypal_order['id']);
+
+            echo json_encode([
+                'id' => $paypal_order['id'],
+                'orderID' => $order_id, // 内部订单ID
+                'status' => 'CREATED'
+            ]);
+
+        } catch (Exception $e) {
+            // 如果PayPal订单创建失败，删除内部订单
+            $this->orderModel->deleteOrder($order_id);
+            http_response_code(500);
+            echo json_encode(['error' => 'PayPal API error: ' . $e->getMessage()]);
         }
     }
 
-    // API端点：捕获支付 (被PayPal JS SDK调用) - 保留但现在需要登录检查
+    // API端点：捕获支付 (被PayPal JS SDK调用)
     public function capture($order_id){
-        if(!isLoggedIn()){ http_response_code(401); echo json_encode(['error' => 'Unauthorized']); return; }
+        if(!isLoggedIn()){
+            http_response_code(401);
+            echo json_encode(['error' => 'Unauthorized']);
+            return;
+        }
 
         header('Content-Type: application/json');
-        $paypal_order_id = json_decode(file_get_contents('php://input'))->orderID;
-        $service = $this->serviceModel->getServiceByOrderId($order_id);
 
-        if($this->orderModel->captureOrder($order_id, $paypal_order_id)){
-            $this->walletModel->addFundsToTotalBalance($service->user_id, $service->price, $order_id);
-            echo json_encode(['status' => 'success']);
-        } else {
-            echo json_encode(['status' => 'error']);
+        $input = json_decode(file_get_contents('php://input'));
+        $paypal_order_id = $input->orderID ?? null;
+
+        if(!$paypal_order_id){
+            echo json_encode(['error' => 'PayPal order ID required']);
+            return;
+        }
+
+        $order = $this->orderModel->getOrderById($order_id);
+        if(!$order || $order->buyer_id != $_SESSION['user_id']){
+            echo json_encode(['error' => 'Invalid order']);
+            return;
+        }
+
+        try {
+            // 捕获PayPal支付
+            $capture_result = $this->paypalAPI->capturePayment($paypal_order_id);
+
+            // 获取交易ID
+            $transaction_id = $capture_result['purchase_units'][0]['payments']['captures'][0]['id'] ?? null;
+
+            if($transaction_id && $this->orderModel->captureOrder($order_id, $transaction_id)){
+                // 添加资金到卖家钱包
+                $this->walletModel->addFundsToTotalBalance($order->seller_id, $order->amount, $order_id);
+
+                echo json_encode([
+                    'status' => 'success',
+                    'order_id' => $order_id,
+                    'transaction_id' => $transaction_id
+                ]);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Failed to update order']);
+            }
+
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['error' => 'Payment capture failed: ' . $e->getMessage()]);
         }
     }
 
@@ -312,7 +448,13 @@ class Orders extends Controller {
         if (strcmp($res, "VERIFIED") == 0) {
             $this->log_ipn('IPN VERIFIED. Processing payment...');
 
-            $order_id = isset($_POST['custom']) ? (int)$_POST['custom'] : 0;
+            // 处理custom字段 - 支持新格式(wg_orderid)和旧格式(orderid)
+        $custom = isset($_POST['custom']) ? $_POST['custom'] : '';
+        if (strpos($custom, 'wg_') === 0) {
+            $order_id = (int)substr($custom, 3); // 去掉wg_前缀
+        } else {
+            $order_id = (int)$custom;
+        }
             $payment_status = isset($_POST['payment_status']) ? $_POST['payment_status'] : '';
             $receiver_email = isset($_POST['receiver_email']) ? $_POST['receiver_email'] : '';
             $txn_id = isset($_POST['txn_id']) ? $_POST['txn_id'] : '';
@@ -365,6 +507,26 @@ class Orders extends Controller {
         error_log($log_message, 3, $log_file);
     }
 
+    // 根据PayPal订单ID获取内部订单ID
+    public function getInternalByPaypal($paypal_order_id) {
+        header('Content-Type: application/json');
+
+        $order = $this->orderModel->getOrderByPayPalOrderId($paypal_order_id);
+
+        if ($order) {
+            echo json_encode([
+                'success' => true,
+                'order_id' => $order->id
+            ]);
+        } else {
+            http_response_code(404);
+            echo json_encode([
+                'success' => false,
+                'error' => 'Order not found'
+            ]);
+        }
+    }
+
     private function log_paypal_request($order_id, $paypal_data, $paypal_url) {
         $log_file = APPROOT . '/doc/paypal_requests.log';
         $log_message = "[" . date("Y-m-d H:i:s") . "] PayPal Request Sent for Order #$order_id\n";
@@ -390,5 +552,53 @@ class Orders extends Controller {
         $log_message .= "=====================================================================\n\n";
 
         error_log($log_message, 3, $log_file);
+    }
+
+    // 新的API端点：直接使用PayPal已捕获的数据更新订单
+    public function updateFromPayPal($order_id){
+        if(!isLoggedIn()){
+            http_response_code(401);
+            echo json_encode(['error' => 'Unauthorized']);
+            return;
+        }
+
+        header('Content-Type: application/json');
+
+        $input = json_decode(file_get_contents('php://input'));
+        $transaction_id = $input->transactionId ?? null;
+        $capture_data = $input->captureData ?? null;
+
+        if(!$transaction_id || !$capture_data){
+            echo json_encode(['error' => 'Transaction ID and capture data required']);
+            return;
+        }
+
+        $order = $this->orderModel->getOrderById($order_id);
+        if(!$order || $order->buyer_id != $_SESSION['user_id']){
+            echo json_encode(['error' => 'Invalid order']);
+            return;
+        }
+
+        // 直接更新订单状态，不需要再次调用PayPal API
+        if($this->orderModel->captureOrder($order_id, $transaction_id)){
+            // 添加资金到卖家钱包
+            if($this->walletModel->addFundsToTotalBalance($order->seller_id, $order->amount, $order_id)){
+                echo json_encode([
+                    'status' => 'success',
+                    'order_id' => $order_id,
+                    'transaction_id' => $transaction_id,
+                    'message' => 'Order updated and funds added to seller wallet'
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'partial_success',
+                    'order_id' => $order_id,
+                    'transaction_id' => $transaction_id,
+                    'message' => 'Order updated but failed to add funds to seller wallet'
+                ]);
+            }
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Failed to update order']);
+        }
     }
 }

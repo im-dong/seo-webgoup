@@ -2,53 +2,6 @@
 
 <?php flash('service_message'); ?>
 
-<!-- Legal Notice Banner -->
-<?php if(isset($_SESSION['user_id']) && !isset($_SESSION['legal_notice_shown'])): ?>
-<div class="alert alert-warning alert-dismissible fade show mb-0 legal-notice" role="alert">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-md-10">
-                <strong>⚠️ Important Legal Notice:</strong> webGoup is a technology platform connecting service providers and buyers.
-                We do not provide SEO services directly. All users must comply with search engine guidelines.
-                <a href="<?php echo URLROOT; ?>/pages/terms" class="alert-link">Read our Terms of Service</a> and
-                <a href="<?php echo URLROOT; ?>/pages/seoGuidelines" class="alert-link">SEO Guidelines</a>.
-            </div>
-            <div class="col-md-2 text-end">
-                <button type="button" class="btn-close legal-notice-close" aria-label="Close"></button>
-            </div>
-        </div>
-    </div>
-</div>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const legalNotice = document.querySelector('.legal-notice');
-    const closeButton = document.querySelector('.legal-notice-close');
-
-    if (closeButton && legalNotice) {
-        closeButton.addEventListener('click', function() {
-            // Set session variable to mark legal notice as shown for this login session
-            fetch('<?php echo URLROOT; ?>/users/markLegalNoticeShown', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            });
-
-            // Immediately hide the alert
-            const alert = closeButton.closest('.alert');
-            if (alert) {
-                alert.classList.remove('show');
-                setTimeout(() => {
-                    alert.style.display = 'none';
-                }, 150); // Wait for fade out animation
-            }
-        });
-    }
-});
-</script>
-<?php endif; ?>
-
 <!-- Hero Section -->
 <section class="hero-section-new">
     <div class="container text-center">
