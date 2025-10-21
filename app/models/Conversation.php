@@ -97,8 +97,22 @@ class Conversation {
             // 获取消息ID和相关信息
             $message_id = $this->db->lastInsertId();
 
-            // 发送新消息通知给接收方
-            $this->sendNewMessageNotification($conversation_id, $sender_id, $message_id, $message_text);
+            // 在后台异步发送邮件通知，不影响页面响应速度
+            // 使用 register_shutdown_function 确保邮件发送不阻塞用户界面
+            register_shutdown_function(function() use ($conversation_id, $sender_id, $message_id, $message_text) {
+                // 设置更长的执行时间限制，用于发送邮件
+                set_time_limit(30);
+
+                // 忽略用户中断，确保邮件发送完成
+                ignore_user_abort(true);
+
+                try {
+                    $this->sendNewMessageNotification($conversation_id, $sender_id, $message_id, $message_text);
+                } catch (Exception $e) {
+                    // 邮件发送失败不影响站内信功能，只记录错误日志
+                    error_log("Failed to send async message notification: " . $e->getMessage());
+                }
+            });
 
             return true;
         }

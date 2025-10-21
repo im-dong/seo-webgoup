@@ -24,7 +24,16 @@ class Order {
             $order_id = $result->id;
 
             // 可选发送新订单通知给卖家（如果需要卖家处理订单）
-            // $this->sendNewOrderNotificationToSeller($order_id);
+            // register_shutdown_function(function() use ($order_id) {
+            //     set_time_limit(30);
+            //     ignore_user_abort(true);
+            //
+            //     try {
+            //         $this->sendNewOrderNotificationToSeller($order_id);
+            //     } catch (Exception $e) {
+            //         error_log("Failed to send async new order notification: " . $e->getMessage());
+            //     }
+            // });
 
             return $order_id;
         }
@@ -51,8 +60,17 @@ class Order {
         }
 
         if($this->db->execute()){
-            // 发送状态变更通知
-            $this->sendOrderStatusUpdateNotification($order_id, $old_status, 'paid');
+            // 在后台异步发送邮件通知，不影响页面响应速度
+            register_shutdown_function(function() use ($order_id, $old_status) {
+                set_time_limit(30);
+                ignore_user_abort(true);
+
+                try {
+                    $this->sendOrderStatusUpdateNotification($order_id, $old_status, 'paid');
+                } catch (Exception $e) {
+                    error_log("Failed to send async order status notification: " . $e->getMessage());
+                }
+            });
             return true;
         }
         return false;
@@ -132,8 +150,17 @@ class Order {
         $this->db->bind(':release_date', $release_date);
 
         if($this->db->execute()){
-            // 发送状态变更通知
-            $this->sendOrderStatusUpdateNotification($order_id, $old_status, 'completed');
+            // 在后台异步发送邮件通知，不影响页面响应速度
+            register_shutdown_function(function() use ($order_id, $old_status) {
+                set_time_limit(30);
+                ignore_user_abort(true);
+
+                try {
+                    $this->sendOrderStatusUpdateNotification($order_id, $old_status, 'completed');
+                } catch (Exception $e) {
+                    error_log("Failed to send async order status notification: " . $e->getMessage());
+                }
+            });
             return true;
         }
         return false;
@@ -151,8 +178,17 @@ class Order {
         $this->db->bind(':user_id', $user_id);
 
         if($this->db->execute() && $this->db->rowCount() > 0){
-            // 发送状态变更通知
-            $this->sendOrderStatusUpdateNotification($order_id, $old_status, 'confirmed');
+            // 在后台异步发送邮件通知，不影响页面响应速度
+            register_shutdown_function(function() use ($order_id, $old_status) {
+                set_time_limit(30);
+                ignore_user_abort(true);
+
+                try {
+                    $this->sendOrderStatusUpdateNotification($order_id, $old_status, 'confirmed');
+                } catch (Exception $e) {
+                    error_log("Failed to send async order status notification: " . $e->getMessage());
+                }
+            });
             return true;
         }
         return false;
