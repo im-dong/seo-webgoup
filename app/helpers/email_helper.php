@@ -247,5 +247,268 @@ class EmailHelper {
 
         return $success_count > 0;
     }
+
+    // 发送新订单通知给卖家
+    public function sendNewOrderNotification($seller_email, $seller_name, $order_data) {
+        $subject = "New Order Received - WebGoup Order #" . $order_data['id'];
+
+        $message = "
+        <!DOCTYPE html>
+        <html lang='en'>
+        <head>
+            <meta charset='UTF-8'>
+            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            <title>New Order - WebGoup</title>
+            <style>
+                body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { text-align: center; padding: 30px 0; background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; border-radius: 10px 10px 0 0; }
+                .content { background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; }
+                .order-info { background: #e9ecef; padding: 15px; border-radius: 5px; margin: 15px 0; }
+                .btn { display: inline-block; background: #28a745; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 10px 5px; }
+                .btn-primary { background: #007bff; }
+                .footer { text-align: center; margin-top: 30px; padding: 20px; background: #e9ecef; border-radius: 10px; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h1>🎉 New Order Received!</h1>
+                    <p>Congratulations! You've received a new order</p>
+                </div>
+
+                <div class='content'>
+                    <h2>Order Details</h2>
+                    <p>Hello <strong>" . htmlspecialchars($seller_name) . "</strong>,</p>
+                    <p>You have received a new order for your service. Please review the details below:</p>
+
+                    <div class='order-info'>
+                        <h3>Order Information:</h3>
+                        <p><strong>Order ID:</strong> #" . $order_data['id'] . "</p>
+                        <p><strong>Service:</strong> " . htmlspecialchars($order_data['service_title']) . "</p>
+                        <p><strong>Buyer:</strong> " . htmlspecialchars($order_data['buyer_name']) . "</p>
+                        <p><strong>Amount:</strong> $" . number_format($order_data['amount'], 2) . "</p>
+                        <p><strong>Order Date:</strong> " . $order_data['created_at'] . "</p>
+                        " . (isset($order_data['remark']) ? "<p><strong>Buyer Note:</strong> " . htmlspecialchars($order_data['remark']) . "</p>" : "") . "
+                    </div>
+
+                    <h3>Next Steps:</h3>
+                    <ol>
+                        <li>Wait for payment confirmation (if not already paid)</li>
+                        <li>Review order details and any special requirements</li>
+                        <li>Start working on the service</li>
+                        <li>Mark as complete when finished</li>
+                    </ol>
+
+                    <div style='text-align: center; margin: 20px 0;'>
+                        <a href='" . URLROOT . "/orders/details/" . $order_data['id'] . "' class='btn'>View Order Details</a>
+                        <a href='" . URLROOT . "/users/dashboard' class='btn btn-primary'>Go to Dashboard</a>
+                    </div>
+
+                    <p><strong>Important:</strong> Please deliver the service within the specified timeframe to maintain good ratings and ensure timely payment release.</p>
+
+                    <p>Best regards!<br>
+                    <strong>The WebGoup Team</strong></p>
+                </div>
+
+                <div class='footer'>
+                    <p>© 2024 WebGoup. All rights reserved.</p>
+                    <p>Empowering SEO service providers worldwide 🚀</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        ";
+
+        return $this->sendEmail($seller_email, $subject, $message);
+    }
+
+    // 发送订单状态变更通知
+    public function sendOrderStatusUpdateNotification($user_email, $user_name, $order_data, $old_status, $new_status) {
+        $statusLabels = array(
+            'pending_payment' => 'Pending Payment',
+            'paid' => 'Paid',
+            'in_progress' => 'In Progress',
+            'completed' => 'Completed',
+            'confirmed' => 'Confirmed',
+            'cancelled' => 'Cancelled',
+            'refunded' => 'Refunded'
+        );
+
+        $statusColors = array(
+            'pending_payment' => '#ffc107',
+            'paid' => '#28a745',
+            'in_progress' => '#17a2b8',
+            'completed' => '#28a745',
+            'confirmed' => '#28a745',
+            'cancelled' => '#dc3545',
+            'refunded' => '#dc3545'
+        );
+
+        $oldStatusLabel = isset($statusLabels[$old_status]) ? $statusLabels[$old_status] : $old_status;
+        $newStatusLabel = isset($statusLabels[$new_status]) ? $statusLabels[$new_status] : $new_status;
+        $statusColor = isset($statusColors[$new_status]) ? $statusColors[$new_status] : '#6c757d';
+
+        $subject = "Order Status Update - WebGoup Order #" . $order_data['id'] . " - " . $newStatusLabel;
+
+        $message = "
+        <!DOCTYPE html>
+        <html lang='en'>
+        <head>
+            <meta charset='UTF-8'>
+            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            <title>Order Status Update - WebGoup</title>
+            <style>
+                body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { text-align: center; padding: 30px 0; background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); color: white; border-radius: 10px 10px 0 0; }
+                .content { background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; }
+                .status-update { background: " . $statusColor . "; color: white; padding: 15px; border-radius: 5px; margin: 15px 0; text-align: center; }
+                .order-info { background: #e9ecef; padding: 15px; border-radius: 5px; margin: 15px 0; }
+                .btn { display: inline-block; background: #007bff; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 10px 5px; }
+                .footer { text-align: center; margin-top: 30px; padding: 20px; background: #e9ecef; border-radius: 10px; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h1>📋 Order Status Update</h1>
+                    <p>Your order status has been updated</p>
+                </div>
+
+                <div class='content'>
+                    <h2>Order #" . $order_data['id'] . " Status Changed</h2>
+                    <p>Hello <strong>" . htmlspecialchars($user_name) . "</strong>,</p>
+                    <p>The status of your order has been updated:</p>
+
+                    <div class='status-update'>
+                        <h3 style='margin: 0;'>" . $oldStatusLabel . " → " . $newStatusLabel . "</h3>
+                    </div>
+
+                    <div class='order-info'>
+                        <h3>Order Information:</h3>
+                        <p><strong>Order ID:</strong> #" . $order_data['id'] . "</p>
+                        <p><strong>Service:</strong> " . htmlspecialchars($order_data['service_title']) . "</p>
+                        <p><strong>Amount:</strong> $" . number_format($order_data['amount'], 2) . "</p>
+                        <p><strong>Update Time:</strong> " . date('Y-m-d H:i:s') . "</p>";
+
+        // 根据状态添加特定信息
+        if ($new_status == 'completed') {
+            $message .= "<p><strong>Proof URL:</strong> <a href='" . URLROOT . $order_data['proof_url'] . "'>View Proof</a></p>";
+            $message .= "<p><strong>Funds Release Date:</strong> " . $order_data['funds_release_date'] . "</p>";
+        } elseif ($new_status == 'paid') {
+            $message .= "<p><strong>Payment ID:</strong> " . $order_data['payment_id'] . "</p>";
+        }
+
+        $message .= "
+                    </div>";
+
+        // 根据状态添加行动提示
+        if ($new_status == 'completed') {
+            $message .= "
+                    <h3>Next Steps:</h3>
+                    <p>Please review the work and confirm if everything meets your requirements. Once confirmed, funds will be released to the seller.</p>
+                    <div style='text-align: center; margin: 20px 0;'>
+                        <a href='" . URLROOT . "/orders/details/" . $order_data['id'] . "' class='btn'>Review Order</a>
+                    </div>";
+        } elseif ($new_status == 'confirmed') {
+            $message .= "
+                    <h3>Order Confirmed!</h3>
+                    <p>Thank you for confirming the order. The payment has been released to the service provider.</p>";
+        } else {
+            $message .= "
+                    <div style='text-align: center; margin: 20px 0;'>
+                        <a href='" . URLROOT . "/orders/details/" . $order_data['id'] . "' class='btn'>View Order Details</a>
+                    </div>";
+        }
+
+        $message .= "
+                    <p>If you have any questions or concerns, please don't hesitate to contact us or the service provider.</p>
+
+                    <p>Best regards!<br>
+                    <strong>The WebGoup Team</strong></p>
+                </div>
+
+                <div class='footer'>
+                    <p>© 2024 WebGoup. All rights reserved.</p>
+                    <p>Connecting quality services with businesses 🤝</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        ";
+
+        return $this->sendEmail($user_email, $subject, $message);
+    }
+
+    // 发送新消息通知
+    public function sendNewMessageNotification($recipient_email, $recipient_name, $message_data) {
+        $subject = "New Message - WebGoup Order #" . $message_data['order_id'];
+
+        $message = "
+        <!DOCTYPE html>
+        <html lang='en'>
+        <head>
+            <meta charset='UTF-8'>
+            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            <title>New Message - WebGoup</title>
+            <style>
+                body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { text-align: center; padding: 30px 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px 10px 0 0; }
+                .content { background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; }
+                .message-bubble { background: #e9ecef; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #667eea; }
+                .order-info { background: #f8f9fa; border: 1px solid #dee2e6; padding: 15px; border-radius: 5px; margin: 15px 0; }
+                .btn { display: inline-block; background: #667eea; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 10px 5px; }
+                .footer { text-align: center; margin-top: 30px; padding: 20px; background: #e9ecef; border-radius: 10px; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h1>💬 New Message Received</h1>
+                    <p>You have a new message regarding your order</p>
+                </div>
+
+                <div class='content'>
+                    <h2>Message from " . htmlspecialchars($message_data['sender_name']) . "</h2>
+                    <p>Hello <strong>" . htmlspecialchars($recipient_name) . "</strong>,</p>
+                    <p>You have received a new message:</p>
+
+                    <div class='message-bubble'>
+                        <p style='margin: 0;'>" . nl2br(htmlspecialchars($message_data['message_text'])) . "</p>
+                        <p style='margin: 10px 0 0 0; font-size: 0.9em; color: #6c757d;'>
+                            <em>Sent at: " . $message_data['created_at'] . "</em>
+                        </p>
+                    </div>
+
+                    <div class='order-info'>
+                        <h3>Related Order:</h3>
+                        <p><strong>Order ID:</strong> #" . $message_data['order_id'] . "</p>
+                        <p><strong>Service:</strong> " . htmlspecialchars($message_data['service_title']) . "</p>
+                    </div>
+
+                    <div style='text-align: center; margin: 20px 0;'>
+                        <a href='" . URLROOT . "/conversations/show/" . $message_data['conversation_id'] . "' class='btn'>View Message</a>
+                        <a href='" . URLROOT . "/orders/details/" . $message_data['order_id'] . "' class='btn'>View Order</a>
+                    </div>
+
+                    <p><strong>Quick Reply Tip:</strong> You can reply to this message directly on the WebGoup platform to keep all communication organized and secure.</p>
+
+                    <p>Best regards!<br>
+                    <strong>The WebGoup Team</strong></p>
+                </div>
+
+                <div class='footer'>
+                    <p>© 2024 WebGoup. All rights reserved.</p>
+                    <p>Keeping communication seamless and secure 🔒</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        ";
+
+        return $this->sendEmail($recipient_email, $subject, $message);
+    }
 }
 ?>

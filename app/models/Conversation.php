@@ -1,9 +1,11 @@
 <?php
 class Conversation {
     private $db;
+    private $emailHelper;
 
     public function __construct(){
         $this->db = new Database;
+        $this->emailHelper = new EmailHelper();
     }
 
     // 获取用户的所有对话
@@ -90,7 +92,17 @@ class Conversation {
         $this->db->bind(':conversation_id', $conversation_id);
         $this->db->bind(':sender_id', $sender_id);
         $this->db->bind(':message_text', $message_text);
-        return $this->db->execute();
+
+        if($this->db->execute()){
+            // 获取消息ID和相关信息
+            $message_id = $this->db->lastInsertId();
+
+            // 发送新消息通知给接收方
+            $this->sendNewMessageNotification($conversation_id, $sender_id, $message_id, $message_text);
+
+            return true;
+        }
+        return false;
     }
 
     // 标记对话中的消息为已读 (简化处理：当用户打开对话时，所有消息被视为已读)
@@ -159,5 +171,53 @@ class Conversation {
         $this->db->bind(':user_id', $user_id);
         $row = $this->db->single();
         return $row ? (int)$row->unread_count : 0;
+    }
+
+    // 发送新消息通知
+    private function sendNewMessageNotification($conversation_id, $sender_id, $message_id, $message_text) {
+        try {
+            // 获取对话详细信息
+            $this->db->query('SELECT c.*, o.service_id, s.title as service_title,
+                              buyer.email as buyer_email, buyer.username as buyer_name,
+                              seller.email as seller_email, seller.username as seller_name,
+                              sender.username as sender_name
+                              FROM conversations c
+                              JOIN orders o ON c.order_id = o.id
+                              JOIN services s ON o.service_id = s.id
+                              JOIN users buyer ON c.buyer_id = buyer.id
+                              JOIN users seller ON c.seller_id = seller.id
+                              JOIN users sender ON sender.id = :sender_id
+                              WHERE c.id = :conversation_id');
+            $this->db->bind(':conversation_id', $conversation_id);
+            $this->db->bind(':sender_id', $sender_id);
+            $conversationData = $this->db->single();
+
+            if ($conversationData) {
+                // 获取接收方信息
+                $recipient_id = ($conversationData->buyer_id == $sender_id) ? $conversationData->seller_id : $conversationData->buyer_id;
+                $recipient_email = ($conversationData->buyer_id == $sender_id) ? $conversationData->seller_email : $conversationData->buyer_email;
+                $recipient_name = ($conversationData->buyer_id == $sender_id) ? $conversationData->seller_name : $conversationData->buyer_name;
+
+                $messageInfo = array(
+                    'order_id' => $conversationData->order_id,
+                    'conversation_id' => $conversation_id,
+                    'service_title' => $conversationData->service_title,
+                    'sender_name' => $conversationData->sender_name,
+                    'message_text' => $message_text,
+                    'created_at' => date('Y-m-d H:i:s')
+                );
+
+                // 发送邮件通知给接收方
+                if ($recipient_email) {
+                    $this->emailHelper->sendNewMessageNotification(
+                        $recipient_email,
+                        $recipient_name,
+                        $messageInfo
+                    );
+                }
+            }
+        } catch (Exception $e) {
+            error_log("Failed to send new message notification: " . $e->getMessage());
+        }
     }
 }

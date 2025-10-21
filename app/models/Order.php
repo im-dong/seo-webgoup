@@ -1,15 +1,17 @@
 <?php
 class Order {
     private $db;
+    private $emailHelper;
 
     public function __construct(){
         $this->db = new Database;
+        $this->emailHelper = new EmailHelper();
     }
 
     // 创建一个新订单
     public function createOrder($data){
         $this->db->query('INSERT INTO orders (service_id, buyer_id, seller_id, amount, status) VALUES (:service_id, :buyer_id, :seller_id, :amount, \'pending_payment\')');
-        
+
         $this->db->bind(':service_id', $data['service_id']);
         $this->db->bind(':buyer_id', $data['buyer_id']);
         $this->db->bind(':seller_id', $data['seller_id']);
@@ -19,13 +21,22 @@ class Order {
             // PDO没有内置方法直接返回刚插入的ID，这里是一种解决方法
             $this->db->query('SELECT LAST_INSERT_ID() as id');
             $result = $this->db->single();
-            return $result->id;
+            $order_id = $result->id;
+
+            // 发送新订单通知给卖家
+            $this->sendNewOrderNotificationToSeller($order_id);
+
+            return $order_id;
         }
         return false;
     }
 
     // 捕获并确认订单支付
     public function captureOrder($order_id, $payment_id, $remark = null){
+        // 获取旧状态
+        $oldOrder = $this->getOrderById($order_id);
+        $old_status = $oldOrder ? $oldOrder->status : 'pending_payment';
+
         $sql = 'UPDATE orders SET status = \'paid\', payment_id = :payment_id, paid_at = CURRENT_TIMESTAMP';
         if ($remark !== null) {
             $sql .= ', remark = :remark';
@@ -40,6 +51,8 @@ class Order {
         }
 
         if($this->db->execute()){
+            // 发送状态变更通知
+            $this->sendOrderStatusUpdateNotification($order_id, $old_status, 'paid');
             return true;
         }
         return false;
@@ -99,6 +112,10 @@ class Order {
 
     // 卖家标记订单为完成
     public function markAsComplete($order_id, $proof_url){
+        // 获取旧状态
+        $oldOrder = $this->getOrderById($order_id);
+        $old_status = $oldOrder ? $oldOrder->status : 'paid';
+
         // 首先获取服务的持续时间
         $this->db->query('SELECT duration FROM services s JOIN orders o ON s.id = o.service_id WHERE o.id = :order_id');
         $this->db->bind(':order_id', $order_id);
@@ -115,6 +132,8 @@ class Order {
         $this->db->bind(':release_date', $release_date);
 
         if($this->db->execute()){
+            // 发送状态变更通知
+            $this->sendOrderStatusUpdateNotification($order_id, $old_status, 'completed');
             return true;
         }
         return false;
@@ -122,12 +141,18 @@ class Order {
 
     // 买家确认订单
     public function confirmOrder($order_id, $user_id){
+        // 获取旧状态
+        $oldOrder = $this->getOrderById($order_id);
+        $old_status = $oldOrder ? $oldOrder->status : 'completed';
+
         // 增加一个 user_id 验证，确保只有买家本人才能确认
         $this->db->query('UPDATE orders SET status = \'confirmed\', confirmed_at = CURRENT_TIMESTAMP WHERE id = :order_id AND buyer_id = :user_id');
         $this->db->bind(':order_id', $order_id);
         $this->db->bind(':user_id', $user_id);
 
         if($this->db->execute() && $this->db->rowCount() > 0){
+            // 发送状态变更通知
+            $this->sendOrderStatusUpdateNotification($order_id, $old_status, 'confirmed');
             return true;
         }
         return false;
@@ -250,6 +275,91 @@ class Order {
         $this->db->query('SELECT id FROM orders WHERE paypal_order_id = :paypal_order_id');
         $this->db->bind(':paypal_order_id', $paypal_order_id);
         return $this->db->single();
+    }
+
+    // 发送新订单通知给卖家
+    private function sendNewOrderNotificationToSeller($order_id) {
+        try {
+            // 获取订单详细信息
+            $this->db->query('SELECT o.*, s.title as service_title, u.username as buyer_name, seller.email as seller_email, seller.username as seller_name
+                              FROM orders o
+                              JOIN services s ON o.service_id = s.id
+                              JOIN users u ON o.buyer_id = u.id
+                              JOIN users seller ON o.seller_id = seller.id
+                              WHERE o.id = :order_id');
+            $this->db->bind(':order_id', $order_id);
+            $orderData = $this->db->single();
+
+            if ($orderData && $orderData->seller_email) {
+                $orderInfo = array(
+                    'id' => $orderData->id,
+                    'service_title' => $orderData->service_title,
+                    'buyer_name' => $orderData->buyer_name,
+                    'amount' => $orderData->amount,
+                    'created_at' => $orderData->created_at,
+                    'remark' => $orderData->remark
+                );
+
+                $this->emailHelper->sendNewOrderNotification(
+                    $orderData->seller_email,
+                    $orderData->seller_name,
+                    $orderInfo
+                );
+            }
+        } catch (Exception $e) {
+            error_log("Failed to send new order notification: " . $e->getMessage());
+        }
+    }
+
+    // 发送订单状态变更通知
+    private function sendOrderStatusUpdateNotification($order_id, $old_status, $new_status) {
+        try {
+            // 获取订单详细信息
+            $this->db->query('SELECT o.*, s.title as service_title, buyer.email as buyer_email, buyer.username as buyer_name,
+                              seller.email as seller_email, seller.username as seller_name
+                              FROM orders o
+                              JOIN services s ON o.service_id = s.id
+                              JOIN users buyer ON o.buyer_id = buyer.id
+                              JOIN users seller ON o.seller_id = seller.id
+                              WHERE o.id = :order_id');
+            $this->db->bind(':order_id', $order_id);
+            $orderData = $this->db->single();
+
+            if ($orderData) {
+                $orderInfo = array(
+                    'id' => $orderData->id,
+                    'service_title' => $orderData->service_title,
+                    'amount' => $orderData->amount,
+                    'payment_id' => $orderData->payment_id,
+                    'proof_url' => $orderData->proof_url,
+                    'funds_release_date' => $orderData->funds_release_date
+                );
+
+                // 通知买家
+                if ($orderData->buyer_email) {
+                    $this->emailHelper->sendOrderStatusUpdateNotification(
+                        $orderData->buyer_email,
+                        $orderData->buyer_name,
+                        $orderInfo,
+                        $old_status,
+                        $new_status
+                    );
+                }
+
+                // 通知卖家
+                if ($orderData->seller_email) {
+                    $this->emailHelper->sendOrderStatusUpdateNotification(
+                        $orderData->seller_email,
+                        $orderData->seller_name,
+                        $orderInfo,
+                        $old_status,
+                        $new_status
+                    );
+                }
+            }
+        } catch (Exception $e) {
+            error_log("Failed to send order status update notification: " . $e->getMessage());
+        }
     }
 }
 
