@@ -522,4 +522,51 @@ public function logout(){
             $this->view('users/change_password', $data);
         }
     }
+
+    public function emailTest() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $_POST = filter_input_array(INPUT_POST, FILTER_UNSAFE_RAW);
+
+            $testEmail = trim($_POST['test_email']);
+            $result = '';
+            $error = '';
+
+            if (empty($testEmail)) {
+                $error = 'Please enter an email address';
+            } elseif (!filter_var($testEmail, FILTER_VALIDATE_EMAIL)) {
+                $error = 'Please enter a valid email address';
+            } else {
+                try {
+                    $subject = 'Test Email from WebGoup - ' . date('Y-m-d H:i:s');
+                    $message = '<h1>Test Email</h1><p>This is a test email from WebGoup system.</p><p>Test time: ' . date('Y-m-d H:i:s') . '</p>';
+
+                    if ($this->emailHelper->sendEmail($testEmail, $subject, $message, true)) {
+                        $result = 'success';
+                    } else {
+                        $result = 'error';
+                        $error = 'Failed to send email. Please check server logs.';
+                    }
+                } catch (Exception $e) {
+                    $result = 'error';
+                    $error = 'Email sending error: ' . $e->getMessage();
+                }
+            }
+
+            $data = array(
+                'title' => 'Email Test Result',
+                'result' => $result,
+                'error' => $error,
+                'test_email' => $testEmail
+            );
+        } else {
+            $data = array(
+                'title' => 'Email Test',
+                'result' => '',
+                'error' => '',
+                'test_email' => ''
+            );
+        }
+
+        $this->view('users/email_test', $data);
+    }
 }
